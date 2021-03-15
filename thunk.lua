@@ -11,15 +11,30 @@ function init()
   Timber.load_sample(0, "/home/we/dust/audio/common/909/909-BD.wav")
 end
 
+function play()
+  while true do
+    clock.sync(1)
+    engine.noteOn(1, 440, 127, 0)
+  end
+end
+
+running = false
+
 function key(n, z)
   params:set("play_mode_0", 4)
+  params:set("clock_tempo",100)
 
-  if n == 2 then
-     if z == 1 then
-	engine.noteOn(1, 440, 127, 0)
-     end
-     if z == 0 then
-	engine.noteOff(1)
-     end
+  if n == 2 and z == 1 then
+    if not running then
+      clock_id = clock.run(play)
+      running = true
+    end
+  end
+
+  if n == 3 and z == 1 then
+    if running then
+      clock.cancel(clock_id)
+      running = false
+    end
   end
 end
