@@ -6,6 +6,7 @@ engine.name = 'Timber'
 local Timber = include("timber/lib/timber_engine")
 
 function init()
+  Timber.options.PLAY_MODE_BUFFER_DEFAULT = 3
   Timber.add_params()
   Timber.add_sample_params(0)
   Timber.load_sample(0, "/home/we/dust/audio/common/909/909-BD.wav")
@@ -21,7 +22,6 @@ end
 running = false
 
 function key(n, z)
-  params:set("play_mode_0", 4)
   params:set("clock_tempo",100)
 
   if n == 2 and z == 1 then
