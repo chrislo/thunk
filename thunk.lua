@@ -15,10 +15,22 @@ function init()
   clock_id = clock.run(step)
 end
 
+pattern = {
+  pos = 0,
+  length = 16,
+  data = {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1}
+}
+
+tick = 0
+
 function step()
   while true do
-    clock.sync(1)
-    engine.noteOn(1, 440, 127, 0)
+    clock.sync(1/4)
+    pattern.pos = pattern.pos + 1
+    if pattern.pos > pattern.length then pattern.pos = 1 end
+    if pattern.data[pattern.pos] > 0 then
+      engine.noteOn(1, 440, 127, 0)
+    end
   end
 end
 
