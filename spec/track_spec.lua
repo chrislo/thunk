@@ -43,4 +43,14 @@ describe('track', function()
             assert.same(true, track.isActive(p, 2))
         end)
     end)
+
+    describe('currentStep()', function()
+        it('returns the current step', function()
+            local p = track.new()
+
+            assert.same(false, track.currentStep(p))
+            p = track.toggleStep(p, 1);
+            assert.same(true, track.currentStep(p))
+        end)
+    end)
 end)

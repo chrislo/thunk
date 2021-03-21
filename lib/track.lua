@@ -32,4 +32,8 @@ function M.isActive(track, step)
   end
 end
 
+function M.currentStep(track)
+  return track.steps[track.pos]
+end
+
 return M
