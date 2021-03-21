@@ -5,7 +5,11 @@
 engine.name = 'Timber'
 local Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
+local Pattern = include("lib/pattern")
+
 g = grid.connect()
+pattern = Pattern.new()
+pattern = Pattern.toggleStep(pattern, 1)
 
 function init()
   Timber.add_params()
@@ -33,9 +37,8 @@ end
 function grid_redraw()
   g:all(0)
 
-  for i=1, pattern.length do
-    -- print(pattern.data[i])
-    if pattern.data[i] > 0 then
+  for i=1, 16 do
+    if Pattern.isActive(pattern, i) then
       if i <= 8 then
 	g:led(i,1,10)
       else
@@ -47,20 +50,12 @@ function grid_redraw()
   g:refresh()
 end
 
-pattern = {
-  pos = 0,
-  length = 16,
-  data = {1,1,0,0,1,0,1,0,1,0,0,0,1,0,0,1}
-}
-
-tick = 0
-
 function step()
   while true do
     clock.sync(1/4)
-    pattern.pos = pattern.pos + 1
-    if pattern.pos > pattern.length then pattern.pos = 1 end
-    if pattern.data[pattern.pos] > 0 then
+    pattern = Pattern.advance(pattern)
+
+    if Pattern.isActive(pattern, pattern.pos) then
       engine.noteOn(1, 440, 127, 0)
     end
     grid_dirty = true
