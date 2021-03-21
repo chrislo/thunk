@@ -14,10 +14,16 @@ pattern = Pattern.toggleStep(pattern, 1)
 
 function init()
   Timber.add_params()
-  Timber.add_sample_params(0)
+
+  for i = 0, 3 do
+    Timber.add_sample_params(i)
+  end
 
   Timber.options.PLAY_MODE_BUFFER_DEFAULT = 3
-  Timber.load_sample(0, "/home/we/dust/audio/common/909/909-BD.wav")
+  Timber.load_sample(0, "/home/we/dust/audio/common/808/808-BD.wav")
+  Timber.load_sample(1, "/home/we/dust/audio/common/808/808-CP.wav")
+  Timber.load_sample(2, "/home/we/dust/audio/common/808/808-CH.wav")
+  Timber.load_sample(3, "/home/we/dust/audio/common/808/808-OH.wav")
 
   clock_id = clock.run(step)
 
@@ -58,7 +64,7 @@ function step()
 
     for k,v in ipairs(Pattern.currentSteps(pattern)) do
       if v then
-        engine.noteOn(1, 440, 127, k-1)
+        engine.noteOn(k, 440, 127, k-1)
       end
     end
     grid_dirty = true
@@ -74,6 +80,9 @@ function g.key(x,y,z)
     if y==2 then
       pattern = Pattern.toggleStep(pattern, x+8)
       grid_dirty = true
+    end
+    if y==8 then
+      pattern.selectedTrack = x
     end
   end
 end
