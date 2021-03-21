@@ -5,11 +5,11 @@
 engine.name = 'Timber'
 local Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
-local Pattern = include("lib/pattern")
+local Track = include("lib/track")
 
 g = grid.connect()
-pattern = Pattern.new()
-pattern = Pattern.toggleStep(pattern, 1)
+track = Track.new()
+track = Track.toggleStep(track, 1)
 
 function init()
   Timber.add_params()
@@ -39,11 +39,11 @@ function grid_redraw()
 
   for i=1, 16 do
     if i <= 8 then
-      if pattern.pos == i then g:led(i, 1, 5) end
-      if Pattern.isActive(pattern, i) then g:led(i,1,15) end
+      if track.pos == i then g:led(i, 1, 5) end
+      if Track.isActive(track, i) then g:led(i,1,15) end
     else
-      if pattern.pos == i then g:led(i-8, 2, 5) end
-      if Pattern.isActive(pattern, i) then g:led(i-8,2,15) end
+      if track.pos == i then g:led(i-8, 2, 5) end
+      if Track.isActive(track, i) then g:led(i-8,2,15) end
     end
   end
 
@@ -53,9 +53,9 @@ end
 function step()
   while true do
     clock.sync(1/4)
-    pattern = Pattern.advance(pattern)
+    track = Track.advance(track)
 
-    if Pattern.isActive(pattern, pattern.pos) then
+    if Track.isActive(track, track.pos) then
       engine.noteOn(1, 440, 127, 0)
     end
     grid_dirty = true
@@ -65,11 +65,11 @@ end
 function g.key(x,y,z)
   if z==1 then
     if y==1 then
-      pattern = Pattern.toggleStep(pattern, x)
+      track = Track.toggleStep(track, x)
       grid_dirty = true
     end
     if y==2 then
-      pattern = Pattern.toggleStep(pattern, x+8)
+      track = Track.toggleStep(track, x+8)
       grid_dirty = true
     end
   end
