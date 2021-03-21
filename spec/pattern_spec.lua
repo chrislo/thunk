@@ -33,4 +33,14 @@ describe('pattern', function()
 	    assert.same(true, p.steps[16])
 	end)
     end)
+
+    describe('isActive()', function()
+	it('returns true if the step is active, false otherwise', function()
+	    local p = pattern.new()
+	    p = pattern.toggleStep(p, 2);
+
+	    assert.same(false, pattern.isActive(p, 1))
+	    assert.same(true, pattern.isActive(p, 2))
+	end)
+    end)
 end)

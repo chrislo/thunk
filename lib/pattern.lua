@@ -24,4 +24,12 @@ function M.toggleStep(pattern, step)
   return pattern
 end
 
+function M.isActive(pattern, step)
+  if pattern.steps[step] then
+    return true
+  else
+    return false
+  end
+end
+
 return M
