@@ -38,12 +38,12 @@ function grid_redraw()
   g:all(0)
 
   for i=1, 16 do
-    if Pattern.isActive(pattern, i) then
-      if i <= 8 then
-	g:led(i,1,10)
-      else
-	g:led(i-8,2,10)
-      end
+    if i <= 8 then
+      if pattern.pos == i then g:led(i, 1, 5) end
+      if Pattern.isActive(pattern, i) then g:led(i,1,15) end
+    else
+      if pattern.pos == i then g:led(i-8, 2, 5) end
+      if Pattern.isActive(pattern, i) then g:led(i-8,2,15) end
     end
   end
 
