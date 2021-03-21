@@ -62,6 +62,19 @@ function step()
   end
 end
 
+function g.key(x,y,z)
+  if z==1 then
+    if y==1 then
+      pattern = Pattern.toggleStep(pattern, x)
+      grid_dirty = true
+    end
+    if y==2 then
+      pattern = Pattern.toggleStep(pattern, x+8)
+      grid_dirty = true
+    end
+  end
+end
+
 function key(n, z)
   if n == 3 and z == 1 then
     clock.cancel(clock_id)
