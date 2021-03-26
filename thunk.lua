@@ -46,11 +46,11 @@ function pattern_position_to_grid(i)
   local loc = {}
 
   if i <= 8 then
-    loc[x] = i
-    loc[y] = 1
+    loc.x = i
+    loc.y = 1
   else
-    loc[x] = i-8
-    loc[y] = 2
+    loc.x = i-8
+    loc.y = 2
   end
 
   return loc
