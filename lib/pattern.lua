@@ -3,7 +3,7 @@ P = {}
 function P.new()
   return {
     selectedTrack = 1,
-    tracks = { Track.new(), Track.new(), Track.new(), Track.new() }
+    tracks = { Track.new(), Track.new(), Track.new(), Track.new(), Track.new(), Track.new() }
   }
 end
 

@@ -67,7 +67,9 @@ function grid_redraw()
   end
 
   for i, step in ipairs(Pattern.currentSteps(pattern)) do
-    if step.active then
+    if pattern.selectedTrack == i then
+      g:led(i+2, 8, 15)
+    elseif step.active then
       g:led(i+2, 8, 10)
     else
       g:led(i+2, 8, 1)
@@ -101,8 +103,8 @@ function g.key(x,y,z)
       pattern = Pattern.toggleStep(pattern, x+8)
       grid_dirty = true
     end
-    if y==8 then
-      pattern.selectedTrack = x
+    if y==8 and x>=3 then
+      pattern.selectedTrack = x-2
     end
   end
 end
