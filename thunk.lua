@@ -7,6 +7,7 @@ local Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
 Pattern = include("lib/pattern")
 Track = include("lib/track")
+Step = include("lib/step")
 
 g = grid.connect()
 pattern = Pattern.new()
