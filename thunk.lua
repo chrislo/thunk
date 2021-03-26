@@ -16,7 +16,7 @@ pattern = Pattern.toggleStep(pattern, 1)
 function init()
   Timber.add_params()
 
-  for i = 0, 3 do
+  for i = 0, 5 do
     Timber.add_sample_params(i)
   end
 
@@ -25,6 +25,8 @@ function init()
   Timber.load_sample(1, "/home/we/dust/audio/common/808/808-CP.wav")
   Timber.load_sample(2, "/home/we/dust/audio/common/808/808-CH.wav")
   Timber.load_sample(3, "/home/we/dust/audio/common/808/808-OH.wav")
+  Timber.load_sample(4, "/home/we/dust/audio/common/808/808-LT.wav")
+  Timber.load_sample(5, "/home/we/dust/audio/common/808/808-HT.wav")
 
   clock_id = clock.run(step)
 
