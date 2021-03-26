@@ -29,16 +29,6 @@ describe('pattern', function()
         end)
     end)
 
-    describe('positionOfSelectedTrack()', function()
-        it('should return position for the currently selected track', function()
-            local p = pattern.new()
-
-            assert.same(1, pattern.positionOfSelectedTrack(p))
-            p = pattern.advance(p)
-            assert.same(2, pattern.positionOfSelectedTrack(p))
-        end)
-    end)
-
     describe('currentSteps', function()
         it('returns a table of track to step mappings for the current time', function()
             local p = pattern.new()

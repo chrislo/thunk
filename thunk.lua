@@ -42,17 +42,28 @@ function grid_redraw_clock()
   end
 end
 
+function pattern_position_to_grid(i)
+  local loc = {}
+
+  if i <= 8 then
+    loc[x] = i
+    loc[y] = 1
+  else
+    loc[x] = i-8
+    loc[y] = 2
+  end
+
+  return loc
+end
+
 function grid_redraw()
   g:all(0)
 
-  for i=1, 16 do
-    if i <= 8 then
-      if Pattern.positionOfSelectedTrack(pattern) == i then g:led(i, 1, 5) end
-      if Pattern.selectedTrackIsActive(pattern, i) then g:led(i,1,15) end
-    else
-      if Pattern.positionOfSelectedTrack(pattern) == i then g:led(i-8, 2, 5) end
-      if Pattern.selectedTrackIsActive(pattern, i) then g:led(i-8,2,15) end
-    end
+  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern)) do
+    local pos = pattern_position_to_grid(i)
+
+    if step.current then g:led(pos.x, pos.y, 5) end
+    if step.active then g:led(pos.x, pos.y, 15) end
   end
 
   g:refresh()

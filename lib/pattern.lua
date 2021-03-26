@@ -21,12 +21,8 @@ function P.toggleStep(pattern, step)
   return pattern
 end
 
-function P.positionOfSelectedTrack(pattern)
-  return pattern.tracks[pattern.selectedTrack].pos
-end
-
-function P.selectedTrackIsActive(pattern, step)
-  return Track.isActive(pattern.tracks[pattern.selectedTrack], step)
+function P.stepsForSelectedTrack(pattern)
+  return pattern.tracks[pattern.selectedTrack].steps
 end
 
 function P.currentSteps(pattern)
