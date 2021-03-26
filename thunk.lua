@@ -58,16 +58,16 @@ function pattern_position_to_grid(i)
   return loc
 end
 
-function grid_redraw()
-  g:all(0)
-
+function draw_track_steps()
   for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern)) do
     local pos = pattern_position_to_grid(i)
 
     if step.current then g:led(pos.x, pos.y, 5) end
     if step.active then g:led(pos.x, pos.y, 15) end
   end
+end
 
+function draw_track_select()
   for i, step in ipairs(Pattern.currentSteps(pattern)) do
     if pattern.selectedTrack == i then
       g:led(i+2, 8, 15)
@@ -77,7 +77,12 @@ function grid_redraw()
       g:led(i+2, 8, 1)
     end
   end
+end
 
+function grid_redraw()
+  g:all(0)
+  draw_track_steps()
+  draw_track_select()
   g:refresh()
 end
 
