@@ -83,7 +83,7 @@ function step()
     pattern = Pattern.advance(pattern)
 
     for k,v in ipairs(Pattern.currentSteps(pattern)) do
-      if v then
+      if v.active then
         engine.noteOn(k, 440, 127, k-1)
       end
     end
