@@ -66,6 +66,14 @@ function grid_redraw()
     if step.active then g:led(pos.x, pos.y, 15) end
   end
 
+  for i, step in ipairs(Pattern.currentSteps(pattern)) do
+    if step.active then
+      g:led(i+2, 8, 10)
+    else
+      g:led(i+2, 8, 1)
+    end
+  end
+
   g:refresh()
 end
 
