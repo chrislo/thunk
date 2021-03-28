@@ -25,12 +25,12 @@ function P.stepsForSelectedTrack(pattern)
   return pattern.tracks[pattern.selectedTrack].steps
 end
 
-function P.currentSteps(pattern)
-  local currentSteps = {}
+function P.currentlyPlayingSteps(pattern)
+  local currentlyPlayingSteps = {}
   for k,v in ipairs(pattern.tracks) do
-    currentSteps[k] = Track.currentStep(pattern.tracks[k])
+    currentlyPlayingSteps[k] = Track.currentlyPlayingStep(pattern.tracks[k])
   end
-  return currentSteps
+  return currentlyPlayingSteps
 end
 
 return P

@@ -66,11 +66,11 @@ describe('track', function()
         end)
     end)
 
-    describe('currentStep()', function()
+    describe('currentlyPlayingStep()', function()
         it('returns the current step', function()
             local p = track.new()
 
-            assert.is_true(track.currentStep(p).current)
+            assert.is_true(track.currentlyPlayingStep(p).current)
         end)
     end)
 end)

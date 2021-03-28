@@ -56,7 +56,7 @@ function M.offsetEvenSteps(track, offset)
   return track
 end
 
-function M.currentStep(track)
+function M.currentlyPlayingStep(track)
   return track.steps[track.pos]
 end
 

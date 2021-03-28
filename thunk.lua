@@ -68,7 +68,7 @@ function draw_track_steps()
 end
 
 function draw_track_select()
-  for i, step in ipairs(Pattern.currentSteps(pattern)) do
+  for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
     if pattern.selectedTrack == i then
       g:led(i+2, 8, 15)
     elseif step.active then
@@ -91,7 +91,7 @@ function step()
     clock.sync(1/4)
     pattern = Pattern.advance(pattern)
 
-    for k,v in ipairs(Pattern.currentSteps(pattern)) do
+    for k,v in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
       if v.active then
         engine.noteOn(k, 440, 127, k-1)
       end
