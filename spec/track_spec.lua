@@ -27,10 +27,10 @@ describe('track', function()
     describe('toggleStep()', function()
         it('sets the step to true if it is false and vice versa', function()
             local p = track.new()
-            assert.same(false, p.steps[1].active)
+            assert.is_false(p.steps[1].active)
 
             p = track.toggleStep(p, 16)
-            assert.same(true, p.steps[16].active)
+            assert.is_true(p.steps[16].active)
         end)
     end)
 
@@ -39,8 +39,8 @@ describe('track', function()
             local p = track.new()
             p = track.toggleStep(p, 2);
 
-            assert.same(false, track.isActive(p, 1))
-            assert.same(true, track.isActive(p, 2))
+            assert.is_false(track.isActive(p, 1))
+            assert.is_true(track.isActive(p, 2))
         end)
     end)
 
@@ -48,7 +48,7 @@ describe('track', function()
         it('returns the current step', function()
             local p = track.new()
 
-            assert.same(true, track.currentStep(p).current)
+            assert.is_true(track.currentStep(p).current)
         end)
     end)
 end)
