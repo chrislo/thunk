@@ -15,7 +15,7 @@ function M.new(ppqn)
 end
 
 local function pulses_per_step(track)
-  return (track.ppqn / 4)
+  return math.floor(track.ppqn / 4)
 end
 
 local function offset_in_current_step(track)
