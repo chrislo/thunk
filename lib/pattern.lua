@@ -25,6 +25,14 @@ function P.stepsForSelectedTrack(pattern)
   return pattern.tracks[pattern.selectedTrack].steps
 end
 
+function P.offsetAllEvenSteps(pattern, offset)
+  for idx, track in ipairs(pattern.tracks) do
+    pattern.tracks[idx] = Track.offsetEvenSteps(track, offset)
+  end
+
+  return pattern
+end
+
 function P.playSteps(pattern, engine)
   for idx, track in ipairs(pattern.tracks) do
     Track.playStep(track, engine, idx)
