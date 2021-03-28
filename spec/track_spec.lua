@@ -24,6 +24,23 @@ describe('track', function()
         end)
     end)
 
+    describe('offsetEvenSteps()', function()
+        it('sets the offset of the even steps', function()
+            local t = track.new()
+            assert.is_same(0, t.steps[1].offset)
+            assert.is_same(0, t.steps[2].offset)
+            assert.is_same(0, t.steps[3].offset)
+            assert.is_same(0, t.steps[4].offset)
+
+            t = track.offsetEvenSteps(t, 2)
+
+            assert.is_same(0, t.steps[1].offset)
+            assert.is_same(2, t.steps[2].offset)
+            assert.is_same(0, t.steps[3].offset)
+            assert.is_same(2, t.steps[4].offset)
+        end)
+    end)
+
     describe('toggleStep()', function()
         it('sets the step to true if it is false and vice versa', function()
             local p = track.new()

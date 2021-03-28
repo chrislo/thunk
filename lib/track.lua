@@ -31,6 +31,16 @@ function M.toggleStep(track, step)
   return track
 end
 
+function M.offsetEvenSteps(track, offset)
+  for i, step in ipairs(track.steps) do
+    if (i % 2 == 0) then
+      track.steps[i].offset = offset
+    end
+  end
+
+  return track
+end
+
 function M.isActive(track, step)
   if track.steps[step].active then
     return true
