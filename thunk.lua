@@ -9,8 +9,10 @@ Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
 
+PPQN = 24
+
 g = grid.connect()
-pattern = Pattern.new()
+pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1)
 
 function init()
@@ -88,7 +90,7 @@ end
 
 function step()
   while true do
-    clock.sync(1/4)
+    clock.sync(1/PPQN)
     pattern = Pattern.advance(pattern)
     Pattern.playSteps(pattern, engine)
     grid_dirty = true

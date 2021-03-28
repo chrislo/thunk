@@ -1,9 +1,9 @@
 P = {}
 
-function P.new()
+function P.new(ppqn)
   return {
     selectedTrack = 1,
-    tracks = { Track.new(), Track.new(), Track.new(), Track.new(), Track.new(), Track.new() }
+    tracks = { Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn) }
   }
 end
 
