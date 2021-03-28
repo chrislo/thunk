@@ -18,9 +18,12 @@ local function pulses_per_step(track)
   return (track.ppqn / 4)
 end
 
+local function offset_in_current_step(track)
+  return track.tick % pulses_per_step(track)
+end
+
 local function advance_step(track)
-  local offset_in_current_step = track.tick % pulses_per_step(track)
-  return offset_in_current_step == 0
+  return offset_in_current_step(track) == 0
 end
 
 function M.advance(track)
@@ -59,7 +62,7 @@ end
 function M.playStep(track, engine, id)
   local step = track.steps[track.pos]
 
-  if step.active then
+  if step.active and (offset_in_current_step(track) == step.offset) then
     engine.noteOn(id, 440, 127, id-1)
   end
 end

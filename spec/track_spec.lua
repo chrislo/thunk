@@ -81,6 +81,24 @@ describe('track', function()
             track.playStep(t, engine, 1)
             assert.stub(engine.noteOn).was_called()
         end)
+
+        it('plays active steps only when the position in the step equals the offset', function()
+            local t = track.new(8)
+            t = track.toggleStep(t, 1)
+            t.steps[1].offset = 1
+
+            local engine = {
+              noteOn = function(id, freq, vel, sampleId) end
+            }
+            stub(engine, 'noteOn')
+
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_not_called()
+
+            t = track.advance(t)
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_called()
+        end)
     end)
 
     describe('toggleStep()', function()
