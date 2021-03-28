@@ -9,12 +9,12 @@ Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
 
-PPQN = 24
+PPQN = 48
 
 g = grid.connect()
 pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1)
-pattern = Pattern.offsetAllEvenSteps(pattern, 6)
+pattern = Pattern.offsetAllEvenSteps(pattern, 4)
 
 function init()
   Timber.add_params()
