@@ -56,6 +56,14 @@ function M.offsetEvenSteps(track, offset)
   return track
 end
 
+function M.playStep(track, engine, id)
+  local step = track.steps[track.pos]
+
+  if step.active then
+    engine.noteOn(id, 440, 127, id-1)
+  end
+end
+
 function M.currentlyPlayingStep(track)
   return track.steps[track.pos]
 end

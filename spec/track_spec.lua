@@ -56,6 +56,33 @@ describe('track', function()
         end)
     end)
 
+    describe('playStep()', function()
+        it('does not play inactive steps', function()
+            local t = track.new()
+
+            local engine = {
+              noteOn = function(id, freq, vel, sampleId) end
+            }
+            stub(engine, 'noteOn')
+
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_not_called()
+        end)
+
+        it('plays active steps', function()
+            local t = track.new()
+            t = track.toggleStep(t, 1)
+
+            local engine = {
+              noteOn = function(id, freq, vel, sampleId) end
+            }
+            stub(engine, 'noteOn')
+
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_called()
+        end)
+    end)
+
     describe('toggleStep()', function()
         it('sets the step to true if it is false and vice versa', function()
             local p = track.new()

@@ -90,12 +90,7 @@ function step()
   while true do
     clock.sync(1/4)
     pattern = Pattern.advance(pattern)
-
-    for k,v in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
-      if v.active then
-        engine.noteOn(k, 440, 127, k-1)
-      end
-    end
+    Pattern.playSteps(pattern, engine)
     grid_dirty = true
   end
 end

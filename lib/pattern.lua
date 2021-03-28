@@ -25,6 +25,12 @@ function P.stepsForSelectedTrack(pattern)
   return pattern.tracks[pattern.selectedTrack].steps
 end
 
+function P.playSteps(pattern, engine)
+  for idx, track in ipairs(pattern.tracks) do
+    Track.playStep(track, engine, idx)
+  end
+end
+
 function P.currentlyPlayingSteps(pattern)
   local currentlyPlayingSteps = {}
   for k,v in ipairs(pattern.tracks) do
