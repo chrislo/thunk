@@ -1,7 +1,9 @@
 M = {}
 
-function M.new()
+function M.new(ppqn)
   track = {
+    ppqn = ppqn or 4,
+    tick = 0,
     pos = 1,
     length = 16,
     steps = {Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new()}
@@ -12,9 +14,22 @@ function M.new()
   return track
 end
 
+local function pulses_per_step(track)
+  return (track.ppqn / 4)
+end
+
+local function advance_step(track)
+  local offset_in_current_step = track.tick % pulses_per_step(track)
+  return offset_in_current_step == 0
+end
+
 function M.advance(track)
   track.steps[track.pos].current = false
-  track.pos = track.pos + 1
+  track.tick = track.tick + 1
+
+  if advance_step(track) then
+    track.pos = track.pos + 1
+  end
 
   if track.pos > track.length then
     track.pos = 1

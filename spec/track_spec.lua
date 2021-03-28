@@ -10,8 +10,23 @@ describe('track', function()
     end)
 
     describe('advance()', function()
-        it('should return a new track with position incremented by 1', function()
-            assert.same(2, track.advance(track.new()).pos)
+        it('should return a new track with tick incremented by 1', function()
+            assert.same(1, track.advance(track.new()).tick)
+        end)
+
+        it('with 4 pulses per quarter note it should move to the next step every tick', function()
+            assert.same(2, track.advance(track.new(4)).pos)
+        end)
+
+        it('with 8 pulses per quarter note it should move to the next step every 2 ticks', function()
+            local t = track.new(8)
+            assert.same(1, t.pos)
+
+            t = track.advance(t)
+            assert.same(1, t.pos)
+
+            t = track.advance(t)
+            assert.same(2, t.pos)
         end)
 
         it('should return to beginning when advanced past the track length', function()
