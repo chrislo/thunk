@@ -66,16 +66,6 @@ describe('track', function()
         end)
     end)
 
-    describe('isActive()', function()
-        it('returns true if the step is active, false otherwise', function()
-            local p = track.new()
-            p = track.toggleStep(p, 2);
-
-            assert.is_false(track.isActive(p, 1))
-            assert.is_true(track.isActive(p, 2))
-        end)
-    end)
-
     describe('currentStep()', function()
         it('returns the current step', function()
             local p = track.new()

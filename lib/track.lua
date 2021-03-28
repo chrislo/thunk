@@ -56,14 +56,6 @@ function M.offsetEvenSteps(track, offset)
   return track
 end
 
-function M.isActive(track, step)
-  if track.steps[step].active then
-    return true
-  else
-    return false
-  end
-end
-
 function M.currentStep(track)
   return track.steps[track.pos]
 end
