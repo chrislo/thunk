@@ -3,22 +3,23 @@
 --
 
 engine.name = 'Timber'
+
 local Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
+local UI = require "ui"
+
 Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
 
-local UI = require "ui"
 local screen_refresh_metro
 local screen_dirty = true
 local swing_dial
 local tempo_dial
+local PPQN = 48
 
-PPQN = 48
-
-g = grid.connect()
-pattern = Pattern.new(PPQN)
+local g = grid.connect()
+local pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1)
 pattern = Pattern.offsetAllEvenSteps(pattern, 4)
 
@@ -137,12 +138,6 @@ function g.key(x,y,z)
     if y==8 and x>=3 then
       pattern.selectedTrack = x-2
     end
-  end
-end
-
-function key(n, z)
-  if n == 3 and z == 1 then
-    clock.cancel(clock_id)
   end
 end
 
