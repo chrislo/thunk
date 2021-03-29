@@ -9,6 +9,11 @@ Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
 
+local UI = require "ui"
+local screen_refresh_metro
+local screen_dirty = true
+local swing_dial
+
 PPQN = 48
 
 g = grid.connect()
@@ -31,10 +36,29 @@ function init()
   Timber.load_sample(4, "/home/we/dust/audio/common/808/808-LT.wav")
   Timber.load_sample(5, "/home/we/dust/audio/common/808/808-HT.wav")
 
+  params:add_number("swing", "swing", 0, math.floor(PPQN/4), false, 0)
+  params:set_action("swing", set_swing)
+
   clock_id = clock.run(step)
 
   grid_dirty = true
   clock.run(grid_redraw_clock)
+
+  -- ui
+  swing_dial = UI.Dial.new(5, 5, 25, params:get("swing"), 0, math.floor(PPQN/4), 1)
+
+  screen_refresh_metro = metro.init()
+  screen_refresh_metro.event = function()
+    if screen_dirty then
+      screen_dirty = false
+      redraw()
+    end
+  end
+  screen_refresh_metro:start(1 / 15)
+end
+
+function set_swing(i)
+  pattern = Pattern.offsetAllEvenSteps(pattern, i)
 end
 
 function grid_redraw_clock()
@@ -118,4 +142,19 @@ function key(n, z)
   if n == 3 and z == 1 then
     clock.cancel(clock_id)
   end
+end
+
+function enc(n, delta)
+  if n == 2 then
+    params:delta("swing", delta)
+    swing_dial:set_value_delta(delta)
+  end
+
+  screen_dirty = true
+end
+
+function redraw()
+  screen.clear()
+  swing_dial:redraw()
+  screen.update()
 end
