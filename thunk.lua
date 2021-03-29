@@ -13,6 +13,7 @@ local UI = require "ui"
 local screen_refresh_metro
 local screen_dirty = true
 local swing_dial
+local tempo_dial
 
 PPQN = 48
 
@@ -46,6 +47,7 @@ function init()
 
   -- ui
   swing_dial = UI.Dial.new(5, 5, 25, params:get("swing"), 0, math.floor(PPQN/4), 1)
+  tempo_dial = UI.Dial.new(35, 5, 25, params:get("clock_tempo"), 40, 240, 1)
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
@@ -150,11 +152,17 @@ function enc(n, delta)
     swing_dial:set_value_delta(delta)
   end
 
+  if n == 3 then
+    params:delta("clock_tempo", delta)
+    tempo_dial:set_value_delta(delta)
+  end
+
   screen_dirty = true
 end
 
 function redraw()
   screen.clear()
   swing_dial:redraw()
+  tempo_dial:redraw()
   screen.update()
 end
