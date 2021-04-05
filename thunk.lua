@@ -25,17 +25,17 @@ pattern = Pattern.toggleStep(pattern, 1)
 function init()
   Timber.add_params()
 
-  for i = 0, 5 do
+  for i = 1, 6 do
     Timber.add_sample_params(i)
   end
 
   Timber.options.PLAY_MODE_BUFFER_DEFAULT = 3
-  Timber.load_sample(0, "/home/we/dust/audio/common/808/808-BD.wav")
-  Timber.load_sample(1, "/home/we/dust/audio/common/808/808-CP.wav")
-  Timber.load_sample(2, "/home/we/dust/audio/common/808/808-CH.wav")
-  Timber.load_sample(3, "/home/we/dust/audio/common/808/808-OH.wav")
-  Timber.load_sample(4, "/home/we/dust/audio/common/808/808-LT.wav")
-  Timber.load_sample(5, "/home/we/dust/audio/common/808/808-HT.wav")
+  Timber.load_sample(1, "/home/we/dust/audio/common/808/808-BD.wav")
+  Timber.load_sample(2, "/home/we/dust/audio/common/808/808-CP.wav")
+  Timber.load_sample(3, "/home/we/dust/audio/common/808/808-CH.wav")
+  Timber.load_sample(4, "/home/we/dust/audio/common/808/808-OH.wav")
+  Timber.load_sample(5, "/home/we/dust/audio/common/808/808-LT.wav")
+  Timber.load_sample(6, "/home/we/dust/audio/common/808/808-HT.wav")
 
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), false, 0)
   params:set_action("swing", set_swing)
