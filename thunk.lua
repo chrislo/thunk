@@ -21,7 +21,6 @@ local PPQN = 48
 local g = grid.connect()
 local pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1)
-pattern = Pattern.offsetAllEvenSteps(pattern, 4)
 
 function init()
   Timber.add_params()
