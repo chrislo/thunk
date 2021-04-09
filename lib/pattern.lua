@@ -2,7 +2,6 @@ P = {}
 
 function P.new(ppqn)
   return {
-    selectedTrack = 1,
     tracks = { Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn) }
   }
 end
@@ -15,14 +14,14 @@ function P.advance(pattern)
   return pattern
 end
 
-function P.toggleStep(pattern, step)
-  pattern.tracks[pattern.selectedTrack] = Track.toggleStep(pattern.tracks[pattern.selectedTrack], step)
+function P.toggleStep(pattern, step, track)
+  pattern.tracks[track] = Track.toggleStep(pattern.tracks[track], step)
 
   return pattern
 end
 
-function P.stepsForSelectedTrack(pattern)
-  return pattern.tracks[pattern.selectedTrack].steps
+function P.stepsForSelectedTrack(pattern, track)
+  return pattern.tracks[track].steps
 end
 
 function P.offsetAllEvenSteps(pattern, offset)

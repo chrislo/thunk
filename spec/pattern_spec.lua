@@ -3,12 +3,6 @@ describe('pattern', function()
         pattern = require("lib/pattern")
     end)
 
-    describe('new()', function()
-        it('should have an initial selectedTrack', function()
-            assert.same(1, pattern.new().selectedTrack)
-        end)
-    end)
-
     describe('advance()', function()
         it('should return a new pattern with the position of each track incremented by 1', function()
             local p = pattern.new()
@@ -20,12 +14,13 @@ describe('pattern', function()
     end)
 
     describe('toggleStep()', function()
-        it('should return toggle the step for the currently selected track', function()
+        it('should return toggle the step for the passed in track', function()
             local p = pattern.new()
+            local track = 1
 
-            assert.is_false(p.tracks[1].steps[1].active)
-            p = pattern.toggleStep(p, 1)
-            assert.is_true(p.tracks[1].steps[1].active)
+            assert.is_false(p.tracks[track].steps[1].active)
+            p = pattern.toggleStep(p, 1, track)
+            assert.is_true(p.tracks[track].steps[1].active)
         end)
     end)
 

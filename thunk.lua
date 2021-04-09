@@ -22,6 +22,8 @@ local g = grid.connect()
 local pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1)
 
+local selected_track = 1
+
 function init()
   Timber.add_params()
 
@@ -88,7 +90,7 @@ function pattern_position_to_grid(i)
 end
 
 function draw_track_steps()
-  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern)) do
+  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern, selected_track)) do
     local pos = pattern_position_to_grid(i)
 
     if step.current then g:led(pos.x, pos.y, 5) end
@@ -98,7 +100,7 @@ end
 
 function draw_track_select()
   for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
-    if pattern.selectedTrack == i then
+    if selected_track == i then
       g:led(i+2, 8, 15)
     elseif step.active then
       g:led(i+2, 8, 10)
@@ -127,15 +129,15 @@ end
 function g.key(x,y,z)
   if z==1 then
     if y==1 then
-      pattern = Pattern.toggleStep(pattern, x)
+      pattern = Pattern.toggleStep(pattern, x, selected_track)
       grid_dirty = true
     end
     if y==2 then
-      pattern = Pattern.toggleStep(pattern, x+8)
+      pattern = Pattern.toggleStep(pattern, x+8, selected_track)
       grid_dirty = true
     end
     if y==8 and x>=3 then
-      pattern.selectedTrack = x-2
+      selected_track = x-2
     end
   end
 end
