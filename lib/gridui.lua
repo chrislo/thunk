@@ -14,12 +14,14 @@ local function pattern_position_to_grid(i)
   return loc
 end
 
-local function draw_track_steps(connection, pattern, selected_track)
-  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern, selected_track)) do
-    local pos = pattern_position_to_grid(i)
+local function draw_track_steps(connection, pattern, track, page)
+  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern, track)) do
+    if math.ceil(i / 16) == page then
+      local pos = pattern_position_to_grid(i - ((page - 1) * 16))
 
-    if step.current then connection:led(pos.x, pos.y, 5) end
-    if step.active then connection:led(pos.x, pos.y, 15) end
+      if step.current then connection:led(pos.x, pos.y, 5) end
+      if step.active then connection:led(pos.x, pos.y, 15) end
+    end
   end
 end
 
@@ -43,7 +45,7 @@ end
 
 function G.redraw(connection, pattern, selected_track, selected_page)
   connection:all(0)
-  draw_track_steps(connection, pattern, selected_track)
+  draw_track_steps(connection, pattern, selected_track, selected_page[selected_track])
   draw_track_select(connection, pattern, selected_track)
   draw_page_select(connection, selected_track, selected_page)
   connection:refresh()

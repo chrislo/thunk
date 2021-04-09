@@ -1,12 +1,17 @@
 M = {}
 
 function M.new(ppqn)
+  local steps = {}
+  for i = 1, 64 do
+    steps[i] = Step.new()
+  end
+
   track = {
     ppqn = ppqn or 4,
     tick = 0,
     pos = 1,
     length = 16,
-    steps = {Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new(), Step.new()}
+    steps = steps
   }
 
   track.steps[track.pos].current = true
@@ -69,6 +74,16 @@ end
 
 function M.currentlyPlayingStep(track)
   return track.steps[track.pos]
+end
+
+function M.maybeCreatePage(track, page)
+  local number_of_pages = math.ceil(track.length / 16)
+
+  if page > number_of_pages then
+    track.length = 16 * page
+  end
+
+  return track
 end
 
 return M

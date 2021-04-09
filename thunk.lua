@@ -89,12 +89,19 @@ end
 function g.key(x,y,z)
   if z==1 then
     if y==1 then
-      pattern = Pattern.toggleStep(pattern, x, selected_track)
+      local step_to_toggle = x + ((selected_page[selected_track] - 1) * 16)
+      pattern = Pattern.toggleStep(pattern, step_to_toggle, selected_track)
       grid_dirty = true
     end
     if y==2 then
-      pattern = Pattern.toggleStep(pattern, x+8, selected_track)
+      local step_to_toggle = x + ((selected_page[selected_track] - 1) * 16) + 8
+      pattern = Pattern.toggleStep(pattern, step_to_toggle, selected_track)
       grid_dirty = true
+    end
+    if y==3 and x>=5 then
+      local page = x - 4
+      selected_page[selected_track] = page
+      pattern = Pattern.maybeCreatePage(pattern, selected_track, page)
     end
     if y==8 and x>=3 then
       selected_track = x-2

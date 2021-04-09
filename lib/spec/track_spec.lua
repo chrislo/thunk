@@ -118,4 +118,28 @@ describe('track', function()
             assert.is_true(track.currentlyPlayingStep(p).current)
         end)
     end)
+
+    describe('maybeCreatePage()', function()
+        it('does not alter the track length when the track already has the page', function()
+            local t = track.new()
+            assert.is_same(16, track.maybeCreatePage(t, 1).length)
+
+            local t = track.new()
+            t.length = 32
+            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+        end)
+
+        it('increases the track length when the track does not have the page', function()
+            local t = track.new()
+            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+
+            local t = track.new()
+            assert.is_same(64, track.maybeCreatePage(t, 4).length)
+
+            local t = track.new()
+            t.length = 8
+            assert.is_same(8, track.maybeCreatePage(t, 1).length)
+            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+        end)
+    end)
 end)

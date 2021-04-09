@@ -46,4 +46,10 @@ function P.currentlyPlayingSteps(pattern)
   return currentlyPlayingSteps
 end
 
+function P.maybeCreatePage(pattern, track, page)
+  pattern.tracks[track] = Track.maybeCreatePage(pattern.tracks[track], page)
+
+  return pattern
+end
+
 return P
