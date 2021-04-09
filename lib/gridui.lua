@@ -1,10 +1,17 @@
 G = {}
 
-function G.draw(connection, pattern, selected_track)
-  connection:all(0)
-  draw_track_steps(connection, pattern, selected_track)
-  draw_track_select(connection, pattern, selected_track)
-  connection:refresh()
+local function pattern_position_to_grid(i)
+  local loc = {}
+
+  if i <= 8 then
+    loc.x = i
+    loc.y = 1
+  else
+    loc.x = i-8
+    loc.y = 2
+  end
+
+  return loc
 end
 
 local function draw_track_steps(connection, pattern, selected_track)
@@ -28,18 +35,12 @@ local function draw_track_select(connection, pattern, selected_track)
   end
 end
 
-local function pattern_position_to_grid(i)
-  local loc = {}
-
-  if i <= 8 then
-    loc.x = i
-    loc.y = 1
-  else
-    loc.x = i-8
-    loc.y = 2
-  end
-
-  return loc
+function G.redraw(connection, pattern, selected_track)
+  connection:all(0)
+  draw_track_steps(connection, pattern, selected_track)
+  draw_track_select(connection, pattern, selected_track)
+  connection:refresh()
 end
+
 
 return G
