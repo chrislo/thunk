@@ -23,6 +23,20 @@ describe('gridui', function()
             assert.stub(connection.led).was.called_with(_, 5, 3, 15)
         end)
 
+        it("should indicate how many pages the currently selected track has", function()
+            local pattern = Pattern.new()
+            local selected_track = 1
+            local selected_page = {1, 1, 1, 1, 1, 1}
+
+            -- make sure the pattern has 2 pages
+            pattern = Pattern.maybeCreatePage(pattern, selected_track, 2)
+
+            GridUI.redraw(connection, pattern, selected_track, selected_page)
+
+            assert.stub(connection.led).was.called_with(_, 5, 3, 15)
+            assert.stub(connection.led).was.called_with(_, 6, 3, 5)
+        end)
+
         it("should show active steps for the selected track", function()
             local selected_track = 1
             local selected_page = {1, 1, 1, 1, 1, 1}

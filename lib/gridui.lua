@@ -37,8 +37,13 @@ local function draw_track_select(connection, pattern, selected_track)
   end
 end
 
-local function draw_page_select(connection, selected_track, selected_page)
+local function draw_page_select(connection, selected_track, selected_page, track)
   local page_for_current_track = selected_page[selected_track]
+  local number_of_pages = math.ceil(track.length / 16)
+
+  for i = 1, number_of_pages do
+    connection:led(i + 4, 3, 5)
+  end
 
   connection:led(page_for_current_track + 4, 3, 15)
 end
@@ -47,7 +52,7 @@ function G.redraw(connection, pattern, selected_track, selected_page)
   connection:all(0)
   draw_track_steps(connection, pattern, selected_track, selected_page[selected_track])
   draw_track_select(connection, pattern, selected_track)
-  draw_page_select(connection, selected_track, selected_page)
+  draw_page_select(connection, selected_track, selected_page, pattern.tracks[selected_track])
   connection:refresh()
 end
 
