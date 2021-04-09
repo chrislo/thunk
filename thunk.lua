@@ -11,6 +11,7 @@ local UI = require "ui"
 Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
+GridUI = include("lib/gridui")
 
 local screen_refresh_metro
 local screen_dirty = true
@@ -69,52 +70,10 @@ function grid_redraw_clock()
   while true do
     clock.sleep(1/30)
     if grid_dirty then
-      grid_redraw()
+      GridUI.redraw(g, pattern, selected_track)
       grid_dirty = false
     end
   end
-end
-
-function pattern_position_to_grid(i)
-  local loc = {}
-
-  if i <= 8 then
-    loc.x = i
-    loc.y = 1
-  else
-    loc.x = i-8
-    loc.y = 2
-  end
-
-  return loc
-end
-
-function draw_track_steps()
-  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern, selected_track)) do
-    local pos = pattern_position_to_grid(i)
-
-    if step.current then g:led(pos.x, pos.y, 5) end
-    if step.active then g:led(pos.x, pos.y, 15) end
-  end
-end
-
-function draw_track_select()
-  for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
-    if selected_track == i then
-      g:led(i+2, 8, 15)
-    elseif step.active then
-      g:led(i+2, 8, 10)
-    else
-      g:led(i+2, 8, 1)
-    end
-  end
-end
-
-function grid_redraw()
-  g:all(0)
-  draw_track_steps()
-  draw_track_select()
-  g:refresh()
 end
 
 function step()
