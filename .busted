@@ -1,5 +1,6 @@
 return {
   default = {
-    helper = "spec/helper"
+    helper = "lib/spec/helper",
+    ROOT = {"lib/spec"}
   }
 }
