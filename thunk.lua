@@ -21,7 +21,7 @@ local PPQN = 48
 
 local g = grid.connect()
 local pattern = Pattern.new(PPQN)
-pattern = Pattern.toggleStep(pattern, 1)
+pattern = Pattern.toggleStep(pattern, 1, 1)
 
 local selected_track = 1
 
