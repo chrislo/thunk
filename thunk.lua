@@ -24,6 +24,7 @@ local pattern = Pattern.new(PPQN)
 pattern = Pattern.toggleStep(pattern, 1, 1)
 
 local selected_track = 1
+local selected_page = {1, 1, 1, 1, 1, 1}
 
 function init()
   Timber.add_params()
@@ -70,7 +71,7 @@ function grid_redraw_clock()
   while true do
     clock.sleep(1/30)
     if grid_dirty then
-      GridUI.redraw(g, pattern, selected_track)
+      GridUI.redraw(g, pattern, selected_track, selected_page)
       grid_dirty = false
     end
   end
