@@ -5,6 +5,7 @@ function S.new()
     active = false,
     current = false,
     offset = 0,
+    velocity = 1,
   }
 end
 

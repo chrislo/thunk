@@ -68,7 +68,7 @@ function M.playStep(track, engine, id)
   local step = track.steps[track.pos]
 
   if step.active and (offset_in_current_step(track) == step.offset) then
-    engine.noteOn(id, 440, 127, id)
+    engine.noteOn(id, 440, step.velocity, id)
   end
 end
 
