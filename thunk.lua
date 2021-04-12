@@ -70,9 +70,13 @@ function format_menu_item(key, value)
 end
 
 function menu_entries()
+  local format_swing = function(pulses)
+    return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
+  end
+
   local entries = {
     format_menu_item("tempo", params:get("clock_tempo")),
-    format_menu_item("swing", params:get("swing"))
+    format_menu_item("swing", format_swing(params:get("swing")))
   }
 
   return entries
