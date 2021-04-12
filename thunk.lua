@@ -15,8 +15,7 @@ GridUI = include("lib/gridui")
 
 local screen_refresh_metro
 local screen_dirty = true
-local swing_dial
-local tempo_dial
+local main_menu
 local PPQN = 48
 
 local g = grid.connect()
@@ -41,7 +40,7 @@ function init()
   Timber.load_sample(5, "/home/we/dust/audio/common/808/808-LT.wav")
   Timber.load_sample(6, "/home/we/dust/audio/common/808/808-HT.wav")
 
-  params:add_number("swing", "swing", 0, math.floor(PPQN/4), false, 0)
+  params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0, {}, false)
   params:set_action("swing", set_swing)
 
   clock_id = clock.run(step)
@@ -50,8 +49,8 @@ function init()
   clock.run(grid_redraw_clock)
 
   -- ui
-  swing_dial = UI.Dial.new(5, 5, 25, params:get("swing"), 0, math.floor(PPQN/4), 1)
-  tempo_dial = UI.Dial.new(35, 5, 25, params:get("clock_tempo"), 40, 240, 1)
+  main_menu = UI.ScrollingList.new(0, 0, 1, {})
+  main_menu.entries = menu_entries()
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
@@ -60,7 +59,23 @@ function init()
       redraw()
     end
   end
-  screen_refresh_metro:start(1 / 15)
+  screen_refresh_metro:start(1 / 5)
+end
+
+function format_menu_item(key, value)
+  local max_width = 30
+  local spaces_to_insert = max_width - string.len(key) - string.len(value)
+
+  return key .. string.rep(" ", spaces_to_insert) .. value
+end
+
+function menu_entries()
+  local entries = {
+    format_menu_item("tempo", params:get("clock_tempo")),
+    format_menu_item("swing", params:get("swing"))
+  }
+
+  return entries
 end
 
 function set_swing(i)
@@ -111,13 +126,18 @@ end
 
 function enc(n, delta)
   if n == 2 then
-    params:delta("swing", delta)
-    swing_dial:set_value_delta(delta)
+    main_menu:set_index_delta(util.clamp(delta, -1, 1))
   end
 
   if n == 3 then
-    params:delta("clock_tempo", delta)
-    tempo_dial:set_value_delta(delta)
+    if main_menu.index == 1 then
+      params:delta("clock_tempo", delta)
+      main_menu.entries = menu_entries()
+    end
+    if main_menu.index == 2 then
+      params:delta("swing", delta)
+      main_menu.entries = menu_entries()
+    end
   end
 
   screen_dirty = true
@@ -125,7 +145,6 @@ end
 
 function redraw()
   screen.clear()
-  swing_dial:redraw()
-  tempo_dial:redraw()
+  main_menu:redraw()
   screen.update()
 end
