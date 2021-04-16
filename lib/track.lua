@@ -11,7 +11,8 @@ function M.new(ppqn)
     tick = 0,
     pos = 1,
     length = 16,
-    steps = steps
+    steps = steps,
+    swing = 0
   }
 
   track.steps[track.pos].current = true
@@ -54,12 +55,8 @@ function M.toggleStep(track, step)
   return track
 end
 
-function M.offsetEvenSteps(track, offset)
-  for i, step in ipairs(track.steps) do
-    if (i % 2 == 0) then
-      track.steps[i].offset = offset
-    end
-  end
+function M.setSwing(track, swing)
+  track.swing = swing
 
   return track
 end
@@ -67,7 +64,12 @@ end
 function M.playStep(track, engine, id)
   local step = track.steps[track.pos]
 
-  if step.active and (offset_in_current_step(track) == step.offset) then
+  local swing_offset = 0
+  if track.pos % 2 == 0 then
+    swing_offset = track.swing
+  end
+
+  if step.active and (offset_in_current_step(track) == (step.offset + swing_offset)) then
     engine.noteOn(id, 440, step.velocity, id)
   end
 end

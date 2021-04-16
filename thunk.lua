@@ -82,8 +82,8 @@ function menu_entries()
   return entries
 end
 
-function set_swing(i)
-  pattern = Pattern.offsetAllEvenSteps(pattern, i)
+function set_swing(swing)
+  pattern = Pattern.setSwing(pattern, swing)
 end
 
 function grid_redraw_clock()

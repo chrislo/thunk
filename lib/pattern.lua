@@ -2,7 +2,8 @@ P = {}
 
 function P.new(ppqn)
   return {
-    tracks = { Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn) }
+    tracks = { Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn) },
+    swing = 0
   }
 end
 
@@ -24,9 +25,11 @@ function P.stepsForSelectedTrack(pattern, track)
   return pattern.tracks[track].steps
 end
 
-function P.offsetAllEvenSteps(pattern, offset)
+function P.setSwing(pattern, swing)
+  pattern.swing = swing;
+
   for idx, track in ipairs(pattern.tracks) do
-    pattern.tracks[idx] = Track.offsetEvenSteps(track, offset)
+    pattern.tracks[idx] = Track.setSwing(track, swing)
   end
 
   return pattern

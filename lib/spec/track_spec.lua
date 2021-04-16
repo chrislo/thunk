@@ -39,23 +39,6 @@ describe('track', function()
         end)
     end)
 
-    describe('offsetEvenSteps()', function()
-        it('sets the offset of the even steps', function()
-            local t = track.new()
-            assert.is_same(0, t.steps[1].offset)
-            assert.is_same(0, t.steps[2].offset)
-            assert.is_same(0, t.steps[3].offset)
-            assert.is_same(0, t.steps[4].offset)
-
-            t = track.offsetEvenSteps(t, 2)
-
-            assert.is_same(0, t.steps[1].offset)
-            assert.is_same(2, t.steps[2].offset)
-            assert.is_same(0, t.steps[3].offset)
-            assert.is_same(2, t.steps[4].offset)
-        end)
-    end)
-
     describe('playStep()', function()
         it('does not play inactive steps', function()
             local t = track.new()
@@ -98,6 +81,41 @@ describe('track', function()
             t = track.advance(t)
             track.playStep(t, engine, 1)
             assert.stub(engine.noteOn).was_called()
+        end)
+
+        it('plays even active steps late if they are swung', function()
+            local t = track.new(8)
+            t = track.toggleStep(t, 1)
+            t = track.toggleStep(t, 2)
+            t = track.setSwing(t, 1)
+
+            local engine = {
+              noteOn = function(id, freq, vel, sampleId) end
+            }
+            stub(engine, 'noteOn')
+
+            -- First step is odd and not swung so should play on tick 1
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_called()
+            engine.noteOn:clear()
+
+            -- But not on tick 2
+            t = track.advance(t)
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_not_called()
+            engine.noteOn:clear()
+
+            -- Second step is even and swung so should not play on tick 3
+            t = track.advance(t)
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_not_called()
+            engine.noteOn:clear()
+
+            -- But should play on tick 4
+            t = track.advance(t)
+            track.playStep(t, engine, 1)
+            assert.stub(engine.noteOn).was_called()
+            engine.noteOn:clear()
         end)
     end)
 
