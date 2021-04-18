@@ -20,11 +20,14 @@ local main_menu
 local PPQN = 48
 
 local g = grid.connect()
-local pattern = Pattern.new(PPQN)
-pattern = Pattern.toggleStep(pattern, 1, 1)
 
-local selected_track = 1
-local selected_page = {1, 1, 1, 1, 1, 1}
+local state = {
+  pattern = Pattern.new(PPQN),
+  selected_track = 1,
+  selected_page = {1, 1, 1, 1, 1, 1}
+}
+
+state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
 
 function init()
   Timber.add_params()
@@ -64,14 +67,14 @@ function init()
 end
 
 function set_swing(swing)
-  pattern = Pattern.setSwing(pattern, swing)
+  state.pattern = Pattern.setSwing(state.pattern, swing)
 end
 
 function grid_redraw_clock()
   while true do
     clock.sleep(1/30)
     if grid_dirty then
-      GridUI.redraw(g, pattern, selected_track, selected_page)
+      GridUI.redraw(g, state.pattern, state.selected_track, state.selected_page)
       grid_dirty = false
     end
   end
@@ -80,8 +83,8 @@ end
 function step()
   while true do
     clock.sync(1/PPQN)
-    pattern = Pattern.advance(pattern)
-    Pattern.playSteps(pattern, engine)
+    state.pattern = Pattern.advance(state.pattern)
+    Pattern.playSteps(state.pattern, engine)
     grid_dirty = true
   end
 end
@@ -89,22 +92,22 @@ end
 function g.key(x,y,z)
   if z==1 then
     if y==1 then
-      local step_to_toggle = x + ((selected_page[selected_track] - 1) * 16)
-      pattern = Pattern.toggleStep(pattern, step_to_toggle, selected_track)
+      local step_to_toggle = x + ((state.selected_page[state.selected_track] - 1) * 16)
+      state.pattern = Pattern.toggleStep(state.pattern, step_to_toggle, state.selected_track)
       grid_dirty = true
     end
     if y==2 then
-      local step_to_toggle = x + ((selected_page[selected_track] - 1) * 16) + 8
-      pattern = Pattern.toggleStep(pattern, step_to_toggle, selected_track)
+      local step_to_toggle = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
+      state.pattern = Pattern.toggleStep(state.pattern, step_to_toggle, state.selected_track)
       grid_dirty = true
     end
     if y==3 and x>=5 then
       local page = x - 4
-      selected_page[selected_track] = page
-      pattern = Pattern.maybeCreatePage(pattern, selected_track, page)
+      state.selected_page[state.selected_track] = page
+      state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, page)
     end
     if y==8 and x>=3 then
-      selected_track = x-2
+      state.selected_track = x-2
     end
   end
 end
