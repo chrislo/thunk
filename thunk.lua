@@ -13,6 +13,7 @@ Track = include("lib/track")
 Step = include("lib/step")
 GridUI = include("lib/gridui")
 ScreenUI = include("lib/screenui")
+Controller = include("lib/controller")
 
 local screen_refresh_metro
 local screen_dirty = true
@@ -91,24 +92,8 @@ end
 
 function g.key(x,y,z)
   if z==1 then
-    if y==1 then
-      local step_to_toggle = x + ((state.selected_page[state.selected_track] - 1) * 16)
-      state.pattern = Pattern.toggleStep(state.pattern, step_to_toggle, state.selected_track)
-      grid_dirty = true
-    end
-    if y==2 then
-      local step_to_toggle = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
-      state.pattern = Pattern.toggleStep(state.pattern, step_to_toggle, state.selected_track)
-      grid_dirty = true
-    end
-    if y==3 and x>=5 then
-      local page = x - 4
-      state.selected_page[state.selected_track] = page
-      state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, page)
-    end
-    if y==8 and x>=3 then
-      state.selected_track = x-2
-    end
+    state = Controller.handle_press(state, x, y)
+    grid_dirty = true
   end
 end
 
