@@ -12,6 +12,7 @@ Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
 GridUI = include("lib/gridui")
+ScreenUI = include("lib/screenui")
 
 local screen_refresh_metro
 local screen_dirty = true
@@ -50,7 +51,7 @@ function init()
 
   -- ui
   main_menu = UI.ScrollingList.new(0, 0, 1, {})
-  main_menu.entries = menu_entries()
+  main_menu.entries = ScreenUI.menu_entries()
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
@@ -60,26 +61,6 @@ function init()
     end
   end
   screen_refresh_metro:start(1 / 5)
-end
-
-function format_menu_item(key, value)
-  local max_width = 30
-  local spaces_to_insert = max_width - string.len(key) - string.len(value)
-
-  return key .. string.rep(" ", spaces_to_insert) .. value
-end
-
-function menu_entries()
-  local format_swing = function(pulses)
-    return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
-  end
-
-  local entries = {
-    format_menu_item("tempo", params:get("clock_tempo")),
-    format_menu_item("swing", format_swing(params:get("swing")))
-  }
-
-  return entries
 end
 
 function set_swing(swing)
@@ -136,11 +117,11 @@ function enc(n, delta)
   if n == 3 then
     if main_menu.index == 1 then
       params:delta("clock_tempo", delta)
-      main_menu.entries = menu_entries()
+      main_menu.entries = ScreenUI.menu_entries()
     end
     if main_menu.index == 2 then
       params:delta("swing", delta)
-      main_menu.entries = menu_entries()
+      main_menu.entries = ScreenUI.menu_entries()
     end
   end
 
