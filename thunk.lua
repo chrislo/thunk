@@ -74,7 +74,7 @@ function grid_redraw_clock()
   while true do
     clock.sleep(1/30)
     if grid_dirty then
-      GridUI.redraw(g, state.pattern, state.selected_track, state.selected_page)
+      GridUI.redraw(g, state)
       grid_dirty = false
     end
   end

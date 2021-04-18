@@ -48,11 +48,11 @@ local function draw_page_select(connection, selected_track, selected_page, track
   connection:led(page_for_current_track + 4, 3, 15)
 end
 
-function G.redraw(connection, pattern, selected_track, selected_page)
+function G.redraw(connection, state)
   connection:all(0)
-  draw_track_steps(connection, pattern, selected_track, selected_page[selected_track])
-  draw_track_select(connection, pattern, selected_track)
-  draw_page_select(connection, selected_track, selected_page, pattern.tracks[selected_track])
+  draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
+  draw_track_select(connection, state.pattern, state.selected_track)
+  draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
   connection:refresh()
 end
 
