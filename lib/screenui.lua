@@ -7,14 +7,14 @@ local function format_menu_item(key, value)
   return key .. string.rep(" ", spaces_to_insert) .. value
 end
 
-function S.menu_entries()
-  local format_swing = function(pulses)
-    return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
-  end
+local function swing_as_percentage(pulses)
+  return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
+end
 
+function S.menu_entries()
   local entries = {
     format_menu_item("tempo", params:get("clock_tempo")),
-    format_menu_item("swing", format_swing(params:get("swing")))
+    format_menu_item("swing", swing_as_percentage(params:get("swing")))
   }
 
   return entries
