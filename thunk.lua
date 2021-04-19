@@ -18,7 +18,7 @@ Controller = include("lib/controller")
 local screen_refresh_metro
 local screen_dirty = true
 local main_menu
-local PPQN = 48
+PPQN = 48
 
 local g = grid.connect()
 
