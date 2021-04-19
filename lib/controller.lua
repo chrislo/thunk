@@ -21,4 +21,15 @@ function C.handle_press(state, x, y)
   return state
 end
 
+function C.handle_long_press(state, x, y)
+  if y==1 then
+    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16)
+  end
+  if y==2 then
+    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
+  end
+
+  return state
+end
+
 return C

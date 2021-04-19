@@ -18,6 +18,8 @@ Controller = include("lib/controller")
 local screen_refresh_metro
 local screen_dirty = true
 local main_menu
+local counter = {}
+
 PPQN = 48
 
 local g = grid.connect()
@@ -55,7 +57,7 @@ function init()
 
   -- ui
   main_menu = UI.ScrollingList.new(0, 0, 1, {})
-  main_menu.entries = ScreenUI.menu_entries()
+  main_menu.entries = ScreenUI.menu_entries(state)
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
@@ -65,6 +67,10 @@ function init()
     end
   end
   screen_refresh_metro:start(1 / 5)
+
+  for x = 1, 16 do
+    counter[x] = {}
+  end
 end
 
 function set_swing(swing)
@@ -90,11 +96,30 @@ function step()
   end
 end
 
+
+
 function g.key(x,y,z)
   if z==1 then
-    state = Controller.handle_press(state, x, y)
-    grid_dirty = true
+    counter[x][y] = clock.run(long_press, x, y)
+  elseif z==0 then
+    if counter[x][y] then
+      clock.cancel(counter[x][y])
+      short_press(x,y)
+    end
   end
+end
+
+function short_press(x,y)
+  state = Controller.handle_press(state, x, y)
+  grid_dirty = true
+end
+
+function long_press(x,y)
+  clock.sleep(0.25)
+  state = Controller.handle_long_press(state, x, y)
+  counter[x][y] = nil
+  grid_dirty = true
+  screen_dirty = true
 end
 
 function enc(n, delta)
@@ -103,14 +128,8 @@ function enc(n, delta)
   end
 
   if n == 3 then
-    if main_menu.index == 1 then
-      params:delta("clock_tempo", delta)
-      main_menu.entries = ScreenUI.menu_entries()
-    end
-    if main_menu.index == 2 then
-      params:delta("swing", delta)
-      main_menu.entries = ScreenUI.menu_entries()
-    end
+    local selected_menu_entry = ScreenUI.menu_entries(state)[main_menu.index]
+    selected_menu_entry.handler(delta)
   end
 
   screen_dirty = true
@@ -118,6 +137,7 @@ end
 
 function redraw()
   screen.clear()
+  main_menu.entries = ScreenUI.menu_labels(state)
   main_menu:redraw()
   screen.update()
 end
