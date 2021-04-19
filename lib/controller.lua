@@ -1,6 +1,6 @@
 C = {}
 
-function C.handle_press(state, x, y)
+function C.handle_short_press(state, x, y)
   if y==1 then
     local step_to_toggle = x + ((state.selected_page[state.selected_track] - 1) * 16)
     state.pattern = Pattern.toggleStep(state.pattern, step_to_toggle, state.selected_track)

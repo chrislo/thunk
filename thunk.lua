@@ -110,7 +110,7 @@ function g.key(x,y,z)
 end
 
 function short_press(x,y)
-  state = Controller.handle_press(state, x, y)
+  state = Controller.handle_short_press(state, x, y)
   grid_dirty = true
 end
 
