@@ -128,7 +128,8 @@ function enc(n, delta)
   end
 
   if n == 3 then
-    ScreenUI.menu_entries(state)[main_menu.index].handler(delta)
+    local selected_menu_entry = ScreenUI.menu_entries(state)[main_menu.index]
+    selected_menu_entry.handler(delta)
   end
 
   screen_dirty = true
