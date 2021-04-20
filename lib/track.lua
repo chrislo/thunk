@@ -70,7 +70,7 @@ function M.playStep(track, engine, id)
   end
 
   if step.active and (offset_in_current_step(track) == (step.offset + swing_offset)) then
-    engine.noteOn(id, 440, step.velocity, id)
+    engine.noteOn(id, 440, step.velocity / 127, id)
   end
 end
 

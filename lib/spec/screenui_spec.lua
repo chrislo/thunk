@@ -31,13 +31,13 @@ describe('screenui', function()
 
         it("displays the selected step velocity", function()
             local label = entries[2].label
-            assert.is_truthy(label:match("^velocity.*1$"))
+            assert.is_truthy(label:match("^velocity.*127$"))
         end)
 
         it("allows us to change the selected step velocity", function()
-            assert.are.equal(1, selected_step.velocity)
+            assert.are.equal(127, selected_step.velocity)
             entries[2].handler(-1)
-            assert.are.equal(0.9, selected_step.velocity)
+            assert.are.equal(126, selected_step.velocity)
         end)
     end)
 end)
