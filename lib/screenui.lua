@@ -30,6 +30,11 @@ function S.menu_entries(state)
     local step = steps[state.selected_step]
 
     table.insert(entries, {
+        label = format_menu_item("sample", step.sample_id),
+        handler = function(x) Step.delta_sample_id(step, x) end
+    })
+
+    table.insert(entries, {
         label = format_menu_item("offset", step.offset),
         handler = function(x) Step.delta_offset(step, x) end
     })

@@ -1,9 +1,9 @@
 M = {}
 
-function M.new(ppqn)
+function M.new(ppqn, default_sample_id)
   local steps = {}
   for i = 1, 64 do
-    steps[i] = Step.new()
+    steps[i] = Step.new(default_sample_id)
   end
 
   track = {
@@ -70,7 +70,7 @@ function M.playStep(track, engine, id)
   end
 
   if step.active and (offset_in_current_step(track) == (step.offset + swing_offset)) then
-    engine.noteOn(id, 440, step.velocity / 127, id)
+    engine.noteOn(id, 440, step.velocity / 127, step.sample_id)
   end
 end
 

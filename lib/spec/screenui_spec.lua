@@ -18,25 +18,36 @@ describe('screenui', function()
             selected_step = state.pattern.tracks[state.selected_track].steps[state.selected_step]
         end)
 
-        it("displays the selected step offset", function()
+        it("displays the selected step sample", function()
             local label = entries[1].label
+            assert.is_truthy(label:match("^sample.*1$"))
+        end)
+
+        it("allows us to change the sample", function()
+            assert.are.equal(1, selected_step.sample_id)
+            entries[1].handler(1)
+            assert.are.equal(2, selected_step.sample_id)
+        end)
+
+        it("displays the selected step offset", function()
+            local label = entries[2].label
             assert.is_truthy(label:match("^offset.*0$"))
         end)
 
         it("allows us to change the selected step offset", function()
             assert.are.equal(0, selected_step.offset)
-            entries[1].handler(1)
+            entries[2].handler(1)
             assert.are.equal(1, selected_step.offset)
         end)
 
         it("displays the selected step velocity", function()
-            local label = entries[2].label
+            local label = entries[3].label
             assert.is_truthy(label:match("^velocity.*127$"))
         end)
 
         it("allows us to change the selected step velocity", function()
             assert.are.equal(127, selected_step.velocity)
-            entries[2].handler(-1)
+            entries[3].handler(-1)
             assert.are.equal(126, selected_step.velocity)
         end)
     end)

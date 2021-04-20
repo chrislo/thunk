@@ -1,11 +1,12 @@
 S = {}
 
-function S.new()
+function S.new(sample_id)
   return {
     active = false,
     current = false,
     offset = 0,
     velocity = 127,
+    sample_id = sample_id
   }
 end
 
@@ -19,6 +20,10 @@ end
 
 function S.delta_velocity(step, delta)
   step.velocity = clamp(step.velocity + delta, 0, 127)
+end
+
+function S.delta_sample_id(step, delta)
+  step.sample_id = clamp(step.sample_id + delta, 1, 128)
 end
 
 return S

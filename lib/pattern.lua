@@ -1,8 +1,13 @@
 P = {}
 
 function P.new(ppqn)
+  local tracks = {}
+  for i = 1, 6 do
+    tracks[i] = Track.new(ppqn, i)
+  end
+
   return {
-    tracks = { Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn), Track.new(ppqn) },
+    tracks = tracks,
     swing = 0
   }
 end
