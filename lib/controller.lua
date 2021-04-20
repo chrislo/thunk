@@ -32,4 +32,11 @@ function C.handle_long_press(state, x, y)
   return state
 end
 
+function C.handle_long_release(state, x, y)
+  state.selected_step = nil
+
+  return state
+end
+
+
 return C

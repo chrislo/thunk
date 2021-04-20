@@ -105,6 +105,8 @@ function g.key(x,y,z)
     if counter[x][y] then
       clock.cancel(counter[x][y])
       short_press(x,y)
+    else
+      long_release(x,y)
     end
   end
 end
@@ -118,6 +120,12 @@ function long_press(x,y)
   clock.sleep(0.25)
   state = Controller.handle_long_press(state, x, y)
   counter[x][y] = nil
+  grid_dirty = true
+  screen_dirty = true
+end
+
+function long_release(x,y)
+  state = Controller.handle_long_release(state, x, y)
   grid_dirty = true
   screen_dirty = true
 end
