@@ -15,9 +15,11 @@ end
 function S.menu_labels(state)
   labels = {}
 
-  for _, entry in S.menu_entries(state) do
+  for _, entry in ipairs(S.menu_entries(state)) do
     table.insert(labels, entry.label)
   end
+
+  return labels
 end
 
 function S.menu_entries(state)
