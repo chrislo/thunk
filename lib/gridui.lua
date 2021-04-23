@@ -48,11 +48,20 @@ local function draw_page_select(connection, selected_track, selected_page, track
   connection:led(page_for_current_track + 4, 3, 15)
 end
 
+function draw_shift(connection, shift)
+  if shift then
+    connection:led(1, 8, 15)
+  else
+    connection:led(1, 8, 0)
+  end
+end
+
 function G.redraw(connection, state)
   connection:all(0)
   draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
   draw_track_select(connection, state.pattern, state.selected_track)
   draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
+  draw_shift(connection, state.shift)
   connection:refresh()
   state.grid_dirty = false
 end

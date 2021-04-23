@@ -29,7 +29,8 @@ local state = {
   selected_track = 1,
   selected_page = {1, 1, 1, 1, 1, 1},
   grid_dirty = true,
-  screen_dirty = true
+  screen_dirty = true,
+  shift = false
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
