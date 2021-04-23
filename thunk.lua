@@ -27,7 +27,9 @@ local g = grid.connect()
 local state = {
   pattern = Pattern.new(PPQN),
   selected_track = 1,
-  selected_page = {1, 1, 1, 1, 1, 1}
+  selected_page = {1, 1, 1, 1, 1, 1},
+  grid_dirty = true,
+  screen_dirty = true
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
@@ -52,7 +54,6 @@ function init()
 
   clock_id = clock.run(step)
 
-  grid_dirty = true
   clock.run(grid_redraw_clock)
 
   -- ui
@@ -61,8 +62,8 @@ function init()
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
-    if screen_dirty then
-      screen_dirty = false
+    if state.screen_dirty then
+      state.screen_dirty = false
       redraw()
     end
   end
@@ -80,9 +81,8 @@ end
 function grid_redraw_clock()
   while true do
     clock.sleep(1/30)
-    if grid_dirty then
+    if state.grid_dirty then
       GridUI.redraw(g, state)
-      grid_dirty = false
     end
   end
 end
@@ -92,7 +92,7 @@ function step()
     clock.sync(1/PPQN)
     state.pattern = Pattern.advance(state.pattern)
     Pattern.playSteps(state.pattern, engine)
-    grid_dirty = true
+    state.grid_dirty = true
   end
 end
 
@@ -112,22 +112,17 @@ function g.key(x,y,z)
 end
 
 function short_press(x,y)
-  state = Controller.handle_short_press(state, x, y)
-  grid_dirty = true
+  Controller.handle_short_press(state, x, y)
 end
 
 function long_press(x,y)
   clock.sleep(0.25)
-  state = Controller.handle_long_press(state, x, y)
+  Controller.handle_long_press(state, x, y)
   counter[x][y] = nil
-  grid_dirty = true
-  screen_dirty = true
 end
 
 function long_release(x,y)
-  state = Controller.handle_long_release(state, x, y)
-  grid_dirty = true
-  screen_dirty = true
+  Controller.handle_long_release(state, x, y)
 end
 
 function enc(n, delta)
@@ -140,7 +135,7 @@ function enc(n, delta)
     selected_menu_entry.handler(delta)
   end
 
-  screen_dirty = true
+  state.screen_dirty = true
 end
 
 function redraw()

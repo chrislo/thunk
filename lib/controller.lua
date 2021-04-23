@@ -18,7 +18,7 @@ function C.handle_short_press(state, x, y)
     state.selected_track = x-2
   end
 
-  return state
+  state.grid_dirty = true
 end
 
 function C.handle_long_press(state, x, y)
@@ -29,13 +29,14 @@ function C.handle_long_press(state, x, y)
     state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
   end
 
-  return state
+  state.grid_dirty = true
+  state.screen_dirty = true
 end
 
 function C.handle_long_release(state, x, y)
   state.selected_step = nil
-
-  return state
+  state.grid_dirty = true
+  state.screen_dirty = true
 end
 
 

@@ -54,6 +54,7 @@ function G.redraw(connection, state)
   draw_track_select(connection, state.pattern, state.selected_track)
   draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
   connection:refresh()
+  state.grid_dirty = false
 end
 
 
