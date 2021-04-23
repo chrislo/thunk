@@ -28,10 +28,18 @@ function S.menu_entries(state)
   if state.selected_step then
     local steps = Pattern.stepsForSelectedTrack(state.pattern, state.selected_track)
     local step = steps[state.selected_step]
+    local track = Pattern.track(state.pattern, state.selected_track)
+
+    local sample_id = nil
+    if step.sample_id then
+      sample_id = step.sample_id
+    else
+      sample_id = track.default_sample_id
+    end
 
     table.insert(entries, {
-        label = format_menu_item("sample", step.sample_id),
-        handler = function(x) Step.delta_sample_id(step, x) end
+        label = format_menu_item("sample", sample_id),
+        handler = function(x) Step.delta_sample_id(step, track.default_sample_id, x) end
     })
 
     table.insert(entries, {

@@ -40,6 +40,10 @@ function P.setSwing(pattern, swing)
   return pattern
 end
 
+function P.track(pattern, idx)
+  return pattern.tracks[idx]
+end
+
 function P.playSteps(pattern, engine)
   for idx, track in ipairs(pattern.tracks) do
     Track.playStep(track, engine, idx)
