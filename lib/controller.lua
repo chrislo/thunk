@@ -17,6 +17,13 @@ function C.handle_short_press(state, x, y)
   if y==8 and x>=3 then
     state.selected_track = x-2
   end
+  if y==7 and x==1 then
+    state.playing = not state.playing
+
+    if (not state.playing) then
+      Pattern.reset(state.pattern)
+    end
+  end
 
   state.grid_dirty = true
 end

@@ -20,6 +20,12 @@ function P.advance(pattern)
   return pattern
 end
 
+function P.reset(pattern)
+  for k,v in ipairs(pattern.tracks) do
+    Track.reset(pattern.tracks[k])
+  end
+end
+
 function P.toggleStep(pattern, step, track)
   pattern.tracks[track] = Track.toggleStep(pattern.tracks[track], step)
 

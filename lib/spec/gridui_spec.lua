@@ -96,5 +96,21 @@ describe('gridui', function()
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 2, 1, 5)
         end)
+
+        it("should indicate the current play state", function()
+            local state = {
+              pattern = Pattern.new(),
+              selected_track = 1,
+              selected_page = {1, 1, 1, 1, 1, 1},
+              playing = true,
+            }
+
+            GridUI.redraw(connection, state)
+            assert.stub(connection.led).was.called_with(_, 1, 7, 15)
+
+            state.playing = false
+            GridUI.redraw(connection, state)
+            assert.stub(connection.led).was.called_with(_, 1, 7, 3)
+        end)
     end)
 end)

@@ -31,4 +31,19 @@ describe('pattern', function()
             assert.is_true(pattern.currentlyPlayingSteps(p)[2].current)
         end)
     end)
+
+    describe('reset()', function()
+        it('should return reset each tracks position to 1', function()
+            local p = pattern.new()
+            pattern.advance(p)
+
+            assert.same(2, p.tracks[1].pos)
+            assert.same(2, p.tracks[2].pos)
+
+            pattern.reset(p)
+
+            assert.same(1, p.tracks[1].pos)
+            assert.same(1, p.tracks[2].pos)
+        end)
+    end)
 end)

@@ -50,6 +50,10 @@ function M.advance(track)
   return track
 end
 
+function M.reset(track)
+  track.pos = 1
+end
+
 function M.toggleStep(track, step)
   track.steps[step].active = not track.steps[step].active
 

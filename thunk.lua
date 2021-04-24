@@ -30,7 +30,8 @@ local state = {
   selected_page = {1, 1, 1, 1, 1, 1},
   grid_dirty = true,
   screen_dirty = true,
-  shift = false
+  shift = false,
+  playing = true
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
@@ -91,9 +92,11 @@ end
 function step()
   while true do
     clock.sync(1/PPQN)
-    state.pattern = Pattern.advance(state.pattern)
-    Pattern.playSteps(state.pattern, engine)
-    state.grid_dirty = true
+    if state.playing then
+      state.pattern = Pattern.advance(state.pattern)
+      Pattern.playSteps(state.pattern, engine)
+      state.grid_dirty = true
+    end
   end
 end
 

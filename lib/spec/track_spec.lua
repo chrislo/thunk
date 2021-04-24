@@ -129,6 +129,18 @@ describe('track', function()
         end)
     end)
 
+    describe('reset()', function()
+        it('resets the track position to 1', function()
+            local p = track.new()
+            track.advance(p)
+            assert.is.equal(2, p.pos)
+
+            track.reset(p)
+
+            assert.is.equal(1, p.pos)
+        end)
+    end)
+
     describe('currentlyPlayingStep()', function()
         it('returns the current step', function()
             local p = track.new()

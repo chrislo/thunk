@@ -56,12 +56,21 @@ function draw_shift(connection, shift)
   end
 end
 
+function draw_playing(connection, playing)
+  if playing then
+    connection:led(1, 7, 15)
+  else
+    connection:led(1, 7, 3)
+  end
+end
+
 function G.redraw(connection, state)
   connection:all(0)
   draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
   draw_track_select(connection, state.pattern, state.selected_track)
   draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
   draw_shift(connection, state.shift)
+  draw_playing(connection, state.playing)
   connection:refresh()
   state.grid_dirty = false
 end
