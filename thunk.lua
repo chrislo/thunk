@@ -4,7 +4,7 @@
 
 engine.name = 'Timber'
 
-local Timber = include("timber/lib/timber_engine")
+Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
 local UI = require "ui"
 
@@ -14,6 +14,7 @@ Step = include("lib/step")
 GridUI = include("lib/gridui")
 ScreenUI = include("lib/screenui")
 Controller = include("lib/controller")
+SamplePool = include("lib/sample_pool")
 
 local screen_refresh_metro
 local screen_dirty = true
@@ -31,25 +32,15 @@ local state = {
   grid_dirty = true,
   screen_dirty = true,
   shift = false,
-  playing = true
+  playing = true,
+  sample_pool = SamplePool:new(),
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
 
 function init()
-  Timber.add_params()
-
-  for i = 1, 6 do
-    Timber.add_sample_params(i)
-  end
-
-  Timber.options.PLAY_MODE_BUFFER_DEFAULT = 3
-  Timber.load_sample(1, "/home/we/dust/audio/common/808/808-BD.wav")
-  Timber.load_sample(2, "/home/we/dust/audio/common/808/808-CP.wav")
-  Timber.load_sample(3, "/home/we/dust/audio/common/808/808-CH.wav")
-  Timber.load_sample(4, "/home/we/dust/audio/common/808/808-OH.wav")
-  Timber.load_sample(5, "/home/we/dust/audio/common/808/808-LT.wav")
-  Timber.load_sample(6, "/home/we/dust/audio/common/808/808-HT.wav")
+  state.sample_pool:init()
+  state.sample_pool:add_dir("/home/we/dust/audio/common/808/")
 
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0, {}, false)
   params:set_action("swing", set_swing)
