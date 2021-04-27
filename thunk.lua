@@ -33,7 +33,10 @@ local state = {
   screen_dirty = true,
   shift = false,
   playing = true,
+  edit_mode = 'track',
   sample_pool = SamplePool:new(),
+  selected_sample = 1,
+  selected_bank = 1
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)

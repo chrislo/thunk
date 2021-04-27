@@ -2,11 +2,15 @@ C = {}
 
 function C.handle_short_press(state, x, y)
   if y<=2 then
-    local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
-    if state.shift then
-      Pattern.track(state.pattern, state.selected_track).length = step_idx
+    if state.edit_mode == 'sample' then
+      state.selected_sample  = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
     else
-      state.pattern = Pattern.toggleStep(state.pattern, step_idx, state.selected_track)
+      local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
+      if state.shift then
+        Pattern.track(state.pattern, state.selected_track).length = step_idx
+      else
+        state.pattern = Pattern.toggleStep(state.pattern, step_idx, state.selected_track)
+      end
     end
   end
   if y==3 and x>=5 then

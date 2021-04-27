@@ -18,6 +18,22 @@ describe('controller', function()
             assert.same(8, state.pattern.tracks[state.selected_track].length)
         end)
 
+        it("sets the selected sample when in sample pool edit mode", function()
+            local state = {
+              edit_mode = 'sample',
+              selected_sample = 1,
+              selected_bank = 1,
+            }
+
+            assert.same(1, state.selected_sample)
+            Controller.handle_short_press(state, 8, 1)
+            assert.same(8, state.selected_sample)
+
+            state.selected_bank = 2
+            Controller.handle_short_press(state, 8, 1)
+            assert.same(24, state.selected_sample)
+        end)
+
         it("toggle steps for the selected track and page", function()
             local state = {
               pattern = Pattern.new(),
