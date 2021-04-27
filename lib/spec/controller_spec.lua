@@ -5,6 +5,19 @@ describe('controller', function()
     end)
 
     describe('handle_short_press', function()
+        it("sets the track length when shift is pressed", function()
+            local state = {
+              pattern = Pattern.new(),
+              selected_track = 1,
+              selected_page = {1, 1, 1, 1, 1, 1},
+              shift = true
+            }
+
+            assert.same(16, state.pattern.tracks[state.selected_track].length)
+            Controller.handle_short_press(state, 8, 1)
+            assert.same(8, state.pattern.tracks[state.selected_track].length)
+        end)
+
         it("toggle steps for the selected track and page", function()
             local state = {
               pattern = Pattern.new(),
