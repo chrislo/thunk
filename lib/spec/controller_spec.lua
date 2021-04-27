@@ -65,5 +65,16 @@ describe('controller', function()
             assert.spy(Pattern.toggleStep).was_called_with(_, 1, 2)
             Pattern.toggleStep:clear()
         end)
+
+        it("selects the step page of the current track", function()
+            local state = {
+              pattern = Pattern.new(),
+              selected_track = 1,
+              selected_page = {1, 1, 1, 1, 1, 1}
+            }
+
+            Controller.handle_short_press(state, 6, 3)
+            assert.same(2, state.selected_page[1])
+        end)
     end)
 end)
