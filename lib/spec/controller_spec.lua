@@ -76,5 +76,16 @@ describe('controller', function()
             Controller.handle_short_press(state, 6, 3)
             assert.same(2, state.selected_page[1])
         end)
+
+        it("sets the bank of samples in sample edit mode", function()
+            local state = {
+              edit_mode = 'sample',
+              selected_sample = 1,
+              selected_bank = 1,
+            }
+
+            Controller.handle_short_press(state, 6, 3)
+            assert.same(2, state.selected_bank)
+        end)
     end)
 end)
