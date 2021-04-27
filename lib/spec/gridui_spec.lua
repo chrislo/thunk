@@ -12,25 +12,21 @@ describe('gridui', function()
     end)
 
     describe('redraw', function()
-        it("should indicate the currently selected track's page", function()
-            local state = {
+        before_each(function()
+            state = {
               pattern = Pattern.new(),
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1}
             }
+        end)
 
+        it("should indicate the currently selected track's page", function()
             GridUI.redraw(connection, state)
 
             assert.stub(connection.led).was.called_with(_, 5, 3, 15)
         end)
 
         it("should indicate how many pages the currently selected track has", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1}
-            }
-
             -- make sure the pattern has 2 pages
             state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, 2)
 
@@ -41,12 +37,6 @@ describe('gridui', function()
         end)
 
         it("should show active steps for the selected track", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1}
-            }
-
             state.pattern = Pattern.toggleStep(state.pattern, 1, state.selected_track)
 
             GridUI.redraw(connection, state)
@@ -55,12 +45,7 @@ describe('gridui', function()
         end)
 
         it("should show active steps for the selected track in the selected page", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {2, 1, 1, 1, 1, 1}
-            }
-
+            state.selected_page = {2, 1, 1, 1, 1, 1}
             state.pattern = Pattern.toggleStep(state.pattern, 17, state.selected_track)
 
             GridUI.redraw(connection, state)
@@ -69,12 +54,7 @@ describe('gridui', function()
         end)
 
         it("should not show active steps for the selected track if not in the page", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {2, 1, 1, 1, 1, 1}
-            }
-
+            state.selected_page = {2, 1, 1, 1, 1, 1}
             state.pattern = Pattern.toggleStep(state.pattern, 1, state.selected_track)
 
             GridUI.redraw(connection, state)
@@ -83,11 +63,7 @@ describe('gridui', function()
         end)
 
         it("should show the current playhead position for the selected track", function()
-            local state = {
-              pattern = Pattern.new(4),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1}
-            }
+            state.pattern = Pattern.new(4)
 
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 1, 5)
@@ -98,12 +74,7 @@ describe('gridui', function()
         end)
 
         it("should indicate the current play state", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1},
-              playing = true,
-            }
+            state.playing = true
 
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 7, 15)
@@ -114,12 +85,7 @@ describe('gridui', function()
         end)
 
         it("should indicate the current edit mode", function()
-            local state = {
-              pattern = Pattern.new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1},
-              edit_mode = 'track',
-            }
+            state.edit_mode = 'track'
 
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 3, 15)
