@@ -64,6 +64,16 @@ function draw_playing(connection, playing)
   end
 end
 
+function draw_edit_mode(connection, edit_mode)
+  if edit_mode == 'track' then
+    connection:led(1, 3, 15)
+    connection:led(2, 3, 0)
+  elseif edit_mode == 'sample' then
+    connection:led(1, 3, 0)
+    connection:led(2, 3, 15)
+  end
+end
+
 function G.redraw(connection, state)
   connection:all(0)
   draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
@@ -71,6 +81,7 @@ function G.redraw(connection, state)
   draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
   draw_shift(connection, state.shift)
   draw_playing(connection, state.playing)
+  draw_edit_mode(connection, state.edit_mode)
   connection:refresh()
   state.grid_dirty = false
 end

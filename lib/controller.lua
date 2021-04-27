@@ -23,6 +23,13 @@ function C.handle_short_press(state, x, y)
       state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, page)
     end
   end
+  if y==3 and x<=2 then
+    if x == 1 then
+      state.edit_mode = 'track'
+    elseif x == 2 then
+      state.edit_mode = 'sample'
+    end
+  end
   if y==8 and x>=3 then
     state.selected_track = x-2
   end

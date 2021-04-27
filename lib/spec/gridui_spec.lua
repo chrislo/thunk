@@ -112,5 +112,23 @@ describe('gridui', function()
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 7, 3)
         end)
+
+        it("should indicate the current edit mode", function()
+            local state = {
+              pattern = Pattern.new(),
+              selected_track = 1,
+              selected_page = {1, 1, 1, 1, 1, 1},
+              edit_mode = 'track',
+            }
+
+            GridUI.redraw(connection, state)
+            assert.stub(connection.led).was.called_with(_, 1, 3, 15)
+            assert.stub(connection.led).was.called_with(_, 2, 3, 0)
+
+            state.edit_mode = 'sample'
+            GridUI.redraw(connection, state)
+            assert.stub(connection.led).was.called_with(_, 1, 3, 0)
+            assert.stub(connection.led).was.called_with(_, 2, 3, 15)
+        end)
     end)
 end)
