@@ -17,7 +17,7 @@ function C.handle_short_press(state, x, y)
     local page = x - 4
 
     if state.edit_mode == 'sample' then
-      state.selected_bank = 2
+      state.selected_bank = page
     else
       state.selected_page[state.selected_track] = page
       state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, page)

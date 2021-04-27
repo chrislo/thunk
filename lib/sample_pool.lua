@@ -28,6 +28,10 @@ function SamplePool:add_dir(dir)
   end
 end
 
+function SamplePool:has_sample(idx)
+  return self.samples[idx].fn ~= nil
+end
+
 function SamplePool:init()
   Timber.add_params()
 

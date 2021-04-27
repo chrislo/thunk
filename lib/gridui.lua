@@ -25,6 +25,19 @@ local function draw_track_steps(connection, pattern, track, page)
   end
 end
 
+local function draw_samples(connection, state)
+  local sample_idx_start = 1
+  local sample_idx_end = 16
+
+  for i=1, 16 do
+    sample_id = i + ((state.selected_bank - 1) * 16)
+    if state.sample_pool:has_sample(sample_id) then
+      local pos = pattern_position_to_grid(i)
+      connection:led(pos.x, pos.y, 5)
+    end
+  end
+end
+
 local function draw_track_select(connection, pattern, selected_track)
   for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
     if selected_track == i then
@@ -46,6 +59,14 @@ local function draw_page_select(connection, selected_track, selected_page, track
   end
 
   connection:led(page_for_current_track + 4, 3, 15)
+end
+
+local function draw_bank_select(connection, state)
+  for i = 1, 4 do
+    connection:led(i + 4, 3, 5)
+  end
+
+  connection:led(state.selected_bank + 4, 3, 15)
 end
 
 function draw_shift(connection, shift)
@@ -76,9 +97,14 @@ end
 
 function G.redraw(connection, state)
   connection:all(0)
-  draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
+  if state.edit_mode == 'sample' then
+    draw_samples(connection, state)
+    draw_bank_select(connection, state)
+  else
+    draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
+    draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
+  end
   draw_track_select(connection, state.pattern, state.selected_track)
-  draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
   draw_shift(connection, state.shift)
   draw_playing(connection, state.playing)
   draw_edit_mode(connection, state.edit_mode)

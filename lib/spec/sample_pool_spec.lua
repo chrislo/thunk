@@ -44,4 +44,18 @@ describe('SamplePool', function()
             util.scandir:revert()
         end)
     end)
+
+    describe('has_sample()', function()
+        before_each(function()
+            s = SamplePool:new()
+        end)
+
+        it('returns true if the sample has been added, false otherwise', function()
+            stub(Timber, "load_sample")
+            assert.same(false, s:has_sample(1))
+
+            s:add('foo', 1)
+            assert.same(true, s:has_sample(1))
+        end)
+    end)
 end)
