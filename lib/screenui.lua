@@ -1,4 +1,4 @@
-S = {}
+ScreenUI = {}
 
 local function format_menu_item(key, value)
   local value = tostring(value)
@@ -12,17 +12,17 @@ local function swing_as_percentage(pulses)
   return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
 end
 
-function S.menu_labels(state)
+function ScreenUI.menu_labels(state)
   labels = {}
 
-  for _, entry in ipairs(S.menu_entries(state)) do
+  for _, entry in ipairs(ScreenUI.menu_entries(state)) do
     table.insert(labels, entry.label)
   end
 
   return labels
 end
 
-function S.menu_entries(state)
+function ScreenUI.menu_entries(state)
   local entries = {}
 
   if state.selected_step then
@@ -66,4 +66,4 @@ function S.menu_entries(state)
   return entries
 end
 
-return S
+return ScreenUI

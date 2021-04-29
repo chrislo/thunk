@@ -1,6 +1,6 @@
-P = {}
+Pattern = {}
 
-function P.new(ppqn)
+function Pattern.new(ppqn)
   local tracks = {}
   for i = 1, 6 do
     tracks[i] = Track.new(ppqn, i)
@@ -12,7 +12,7 @@ function P.new(ppqn)
   }
 end
 
-function P.advance(pattern)
+function Pattern.advance(pattern)
   for k,v in ipairs(pattern.tracks) do
     pattern.tracks[k] = Track.advance(v)
   end
@@ -20,23 +20,23 @@ function P.advance(pattern)
   return pattern
 end
 
-function P.reset(pattern)
+function Pattern.reset(pattern)
   for k,v in ipairs(pattern.tracks) do
     Track.reset(pattern.tracks[k])
   end
 end
 
-function P.toggleStep(pattern, step, track)
+function Pattern.toggleStep(pattern, step, track)
   pattern.tracks[track] = Track.toggleStep(pattern.tracks[track], step)
 
   return pattern
 end
 
-function P.stepsForSelectedTrack(pattern, track)
+function Pattern.stepsForSelectedTrack(pattern, track)
   return pattern.tracks[track].steps
 end
 
-function P.setSwing(pattern, swing)
+function Pattern.setSwing(pattern, swing)
   pattern.swing = swing;
 
   for idx, track in ipairs(pattern.tracks) do
@@ -46,17 +46,17 @@ function P.setSwing(pattern, swing)
   return pattern
 end
 
-function P.track(pattern, idx)
+function Pattern.track(pattern, idx)
   return pattern.tracks[idx]
 end
 
-function P.playSteps(pattern, engine)
+function Pattern.playSteps(pattern, engine)
   for idx, track in ipairs(pattern.tracks) do
     Track.playStep(track, engine, idx)
   end
 end
 
-function P.currentlyPlayingSteps(pattern)
+function Pattern.currentlyPlayingSteps(pattern)
   local currentlyPlayingSteps = {}
   for k,v in ipairs(pattern.tracks) do
     currentlyPlayingSteps[k] = Track.currentlyPlayingStep(pattern.tracks[k])
@@ -64,10 +64,10 @@ function P.currentlyPlayingSteps(pattern)
   return currentlyPlayingSteps
 end
 
-function P.maybeCreatePage(pattern, track, page)
+function Pattern.maybeCreatePage(pattern, track, page)
   pattern.tracks[track] = Track.maybeCreatePage(pattern.tracks[track], page)
 
   return pattern
 end
 
-return P
+return Pattern

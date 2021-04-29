@@ -1,6 +1,6 @@
-M = {}
+Track = {}
 
-function M.new(ppqn, default_sample_id)
+function Track.new(ppqn, default_sample_id)
   local steps = {}
   for i = 1, 64 do
     steps[i] = Step.new()
@@ -33,7 +33,7 @@ local function advance_step(track)
   return offset_in_current_step(track) == 0
 end
 
-function M.advance(track)
+function Track.advance(track)
   track.steps[track.pos].current = false
   track.tick = track.tick + 1
 
@@ -50,23 +50,23 @@ function M.advance(track)
   return track
 end
 
-function M.reset(track)
+function Track.reset(track)
   track.pos = 1
 end
 
-function M.toggleStep(track, step)
+function Track.toggleStep(track, step)
   track.steps[step].active = not track.steps[step].active
 
   return track
 end
 
-function M.setSwing(track, swing)
+function Track.setSwing(track, swing)
   track.swing = swing
 
   return track
 end
 
-function M.playStep(track, engine, id)
+function Track.playStep(track, engine, id)
   local step = track.steps[track.pos]
 
   local swing_offset = 0
@@ -86,11 +86,11 @@ function M.playStep(track, engine, id)
   end
 end
 
-function M.currentlyPlayingStep(track)
+function Track.currentlyPlayingStep(track)
   return track.steps[track.pos]
 end
 
-function M.maybeCreatePage(track, page)
+function Track.maybeCreatePage(track, page)
   local number_of_pages = math.ceil(track.length / 16)
 
   if page > number_of_pages then
@@ -100,4 +100,4 @@ function M.maybeCreatePage(track, page)
   return track
 end
 
-return M
+return Track

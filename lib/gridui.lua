@@ -1,4 +1,4 @@
-G = {}
+GridUI = {}
 
 local function pattern_position_to_grid(i)
   local loc = {}
@@ -95,7 +95,7 @@ function draw_edit_mode(connection, edit_mode)
   end
 end
 
-function G.redraw(connection, state)
+function GridUI.redraw(connection, state)
   connection:all(0)
   if state.edit_mode == 'sample' then
     draw_samples(connection, state)
@@ -112,5 +112,4 @@ function G.redraw(connection, state)
   state.grid_dirty = false
 end
 
-
-return G
+return GridUI

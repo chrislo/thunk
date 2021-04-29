@@ -1,6 +1,6 @@
-C = {}
+Controller = {}
 
-function C.handle_short_press(state, x, y)
+function Controller.handle_short_press(state, x, y)
   if y<=2 then
     if state.edit_mode == 'sample' then
       state.selected_sample  = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
@@ -44,7 +44,7 @@ function C.handle_short_press(state, x, y)
   state.grid_dirty = true
 end
 
-function C.handle_long_press(state, x, y)
+function Controller.handle_long_press(state, x, y)
   if y==1 then
     state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16)
   end
@@ -59,7 +59,7 @@ function C.handle_long_press(state, x, y)
   state.screen_dirty = true
 end
 
-function C.handle_long_release(state, x, y)
+function Controller.handle_long_release(state, x, y)
   if y<=2 then
     state.selected_step = nil
     state.grid_dirty = true
@@ -72,5 +72,4 @@ function C.handle_long_release(state, x, y)
   end
 end
 
-
-return C
+return Controller
