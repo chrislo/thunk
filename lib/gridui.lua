@@ -33,7 +33,11 @@ local function draw_samples(connection, state)
     sample_id = i + ((state.selected_bank - 1) * 16)
     if state.sample_pool:has_sample(sample_id) then
       local pos = pattern_position_to_grid(i)
-      connection:led(pos.x, pos.y, 5)
+      if state.selected_sample == sample_id then
+        connection:led(pos.x, pos.y, 15)
+      else
+        connection:led(pos.x, pos.y, 5)
+      end
     end
   end
 end
