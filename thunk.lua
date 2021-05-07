@@ -36,7 +36,8 @@ local state = {
   edit_mode = 'track',
   sample_pool = SamplePool:new(),
   selected_sample = 1,
-  selected_bank = 1
+  selected_bank = 1,
+  trigger_immediately = nil
 }
 
 state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
@@ -90,6 +91,11 @@ function step()
       state.pattern = Pattern.advance(state.pattern)
       Pattern.playSteps(state.pattern, engine)
       state.grid_dirty = true
+    end
+
+    if state.trigger_immediately then
+      engine.noteOn(7, 440, 1, state.trigger_immediately)
+      state.trigger_immediately = nil
     end
   end
 end

@@ -8,7 +8,8 @@ function Controller.handle_short_press(state, x, y)
       if state.shift then
         Pattern.track(state.pattern, state.selected_track).default_sample_id = sample_id
       else
-        state.selected_sample  = sample_id
+        state.selected_sample = sample_id
+        state.trigger_immediately = sample_id
       end
     else
       local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
