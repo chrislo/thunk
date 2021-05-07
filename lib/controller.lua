@@ -45,13 +45,15 @@ function Controller.handle_short_press(state, x, y)
 end
 
 function Controller.handle_long_press(state, x, y)
-  if y==1 then
+  if state.edit_mode == 'track' then
     state.edit_mode = 'step'
-    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16)
-  end
-  if y==2 then
-    state.edit_mode = 'step'
-    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
+
+    if y==1 then
+      state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16)
+    end
+    if y==2 then
+      state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
+    end
   end
   if y==8 and x==1 then
     state.shift = true
@@ -66,7 +68,10 @@ function Controller.handle_long_release(state, x, y)
     state.selected_step = nil
     state.grid_dirty = true
     state.screen_dirty = true
-    state.edit_mode = 'track'
+
+    if state.edit_mode == 'step' then
+      state.edit_mode = 'track'
+    end
   end
 
   if y==8 and x==1 then
