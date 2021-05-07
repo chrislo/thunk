@@ -32,6 +32,10 @@ function SamplePool:has_sample(idx)
   return self.samples[idx].fn ~= nil
 end
 
+function SamplePool:name(idx)
+  return self.samples[idx].fn:match("^.+/(.+)$")
+end
+
 function SamplePool:init()
   Timber.add_params()
 

@@ -42,6 +42,7 @@ function Controller.handle_short_press(state, x, y)
   end
 
   state.grid_dirty = true
+  state.screen_dirty = true
 end
 
 function Controller.handle_long_press(state, x, y)

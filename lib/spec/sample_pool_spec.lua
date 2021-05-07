@@ -58,4 +58,17 @@ describe('SamplePool', function()
             assert.same(true, s:has_sample(1))
         end)
     end)
+
+    describe('name()', function()
+        before_each(function()
+            s = SamplePool:new()
+        end)
+
+        it('returns ', function()
+            stub(Timber, "load_sample")
+            s:add('/home/foo/kick.wav', 1)
+
+            assert.same('kick.wav', s:name(1))
+        end)
+    end)
 end)
