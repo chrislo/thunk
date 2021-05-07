@@ -3,7 +3,7 @@ Track = {}
 function Track:new(ppqn, default_sample_id)
   local steps = {}
   for i = 1, 64 do
-    steps[i] = Step.new()
+    steps[i] = Step:new()
   end
 
   track = {

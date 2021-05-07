@@ -44,17 +44,17 @@ function ScreenUI.menu_entries(state)
 
     table.insert(entries, {
         label = format_menu_item("sample", sample_id),
-        handler = function(x) Step.delta_sample_id(step, track.default_sample_id, x) end
+        handler = function(x) step:delta_sample_id(track.default_sample_id, x) end
     })
 
     table.insert(entries, {
         label = format_menu_item("offset", step.offset),
-        handler = function(x) Step.delta_offset(step, x) end
+        handler = function(x) step:delta_offset(x) end
     })
 
     table.insert(entries, {
         label = format_menu_item("velocity", step.velocity),
-        handler = function(x) Step.delta_velocity(step, x) end
+        handler = function(x) step:delta_velocity(x) end
     })
   else
     table.insert(entries, {
