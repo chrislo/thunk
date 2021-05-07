@@ -19,7 +19,7 @@ SamplePool = include("lib/sample_pool")
 local screen_refresh_metro
 local screen_dirty = true
 local main_menu
-local counter = {}
+local press_counter = {}
 
 PPQN = 48
 
@@ -66,7 +66,7 @@ function init()
   screen_refresh_metro:start(1 / 5)
 
   for x = 1, 16 do
-    counter[x] = {}
+    press_counter[x] = {}
   end
 end
 
@@ -98,10 +98,10 @@ end
 
 function g.key(x,y,z)
   if z==1 then
-    counter[x][y] = clock.run(long_press, x, y)
+    press_counter[x][y] = clock.run(long_press, x, y)
   elseif z==0 then
-    if counter[x][y] then
-      clock.cancel(counter[x][y])
+    if press_counter[x][y] then
+      clock.cancel(press_counter[x][y])
       short_press(x,y)
     else
       long_release(x,y)
@@ -116,7 +116,7 @@ end
 function long_press(x,y)
   clock.sleep(0.25)
   Controller.handle_long_press(state, x, y)
-  counter[x][y] = nil
+  press_counter[x][y] = nil
 end
 
 function long_release(x,y)
