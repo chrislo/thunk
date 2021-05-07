@@ -32,6 +32,7 @@ function Controller.handle_short_press(state, x, y)
   end
   if y==8 and x>=3 then
     state.selected_track = x-2
+    state.selected_sample = Pattern.track(state.pattern, state.selected_track).default_sample_id
   end
   if y==7 and x==1 then
     state.playing = not state.playing
