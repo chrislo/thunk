@@ -13,7 +13,8 @@ function Track.new(ppqn, default_sample_id)
     length = 16,
     steps = steps,
     swing = 0,
-    default_sample_id = default_sample_id
+    default_sample_id = default_sample_id,
+    mute = false
   }
 
   track.steps[track.pos].current = true
@@ -67,6 +68,10 @@ function Track.setSwing(track, swing)
 end
 
 function Track.playStep(track, engine, id)
+  if track.mute then
+    return
+  end
+
   local step = track.steps[track.pos]
 
   local swing_offset = 0

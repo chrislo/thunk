@@ -38,8 +38,14 @@ function Controller.handle_short_press(state, x, y)
     end
   end
   if y==8 and x>=3 then
-    state.selected_track = x-2
-    state.selected_sample = Pattern.track(state.pattern, state.selected_track).default_sample_id
+    local track_id = x-2
+    if state.shift then
+      local current_mute = Pattern.track(state.pattern, track_id).mute
+      Pattern.track(state.pattern, track_id).mute = not current_mute
+    else
+      state.selected_track = track_id
+      state.selected_sample = Pattern.track(state.pattern, track_id).default_sample_id
+    end
   end
   if y==7 and x==1 then
     state.playing = not state.playing
@@ -54,6 +60,11 @@ function Controller.handle_short_press(state, x, y)
 end
 
 function Controller.handle_long_press(state, x, y)
+  if y==8 and x==1 then
+    state.shift = true
+    return
+  end
+
   if state.edit_mode == 'track' then
     state.edit_mode = 'step'
 
@@ -64,9 +75,6 @@ function Controller.handle_long_press(state, x, y)
       state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
     end
   end
-  if y==8 and x==1 then
-    state.shift = true
-  end
 
   state.grid_dirty = true
   state.screen_dirty = true
@@ -74,7 +82,6 @@ end
 
 function Controller.handle_long_release(state, x, y)
   if y<=2 then
-    state.selected_step = nil
     state.grid_dirty = true
     state.screen_dirty = true
 

@@ -47,7 +47,11 @@ end
 
 local function draw_track_select(connection, pattern, selected_track)
   for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
-    if selected_track == i then
+    local track = Pattern.track(pattern, i)
+
+    if track.mute then
+      connection:led(i+2, 8, 5)
+    elseif selected_track == i then
       connection:led(i+2, 8, 15)
     elseif step.active then
       connection:led(i+2, 8, 10)
