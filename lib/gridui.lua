@@ -28,13 +28,16 @@ end
 local function draw_samples(connection, state)
   local sample_idx_start = 1
   local sample_idx_end = 16
+  local default_sample_for_current_track = Pattern.track(state.pattern, state.selected_track).default_sample_id
 
   for i=1, 16 do
     sample_id = i + ((state.selected_bank - 1) * 16)
     if state.sample_pool:has_sample(sample_id) then
       local pos = pattern_position_to_grid(i)
-      if state.selected_sample == sample_id then
+      if sample_id == state.selected_sample then
         connection:led(pos.x, pos.y, 15)
+      elseif sample_id == default_sample_for_current_track then
+        connection:led(pos.x, pos.y, 10)
       else
         connection:led(pos.x, pos.y, 5)
       end

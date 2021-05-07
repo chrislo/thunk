@@ -3,7 +3,13 @@ Controller = {}
 function Controller.handle_short_press(state, x, y)
   if y<=2 then
     if state.edit_mode == 'sample' then
-      state.selected_sample  = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
+      sample_id = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
+
+      if state.shift then
+        Pattern.track(state.pattern, state.selected_track).default_sample_id = sample_id
+      else
+        state.selected_sample  = sample_id
+      end
     else
       local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
       if state.shift then
