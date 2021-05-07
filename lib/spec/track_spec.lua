@@ -5,35 +5,41 @@ describe('track', function()
 
     describe('new()', function()
         it('should have an initial position', function()
-            assert.same(1, track.new().pos)
+            assert.same(1, track:new().pos)
         end)
     end)
 
     describe('advance()', function()
         it('should return a new track with tick incremented by 1', function()
-            assert.same(1, track.advance(track.new()).tick)
+            t = track:new()
+            t:advance()
+
+            assert.same(1, t.tick)
         end)
 
         it('with 4 pulses per quarter note it should move to the next step every tick', function()
-            assert.same(2, track.advance(track.new(4)).pos)
+            t = track:new()
+            t:advance()
+
+            assert.same(2, t.pos)
         end)
 
         it('with 8 pulses per quarter note it should move to the next step every 2 ticks', function()
-            local t = track.new(8)
+            local t = track:new(8)
             assert.same(1, t.pos)
 
-            t = track.advance(t)
+            t:advance()
             assert.same(1, t.pos)
 
-            t = track.advance(t)
+            t:advance()
             assert.same(2, t.pos)
         end)
 
         it('should return to beginning when advanced past the track length', function()
-            local p = track.new()
+            local p = track:new()
 
             for i = 1, 16 do
-              p = track.advance(p)
+              p:advance()
             end
             assert.same(1, p.pos)
         end)
@@ -41,33 +47,33 @@ describe('track', function()
 
     describe('playStep()', function()
         it('does not play inactive steps', function()
-            local t = track.new()
+            local t = track:new()
 
             local engine = {
               noteOn = function(id, freq, vel, sampleId) end
             }
             stub(engine, 'noteOn')
 
-            track.playStep(t, engine, 1)
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_not_called()
         end)
 
         it('plays active steps', function()
-            local t = track.new()
-            t = track.toggleStep(t, 1)
+            local t = track:new()
+            t:toggleStep(1)
 
             local engine = {
               noteOn = function(id, freq, vel, sampleId) end
             }
             stub(engine, 'noteOn')
 
-            track.playStep(t, engine, 1)
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_called()
         end)
 
         it('plays active steps only when the position in the step equals the offset', function()
-            local t = track.new(8)
-            t = track.toggleStep(t, 1)
+            local t = track:new(8)
+            t:toggleStep(1)
             t.steps[1].offset = 1
 
             local engine = {
@@ -75,19 +81,19 @@ describe('track', function()
             }
             stub(engine, 'noteOn')
 
-            track.playStep(t, engine, 1)
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_not_called()
 
-            t = track.advance(t)
-            track.playStep(t, engine, 1)
+            t:advance(t)
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_called()
         end)
 
         it('plays even active steps late if they are swung', function()
-            local t = track.new(8)
-            t = track.toggleStep(t, 1)
-            t = track.toggleStep(t, 2)
-            t = track.setSwing(t, 1)
+            local t = track:new(8)
+            t:toggleStep(1)
+            t:toggleStep(2)
+            t:setSwing(1)
 
             local engine = {
               noteOn = function(id, freq, vel, sampleId) end
@@ -95,25 +101,25 @@ describe('track', function()
             stub(engine, 'noteOn')
 
             -- First step is odd and not swung so should play on tick 1
-            track.playStep(t, engine, 1)
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_called()
             engine.noteOn:clear()
 
             -- But not on tick 2
-            t = track.advance(t)
-            track.playStep(t, engine, 1)
+            t:advance()
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_not_called()
             engine.noteOn:clear()
 
             -- Second step is even and swung so should not play on tick 3
-            t = track.advance(t)
-            track.playStep(t, engine, 1)
+            t:advance()
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_not_called()
             engine.noteOn:clear()
 
             -- But should play on tick 4
-            t = track.advance(t)
-            track.playStep(t, engine, 1)
+            t:advance()
+            t:playStep(engine, 1)
             assert.stub(engine.noteOn).was_called()
             engine.noteOn:clear()
         end)
@@ -121,55 +127,61 @@ describe('track', function()
 
     describe('toggleStep()', function()
         it('sets the step to true if it is false and vice versa', function()
-            local p = track.new()
+            local p = track:new()
             assert.is_false(p.steps[1].active)
 
-            p = track.toggleStep(p, 16)
+            p:toggleStep(16)
             assert.is_true(p.steps[16].active)
         end)
     end)
 
     describe('reset()', function()
         it('resets the track position to 1', function()
-            local p = track.new()
-            track.advance(p)
-            assert.is.equal(2, p.pos)
+            local t = track:new()
+            t:advance()
+            assert.is.equal(2, t.pos)
 
-            track.reset(p)
+            t:reset()
 
-            assert.is.equal(1, p.pos)
+            assert.is.equal(1, t.pos)
         end)
     end)
 
     describe('currentlyPlayingStep()', function()
         it('returns the current step', function()
-            local p = track.new()
+            local t = track:new()
 
-            assert.is_true(track.currentlyPlayingStep(p).current)
+            assert.is_true(t:currentlyPlayingStep().current)
         end)
     end)
 
     describe('maybeCreatePage()', function()
         it('does not alter the track length when the track already has the page', function()
-            local t = track.new()
-            assert.is_same(16, track.maybeCreatePage(t, 1).length)
+            local t = track:new()
+            t:maybeCreatePage(1)
+            assert.is_same(16, t.length)
 
-            local t = track.new()
+            local t = track:new()
             t.length = 32
-            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+            t:maybeCreatePage(2)
+            assert.is_same(32, t.length)
         end)
 
         it('increases the track length when the track does not have the page', function()
-            local t = track.new()
-            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+            local t = track:new()
+            t:maybeCreatePage(2)
+            assert.is_same(32, t.length)
 
-            local t = track.new()
-            assert.is_same(64, track.maybeCreatePage(t, 4).length)
+            local t = track:new()
+            t:maybeCreatePage(4)
+            assert.is_same(64, t.length)
 
-            local t = track.new()
+            local t = track:new()
             t.length = 8
-            assert.is_same(8, track.maybeCreatePage(t, 1).length)
-            assert.is_same(32, track.maybeCreatePage(t, 2).length)
+            t:maybeCreatePage(1)
+            assert.is_same(8, t.length)
+            t:maybeCreatePage(2)
+            assert.is_same(32, t.length)
         end)
     end)
 end)

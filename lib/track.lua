@@ -1,6 +1,6 @@
 Track = {}
 
-function Track.new(ppqn, default_sample_id)
+function Track:new(ppqn, default_sample_id)
   local steps = {}
   for i = 1, 64 do
     steps[i] = Step.new()
@@ -19,6 +19,9 @@ function Track.new(ppqn, default_sample_id)
 
   track.steps[track.pos].current = true
 
+  setmetatable(track, self)
+  self.__index = self
+
   return track
 end
 
@@ -34,75 +37,67 @@ local function advance_step(track)
   return offset_in_current_step(track) == 0
 end
 
-function Track.advance(track)
-  track.steps[track.pos].current = false
-  track.tick = track.tick + 1
+function Track:advance()
+  self.steps[self.pos].current = false
+  self.tick = self.tick + 1
 
-  if advance_step(track) then
-    track.pos = track.pos + 1
+  if advance_step(self) then
+    self.pos = self.pos + 1
   end
 
-  if track.pos > track.length then
-    track.pos = 1
+  if self.pos > self.length then
+    self.pos = 1
   end
 
-  track.steps[track.pos].current = true
-
-  return track
+  self.steps[self.pos].current = true
 end
 
-function Track.reset(track)
-  track.pos = 1
+function Track:reset()
+  self.pos = 1
 end
 
-function Track.toggleStep(track, step)
-  track.steps[step].active = not track.steps[step].active
-
-  return track
+function Track:toggleStep(step)
+  self.steps[step].active = not self.steps[step].active
 end
 
-function Track.setSwing(track, swing)
-  track.swing = swing
-
-  return track
+function Track:setSwing(swing)
+  self.swing = swing
 end
 
-function Track.playStep(track, engine, id)
-  if track.mute then
+function Track:playStep(engine, id)
+  if self.mute then
     return
   end
 
-  local step = track.steps[track.pos]
+  local step = self.steps[self.pos]
 
   local swing_offset = 0
-  if track.pos % 2 == 0 then
-    swing_offset = track.swing
+  if self.pos % 2 == 0 then
+    swing_offset = self.swing
   end
 
   local sample_id = nil
   if step.sample_id then
     sample_id = step.sample_id
   else
-    sample_id = track.default_sample_id
+    sample_id = self.default_sample_id
   end
 
-  if step.active and (offset_in_current_step(track) == (step.offset + swing_offset)) then
+  if step.active and (offset_in_current_step(self) == (step.offset + swing_offset)) then
     engine.noteOn(id, 440, step.velocity / 127, sample_id)
   end
 end
 
-function Track.currentlyPlayingStep(track)
-  return track.steps[track.pos]
+function Track:currentlyPlayingStep()
+  return self.steps[self.pos]
 end
 
-function Track.maybeCreatePage(track, page)
-  local number_of_pages = math.ceil(track.length / 16)
+function Track:maybeCreatePage(page)
+  local number_of_pages = math.ceil(self.length / 16)
 
   if page > number_of_pages then
-    track.length = 16 * page
+    self.length = 16 * page
   end
-
-  return track
 end
 
 return Track
