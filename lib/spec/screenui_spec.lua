@@ -12,6 +12,7 @@ describe('screenui', function()
               pattern = Pattern.new(),
               selected_track = 1,
               selected_step = 1,
+              edit_mode = 'step'
             }
 
             entries = ScreenUI.menu_entries(state)

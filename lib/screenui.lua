@@ -25,7 +25,7 @@ end
 function ScreenUI.menu_entries(state)
   local entries = {}
 
-  if state.selected_step then
+  if state.edit_mode == 'step' then
     local steps = Pattern.stepsForSelectedTrack(state.pattern, state.selected_track)
     local step = steps[state.selected_step]
     local track = Pattern.track(state.pattern, state.selected_track)
