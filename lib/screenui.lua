@@ -31,9 +31,9 @@ function ScreenUI.menu_entries(state)
         handler = function(x) end
     })
   elseif state.edit_mode == 'step' then
-    local steps = Pattern.stepsForSelectedTrack(state.pattern, state.selected_track)
+    local steps = state.pattern:stepsForSelectedTrack(state.selected_track)
     local step = steps[state.selected_step]
-    local track = Pattern.track(state.pattern, state.selected_track)
+    local track = state.pattern:track(state.selected_track)
 
     local sample_id = nil
     if step.sample_id then

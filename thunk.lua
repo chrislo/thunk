@@ -26,7 +26,7 @@ PPQN = 48
 local g = grid.connect()
 
 local state = {
-  pattern = Pattern.new(PPQN),
+  pattern = Pattern:new(PPQN),
   selected_track = 1,
   selected_page = {1, 1, 1, 1, 1, 1},
   grid_dirty = true,
@@ -40,7 +40,7 @@ local state = {
   trigger_immediately = nil
 }
 
-state.pattern = Pattern.toggleStep(state.pattern, 1, 1)
+state.pattern:toggleStep(1, 1)
 
 function init()
   state.sample_pool:init()
@@ -72,7 +72,7 @@ function init()
 end
 
 function set_swing(swing)
-  state.pattern = Pattern.setSwing(state.pattern, swing)
+  state.pattern:setSwing(swing)
 end
 
 function grid_redraw_clock()
@@ -88,8 +88,8 @@ function step()
   while true do
     clock.sync(1/PPQN)
     if state.playing then
-      state.pattern = Pattern.advance(state.pattern)
-      Pattern.playSteps(state.pattern, engine)
+      state.pattern:advance()
+      state.pattern:playSteps(engine)
       state.grid_dirty = true
     end
 

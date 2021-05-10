@@ -7,7 +7,7 @@ describe('controller', function()
     describe('handle_short_press', function()
         it("sets the track length when shift is pressed", function()
             local state = {
-              pattern = Pattern.new(),
+              pattern = Pattern:new(),
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1},
               shift = true
@@ -36,7 +36,7 @@ describe('controller', function()
 
         it("toggle steps for the selected track and page", function()
             local state = {
-              pattern = Pattern.new(),
+              pattern = Pattern:new(),
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1}
             }
@@ -68,7 +68,7 @@ describe('controller', function()
 
         it("selects the step page of the current track", function()
             local state = {
-              pattern = Pattern.new(),
+              pattern = Pattern:new(),
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1}
             }

@@ -14,7 +14,7 @@ describe('gridui', function()
     describe('redraw', function()
         before_each(function()
             state = {
-              pattern = Pattern.new(),
+              pattern = Pattern:new(),
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1},
               sample_pool = SamplePool:new(),
@@ -30,7 +30,7 @@ describe('gridui', function()
 
         it("should indicate how many pages the currently selected track has", function()
             -- make sure the pattern has 2 pages
-            state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, 2)
+            state.pattern:maybeCreatePage(state.selected_track, 2)
 
             GridUI.redraw(connection, state)
 
@@ -39,7 +39,7 @@ describe('gridui', function()
         end)
 
         it("should show active steps for the selected track", function()
-            state.pattern = Pattern.toggleStep(state.pattern, 1, state.selected_track)
+            state.pattern:toggleStep(1, state.selected_track)
 
             GridUI.redraw(connection, state)
 
@@ -48,7 +48,7 @@ describe('gridui', function()
 
         it("should show active steps for the selected track in the selected page", function()
             state.selected_page = {2, 1, 1, 1, 1, 1}
-            state.pattern = Pattern.toggleStep(state.pattern, 17, state.selected_track)
+            state.pattern:toggleStep(17, state.selected_track)
 
             GridUI.redraw(connection, state)
 
@@ -57,7 +57,7 @@ describe('gridui', function()
 
         it("should not show active steps for the selected track if not in the page", function()
             state.selected_page = {2, 1, 1, 1, 1, 1}
-            state.pattern = Pattern.toggleStep(state.pattern, 1, state.selected_track)
+            state.pattern:toggleStep(1, state.selected_track)
 
             GridUI.redraw(connection, state)
 
@@ -65,12 +65,12 @@ describe('gridui', function()
         end)
 
         it("should show the current playhead position for the selected track", function()
-            state.pattern = Pattern.new(4)
+            state.pattern = Pattern:new(4)
 
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 1, 5)
 
-            state.pattern = Pattern.advance(state.pattern)
+            state.pattern:advance()
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 2, 1, 5)
         end)

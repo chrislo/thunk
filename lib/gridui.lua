@@ -15,7 +15,7 @@ local function pattern_position_to_grid(i)
 end
 
 local function draw_track_steps(connection, pattern, track, page)
-  for i, step in ipairs(Pattern.stepsForSelectedTrack(pattern, track)) do
+  for i, step in ipairs(pattern:stepsForSelectedTrack(track)) do
     if math.ceil(i / 16) == page then
       local pos = pattern_position_to_grid(i - ((page - 1) * 16))
 
@@ -28,7 +28,7 @@ end
 local function draw_samples(connection, state)
   local sample_idx_start = 1
   local sample_idx_end = 16
-  local default_sample_for_current_track = Pattern.track(state.pattern, state.selected_track).default_sample_id
+  local default_sample_for_current_track = state.pattern:track(state.selected_track).default_sample_id
 
   for i=1, 16 do
     sample_id = i + ((state.selected_bank - 1) * 16)
@@ -46,8 +46,8 @@ local function draw_samples(connection, state)
 end
 
 local function draw_track_select(connection, pattern, selected_track)
-  for i, step in ipairs(Pattern.currentlyPlayingSteps(pattern)) do
-    local track = Pattern.track(pattern, i)
+  for i, step in ipairs(pattern:currentlyPlayingSteps()) do
+    local track = pattern:track(i)
 
     if track.mute then
       connection:led(i+2, 8, 5)

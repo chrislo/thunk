@@ -6,7 +6,7 @@ function Controller.handle_short_press(state, x, y)
       sample_id = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
 
       if state.shift then
-        Pattern.track(state.pattern, state.selected_track).default_sample_id = sample_id
+        state.pattern:track(state.selected_track).default_sample_id = sample_id
       else
         state.selected_sample = sample_id
         state.trigger_immediately = sample_id
@@ -14,9 +14,9 @@ function Controller.handle_short_press(state, x, y)
     else
       local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
       if state.shift then
-        Pattern.track(state.pattern, state.selected_track).length = step_idx
+        state.pattern:track(state.selected_track).length = step_idx
       else
-        state.pattern = Pattern.toggleStep(state.pattern, step_idx, state.selected_track)
+        state.pattern:toggleStep(step_idx, state.selected_track)
       end
     end
   end
@@ -27,7 +27,7 @@ function Controller.handle_short_press(state, x, y)
       state.selected_bank = page
     else
       state.selected_page[state.selected_track] = page
-      state.pattern = Pattern.maybeCreatePage(state.pattern, state.selected_track, page)
+      state.pattern:maybeCreatePage(state.selected_track, page)
     end
   end
   if y==3 and x<=2 then
@@ -40,18 +40,18 @@ function Controller.handle_short_press(state, x, y)
   if y==8 and x>=3 then
     local track_id = x-2
     if state.shift then
-      local current_mute = Pattern.track(state.pattern, track_id).mute
-      Pattern.track(state.pattern, track_id).mute = not current_mute
+      local current_mute = state.pattern:track(track_id).mute
+      state.pattern:track(track_id).mute = not current_mute
     else
       state.selected_track = track_id
-      state.selected_sample = Pattern.track(state.pattern, track_id).default_sample_id
+      state.selected_sample = state.pattern:track(track_id).default_sample_id
     end
   end
   if y==7 and x==1 then
     state.playing = not state.playing
 
     if (not state.playing) then
-      Pattern.reset(state.pattern)
+      state.pattern:reset()
     end
   end
 

@@ -9,7 +9,7 @@ describe('screenui', function()
 
         before_each(function()
             local state = {
-              pattern = Pattern.new(),
+              pattern = Pattern:new(),
               selected_track = 1,
               selected_step = 1,
               edit_mode = 'step'
