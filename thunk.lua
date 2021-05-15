@@ -128,10 +128,7 @@ function long_release(x,y)
 end
 
 function key(n,z)
-  if n == 2 and state.edit_mode == 'track' then
-    state.edit_mode = 'pattern'
-    state.screen_dirty = true
-  end
+  Controller.handle_key(state, n, z)
 end
 
 function enc(n, delta)

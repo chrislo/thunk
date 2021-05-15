@@ -71,4 +71,11 @@ function Controller.handle_long_release(state, x, y)
   end
 end
 
+function Controller.handle_key(state, n, z)
+  if n == 2 and state.edit_mode == 'track' then
+    state.edit_mode = 'pattern'
+    state.screen_dirty = true
+  end
+end
+
 return Controller
