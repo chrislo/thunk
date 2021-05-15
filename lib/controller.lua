@@ -21,6 +21,7 @@ function Controller.handle_short_press(state, x, y)
       local current_mute = state.pattern:track(track_id).mute
       state.pattern:track(track_id).mute = not current_mute
     else
+      state.edit_mode = 'track'
       state.selected_track = track_id
       if not state.playing then
         state.trigger_immediately = state.pattern:track(track_id).default_sample_id

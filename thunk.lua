@@ -127,6 +127,13 @@ function long_release(x,y)
   Controller.handle_long_release(state, x, y)
 end
 
+function key(n,z)
+  if n == 2 and state.edit_mode == 'track' then
+    state.edit_mode = 'pattern'
+    state.screen_dirty = true
+  end
+end
+
 function enc(n, delta)
   if n == 2 then
     main_menu:set_index_delta(util.clamp(delta, -1, 1))
