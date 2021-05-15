@@ -35,8 +35,6 @@ local state = {
   playing = true,
   edit_mode = 'track',
   sample_pool = SamplePool:new(),
-  selected_sample = 1,
-  selected_bank = 1,
   trigger_immediately = nil
 }
 

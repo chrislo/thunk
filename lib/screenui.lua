@@ -25,12 +25,7 @@ end
 function ScreenUI.menu_entries(state)
   local entries = {}
 
-  if state.edit_mode == 'sample' then
-    table.insert(entries, {
-        label = state.sample_pool:name(state.selected_sample),
-        handler = function(x) end
-    })
-  elseif state.edit_mode == 'step' then
+  if state.edit_mode == 'step' then
     local steps = state.pattern:stepsForSelectedTrack(state.selected_track)
     local step = steps[state.selected_step]
     local track = state.pattern:track(state.selected_track)

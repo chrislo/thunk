@@ -18,7 +18,6 @@ describe('gridui', function()
               selected_track = 1,
               selected_page = {1, 1, 1, 1, 1, 1},
               sample_pool = SamplePool:new(),
-              selected_bank = 1,
             }
         end)
 
@@ -84,30 +83,6 @@ describe('gridui', function()
             state.playing = false
             GridUI.redraw(connection, state)
             assert.stub(connection.led).was.called_with(_, 1, 7, 3)
-        end)
-
-        it("should indicate the current edit mode", function()
-            state.edit_mode = 'track'
-
-            GridUI.redraw(connection, state)
-            assert.stub(connection.led).was.called_with(_, 1, 3, 15)
-            assert.stub(connection.led).was.called_with(_, 2, 3, 0)
-
-            state.edit_mode = 'sample'
-            GridUI.redraw(connection, state)
-            assert.stub(connection.led).was.called_with(_, 1, 3, 0)
-            assert.stub(connection.led).was.called_with(_, 2, 3, 15)
-        end)
-
-        it("should indicate which samples are loaded in sample edit mode", function()
-            stub(Timber, 'load_sample')
-
-            state.edit_mode = 'sample'
-            state.sample_pool = SamplePool:new()
-            state.sample_pool:add('foo.wav', 2)
-
-            GridUI.redraw(connection, state)
-            assert.stub(connection.led).was.called_with(_, 2, 1, 5)
         end)
     end)
 end)

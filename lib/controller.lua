@@ -2,40 +2,18 @@ Controller = {}
 
 function Controller.handle_short_press(state, x, y)
   if y<=2 then
-    if state.edit_mode == 'sample' then
-      sample_id = x + ((state.selected_bank - 1) * 16) + ((y-1) * 8)
-
-      if state.shift then
-        state.pattern:track(state.selected_track).default_sample_id = sample_id
-      else
-        state.selected_sample = sample_id
-        state.trigger_immediately = sample_id
-      end
+    local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
+    if state.shift then
+      state.pattern:track(state.selected_track).length = step_idx
     else
-      local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
-      if state.shift then
-        state.pattern:track(state.selected_track).length = step_idx
-      else
-        state.pattern:toggleStep(step_idx, state.selected_track)
-      end
+      state.pattern:toggleStep(step_idx, state.selected_track)
     end
   end
   if y==3 and x>=5 then
     local page = x - 4
 
-    if state.edit_mode == 'sample' then
-      state.selected_bank = page
-    else
-      state.selected_page[state.selected_track] = page
-      state.pattern:maybeCreatePage(state.selected_track, page)
-    end
-  end
-  if y==3 and x<=2 then
-    if x == 1 then
-      state.edit_mode = 'track'
-    elseif x == 2 then
-      state.edit_mode = 'sample'
-    end
+    state.selected_page[state.selected_track] = page
+    state.pattern:maybeCreatePage(state.selected_track, page)
   end
   if y==8 and x>=3 then
     local track_id = x-2
@@ -44,7 +22,6 @@ function Controller.handle_short_press(state, x, y)
       state.pattern:track(track_id).mute = not current_mute
     else
       state.selected_track = track_id
-      state.selected_sample = state.pattern:track(track_id).default_sample_id
     end
   end
   if y==7 and x==1 then
