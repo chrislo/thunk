@@ -3,7 +3,7 @@ ScreenUI = {}
 local function format_menu_item(key, value)
   local value = tostring(value)
   local max_width = 30
-  local spaces_to_insert = max_width - string.len(key) - string.len(value)
+  local spaces_to_insert = max_width - string.len(key) - string.len(value) - 1
 
   return key .. string.rep(" ", spaces_to_insert) .. value
 end
@@ -51,7 +51,14 @@ function ScreenUI.menu_entries(state)
         label = format_menu_item("velocity", step.velocity),
         handler = function(x) step:delta_velocity(x) end
     })
-  else
+  elseif state.edit_mode == 'track' then
+    local sample_id = state.pattern:track(state.selected_track).default_sample_id
+
+    table.insert(entries, {
+        label = format_menu_item("sample", state.sample_pool:name(sample_id)),
+        handler = function(x) end
+    })
+  elseif state.edit_mode == 'pattern' then
     table.insert(entries, {
         label = format_menu_item("tempo", params:get("clock_tempo")),
         handler = function(x) params:delta("clock_tempo", x) end
