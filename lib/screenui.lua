@@ -38,7 +38,7 @@ function ScreenUI.menu_entries(state)
     end
 
     table.insert(entries, {
-        label = format_menu_item("sample", sample_id),
+        label = format_menu_item("sample", state.sample_pool:name(sample_id)),
         handler = function(x) step:delta_sample_id(track.default_sample_id, x) end
     })
 
