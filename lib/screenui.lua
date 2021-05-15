@@ -1,11 +1,16 @@
 ScreenUI = {}
 
 local function format_menu_item(key, value)
-  local value = tostring(value)
+  local v
+  if type(value) == 'number' then
+    v = string.format("%.2f", value)
+  else
+    v = tostring(value)
+  end
   local max_width = 30
-  local spaces_to_insert = max_width - string.len(key) - string.len(value) - 1
+  local spaces_to_insert = max_width - string.len(key) - string.len(v) - 1
 
-  return key .. string.rep(" ", spaces_to_insert) .. value
+  return key .. string.rep(" ", spaces_to_insert) .. v
 end
 
 local function swing_as_percentage(pulses)
