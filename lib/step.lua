@@ -34,7 +34,7 @@ function Step:delta_sample_id(default, delta)
     sample_id = default
   end
 
-  self.sample_id = clamp(sample_id + delta, 1, 128)
+  self.sample_id = clamp(sample_id + delta, 1, 256)
 end
 
 return Step

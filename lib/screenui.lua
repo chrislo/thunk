@@ -52,11 +52,12 @@ function ScreenUI.menu_entries(state)
         handler = function(x) step:delta_velocity(x) end
     })
   elseif state.edit_mode == 'track' then
-    local sample_id = state.pattern:track(state.selected_track).default_sample_id
+    local track = state.pattern:track(state.selected_track)
+    local sample_id = track.default_sample_id
 
     table.insert(entries, {
         label = format_menu_item("sample", state.sample_pool:name(sample_id)),
-        handler = function(x) end
+        handler = function(x) track:delta_default_sample_id(x) end
     })
   elseif state.edit_mode == 'pattern' then
     table.insert(entries, {

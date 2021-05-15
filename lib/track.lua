@@ -100,4 +100,12 @@ function Track:maybeCreatePage(page)
   end
 end
 
+local function clamp(n, min, max)
+  return math.min(max,(math.max(n,min)))
+end
+
+function Track:delta_default_sample_id(delta)
+  self.default_sample_id = clamp(self.default_sample_id + delta, 1, 256)
+end
+
 return Track

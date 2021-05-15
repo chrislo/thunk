@@ -2,7 +2,7 @@ SamplePool = {}
 
 function SamplePool:new()
   samples = {}
-  for i=1,64 do
+  for i=1,256 do
     samples[i] = {}
   end
 
@@ -33,7 +33,11 @@ function SamplePool:has_sample(idx)
 end
 
 function SamplePool:name(idx)
-  return self.samples[idx].fn:match("^.+/(.+)$")
+  if self:has_sample(idx) then
+    return self.samples[idx].fn:match("^.+/(.+)$")
+  else
+    return "<empty>"
+  end
 end
 
 function SamplePool:init()
