@@ -45,15 +45,9 @@ function Controller.handle_long_press(state, x, y)
     return
   end
 
-  if state.edit_mode == 'track' then
+  if y <=2 and state.edit_mode == 'track' then
     state.edit_mode = 'step'
-
-    if y==1 then
-      state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16)
-    end
-    if y==2 then
-      state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + 8
-    end
+    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
   end
 
   state.grid_dirty = true
