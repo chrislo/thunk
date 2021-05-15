@@ -22,6 +22,9 @@ function Controller.handle_short_press(state, x, y)
       state.pattern:track(track_id).mute = not current_mute
     else
       state.selected_track = track_id
+      if not state.playing then
+        state.trigger_immediately = state.pattern:track(track_id).default_sample_id
+      end
     end
   end
   if y==7 and x==1 then
