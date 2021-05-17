@@ -8,11 +8,16 @@ describe('screenui', function()
         local entries, selected_step
 
         before_each(function()
+            local sample_pool = {
+              name = function(x) return 'foo' end
+            }
+
             local state = {
               pattern = Pattern:new(),
               selected_track = 1,
               selected_step = 1,
-              edit_mode = 'step'
+              edit_mode = 'step',
+              sample_pool = sample_pool
             }
 
             entries = ScreenUI.menu_entries(state)
@@ -21,7 +26,7 @@ describe('screenui', function()
 
         it("displays the selected step sample", function()
             local label = entries[1].label
-            assert.is_truthy(label:match("^sample.*1$"))
+            assert.is_truthy(label:match("^sample.*foo$"))
         end)
 
         it("allows us to change the sample #wip", function()
@@ -43,7 +48,7 @@ describe('screenui', function()
 
         it("displays the selected step velocity", function()
             local label = entries[3].label
-            assert.is_truthy(label:match("^velocity.*127$"))
+            assert.is_truthy(label:match("^velocity.*127\.00$"))
         end)
 
         it("allows us to change the selected step velocity", function()
