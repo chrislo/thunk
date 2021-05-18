@@ -25,24 +25,10 @@ PPQN = 48
 
 local g = grid.connect()
 
-local state = {
-  pattern = Pattern:new(PPQN),
-  selected_track = 1,
-  selected_page = {1, 1, 1, 1, 1, 1},
-  grid_dirty = true,
-  screen_dirty = true,
-  shift = false,
-  playing = true,
-  edit_mode = 'track',
-  sample_pool = SamplePool:new(),
-  trigger_immediately = nil
-}
-
-state.pattern:toggleStep(1, 1)
+local state = State:new()
 
 function init()
-  state.sample_pool:init()
-  state.sample_pool:add_dir("/home/we/dust/audio/common/808/")
+  state:init()
 
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0, {}, false)
   params:set_action("swing", set_swing)

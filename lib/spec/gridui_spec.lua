@@ -13,12 +13,7 @@ describe('gridui', function()
 
     describe('redraw', function()
         before_each(function()
-            state = {
-              pattern = Pattern:new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1},
-              sample_pool = SamplePool:new(),
-            }
+            state = State:new()
         end)
 
         it("should indicate the currently selected track's page", function()
@@ -38,11 +33,11 @@ describe('gridui', function()
         end)
 
         it("should show active steps for the selected track", function()
-            state.pattern:toggleStep(1, state.selected_track)
+            state.pattern:toggleStep(2, state.selected_track)
 
             GridUI.redraw(connection, state)
 
-            assert.stub(connection.led).was.called_with(_, 1, 1, 15)
+            assert.stub(connection.led).was.called_with(_, 2, 1, 15)
         end)
 
         it("should show active steps for the selected track in the selected page", function()

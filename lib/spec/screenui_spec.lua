@@ -12,13 +12,10 @@ describe('screenui', function()
               name = function(x) return 'foo' end
             }
 
-            local state = {
-              pattern = Pattern:new(),
-              selected_track = 1,
-              selected_step = 1,
-              edit_mode = 'step',
-              sample_pool = sample_pool
-            }
+            local state = State:new()
+            state.selected_step = 1
+            state.edit_mode = 'step'
+            state.sample_pool = sample_pool
 
             entries = ScreenUI.menu_entries(state)
             selected_step = state.pattern.tracks[state.selected_track].steps[state.selected_step]

@@ -6,12 +6,8 @@ describe('controller', function()
 
     describe('handle_short_press', function()
         it("sets the track length when shift is pressed", function()
-            local state = {
-              pattern = Pattern:new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1},
-              shift = true
-            }
+            local state = State:new()
+            state.shift = true
 
             assert.same(16, state.pattern.tracks[state.selected_track].length)
             Controller.handle_short_press(state, 8, 1)
@@ -19,11 +15,9 @@ describe('controller', function()
         end)
 
         it("toggle steps for the selected track and page", function()
-            local state = {
-              pattern = Pattern:new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1}
-            }
+            local state = State:new()
+            state.selected_track = 1
+            state.selected_page = {1, 1, 1, 1, 1, 1}
 
             local s = spy.on(Pattern, "toggleStep")
 
@@ -51,11 +45,9 @@ describe('controller', function()
         end)
 
         it("selects the step page of the current track", function()
-            local state = {
-              pattern = Pattern:new(),
-              selected_track = 1,
-              selected_page = {1, 1, 1, 1, 1, 1}
-            }
+            local state = State:new()
+            state.selected_track = 1
+            state.selected_page = {1, 1, 1, 1, 1, 1}
 
             Controller.handle_short_press(state, 6, 3)
             assert.same(2, state.selected_page[1])
