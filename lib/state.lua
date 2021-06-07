@@ -23,7 +23,6 @@ function State:new()
 end
 
 function State:init()
-  self.sample_pool:init()
   self.sample_pool:add_dir("/home/we/dust/audio/common/808/")
 end
 

@@ -17,7 +17,7 @@ end
 
 function SamplePool:add(fn, idx)
   self.samples[idx] = { fn = fn }
-  Timber.load_sample(idx, fn)
+  engine.load_sample(idx, fn)
 end
 
 function SamplePool:add_dir(dir)
@@ -38,16 +38,6 @@ function SamplePool:name(idx)
   else
     return "<empty>"
   end
-end
-
-function SamplePool:init()
-  Timber.add_params()
-
-  for idx, _ in pairs(self.samples) do
-    Timber.add_sample_params(idx)
-  end
-
-  Timber.options.PLAY_MODE_BUFFER_DEFAULT = 3
 end
 
 return SamplePool
