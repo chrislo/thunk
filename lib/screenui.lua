@@ -64,18 +64,7 @@ function ScreenUI.menu_entries(state)
         label = format_menu_item("sample", state.sample_pool:name(sample_id)),
         handler = function(x) track:delta_default_sample_id(x) end
     })
-    table.insert(entries, {
-        label = format_menu_item("cutoff", params:get("filter_freq_" .. sample_id)),
-        handler = function(x) params:delta("filter_freq_" .. sample_id, x) end
-    })
-    table.insert(entries, {
-        label = format_menu_item("resonance", params:get("filter_resonance_" .. sample_id)),
-        handler = function(x) params:delta("filter_resonance_" .. sample_id, x) end
-    })
-    table.insert(entries, {
-        label = format_menu_item("transpose", params:get("transpose_" .. sample_id)),
-        handler = function(x) params:delta("transpose_" .. sample_id, x) end
-    })
+        
   elseif state.edit_mode == 'pattern' then
     table.insert(entries, {
         label = format_menu_item("tempo", params:get("clock_tempo")),

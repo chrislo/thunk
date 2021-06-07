@@ -14,6 +14,7 @@ GridUI = include("lib/gridui")
 ScreenUI = include("lib/screenui")
 Controller = include("lib/controller")
 SamplePool = include("lib/sample_pool")
+State = include("lib/state")
 
 local screen_refresh_metro
 local screen_dirty = true
