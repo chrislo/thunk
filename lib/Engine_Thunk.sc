@@ -58,16 +58,19 @@ Engine_Thunk : CroneEngine {
     });
 
     this.addCommand("load_sample","is", { arg msg;
-      // lua is sending 1-index
-      samples[msg[1]-1].free;
-      samples[msg[1]-1] = Buffer.read(context.server,msg[2]);
+      var idx = msg[1]-1;
+
+      samples[idx].free;
+      samples[idx] = Buffer.read(context.server,msg[2]);
     });
 
     this.addCommand("note_on","iii", { arg msg;
-      // lua is sending 1-index
-      tracks[msg[1]-1].set(
+      var idx = msg[1]-1;
+      var sample_idx = msg[2]-1;
+
+      tracks[idx].set(
         \t_trig, 1,
-        \bufnum, msg[2]-1,
+        \bufnum, sample_idx,
         \vel, msg[3]
       );
     });
