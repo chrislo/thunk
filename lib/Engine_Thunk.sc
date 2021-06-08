@@ -8,7 +8,7 @@ Engine_Thunk : CroneEngine {
 
   alloc {
     samples = Array.fill(64, { arg i;
-      Buffer.read(context.server, "/Users/chris/silence.wav");
+      Buffer.alloc(context.server, 1, 2);
     });
 
     (0..5).do({arg i;
