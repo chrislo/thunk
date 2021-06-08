@@ -1,6 +1,6 @@
 State = {}
 
-function State:new()
+function State:new(engine)
   state = {
     pattern = Pattern:new(PPQN),
     selected_track = 1,
@@ -10,7 +10,7 @@ function State:new()
     shift = false,
     playing = true,
     edit_mode = 'track',
-    sample_pool = SamplePool:new(),
+    sample_pool = SamplePool:new(engine),
     trigger_immediately = nil
   }
 
@@ -23,7 +23,6 @@ function State:new()
 end
 
 function State:init()
-  self.sample_pool:init()
   self.sample_pool:add_dir("/home/we/dust/audio/common/808/")
 end
 

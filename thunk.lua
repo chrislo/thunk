@@ -2,9 +2,8 @@
 -- 0.0.1 @chrislo
 --
 
-engine.name = 'Timber'
+engine.name = 'Thunk'
 
-Timber = include("timber/lib/timber_engine")
 local grid = include "midigrid/lib/midigrid"
 local UI = require "ui"
 
@@ -26,7 +25,7 @@ PPQN = 48
 
 local g = grid.connect()
 
-local state = State:new()
+local state = State:new(engine)
 
 function init()
   state:init()
@@ -79,7 +78,7 @@ function step()
     end
 
     if state.trigger_immediately then
-      engine.noteOn(7, 440, 1, state.trigger_immediately)
+      engine.note_on(1, state.trigger_immediately, 100)
       state.trigger_immediately = nil
     end
   end

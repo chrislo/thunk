@@ -4,54 +4,43 @@ describe('SamplePool', function()
     end)
 
     before_each(function()
-        stub(Timber, 'load_sample')
+        engine = { load_sample = function(idx, fn) end }
+        s = SamplePool:new(engine)
     end)
 
     describe('add()', function()
-        before_each(function()
-            s = SamplePool:new()
-        end)
-
         it('should set the filename of the sample at index', function()
             s:add('foo', 1)
 
             assert.same('foo', s.samples[1].fn)
         end)
 
-        it('should tell Timber to load the sample', function()
-            stub(Timber, "load_sample")
+        it('should tell the engine to load the sample', function()
+            stub(engine, "load_sample")
             s:add('foo', 1)
 
-            assert.stub(Timber.load_sample).was.called_with(1, 'foo')
+            assert.stub(engine.load_sample).was.called_with(1, 'foo')
 
-            Timber.load_sample:revert()
+            engine.load_sample:revert()
         end)
     end)
 
     describe('add()', function()
-        before_each(function()
-            s = SamplePool:new()
-        end)
-
         it('should add each file in the directory', function()
             stub(util, 'scandir', function(dir) return { "foo" } end)
-            stub(Timber, "load_sample")
+            stub(engine, "load_sample")
 
             s:add_dir('dirname/')
 
-            assert.stub(Timber.load_sample).was.called_with(1, 'dirname/foo')
-            Timber.load_sample:revert()
+            assert.stub(engine.load_sample).was.called_with(1, 'dirname/foo')
+            engine.load_sample:revert()
             util.scandir:revert()
         end)
     end)
 
     describe('has_sample()', function()
-        before_each(function()
-            s = SamplePool:new()
-        end)
-
         it('returns true if the sample has been added, false otherwise', function()
-            stub(Timber, "load_sample")
+            stub(engine, "load_sample")
             assert.same(false, s:has_sample(1))
 
             s:add('foo', 1)
@@ -60,12 +49,8 @@ describe('SamplePool', function()
     end)
 
     describe('name()', function()
-        before_each(function()
-            s = SamplePool:new()
-        end)
-
         it('returns ', function()
-            stub(Timber, "load_sample")
+            stub(engine, "load_sample")
             s:add('/home/foo/kick.wav', 1)
 
             assert.same('kick.wav', s:name(1))

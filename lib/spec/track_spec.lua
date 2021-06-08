@@ -50,12 +50,12 @@ describe('track', function()
             local t = track:new()
 
             local engine = {
-              noteOn = function(id, freq, vel, sampleId) end
+              note_on = function(id, sampleId, vel) end
             }
-            stub(engine, 'noteOn')
+            stub(engine, 'note_on')
 
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_not_called()
+            assert.stub(engine.note_on).was_not_called()
         end)
 
         it('plays active steps', function()
@@ -63,12 +63,12 @@ describe('track', function()
             t:toggleStep(1)
 
             local engine = {
-              noteOn = function(id, freq, vel, sampleId) end
+              note_on = function(id, sampleId, vel) end
             }
-            stub(engine, 'noteOn')
+            stub(engine, 'note_on')
 
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_called()
+            assert.stub(engine.note_on).was_called()
         end)
 
         it('plays active steps only when the position in the step equals the offset', function()
@@ -77,16 +77,16 @@ describe('track', function()
             t.steps[1].offset = 1
 
             local engine = {
-              noteOn = function(id, freq, vel, sampleId) end
+              note_on = function(id, sampleId, vel) end
             }
-            stub(engine, 'noteOn')
+            stub(engine, 'note_on')
 
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_not_called()
+            assert.stub(engine.note_on).was_not_called()
 
             t:advance(t)
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_called()
+            assert.stub(engine.note_on).was_called()
         end)
 
         it('plays even active steps late if they are swung', function()
@@ -96,32 +96,32 @@ describe('track', function()
             t:setSwing(1)
 
             local engine = {
-              noteOn = function(id, freq, vel, sampleId) end
+              note_on = function(id, sampleId, vel) end
             }
-            stub(engine, 'noteOn')
+            stub(engine, 'note_on')
 
             -- First step is odd and not swung so should play on tick 1
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_called()
-            engine.noteOn:clear()
+            assert.stub(engine.note_on).was_called()
+            engine.note_on:clear()
 
             -- But not on tick 2
             t:advance()
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_not_called()
-            engine.noteOn:clear()
+            assert.stub(engine.note_on).was_not_called()
+            engine.note_on:clear()
 
             -- Second step is even and swung so should not play on tick 3
             t:advance()
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_not_called()
-            engine.noteOn:clear()
+            assert.stub(engine.note_on).was_not_called()
+            engine.note_on:clear()
 
             -- But should play on tick 4
             t:advance()
             t:playStep(engine, 1)
-            assert.stub(engine.noteOn).was_called()
-            engine.noteOn:clear()
+            assert.stub(engine.note_on).was_called()
+            engine.note_on:clear()
         end)
     end)
 
