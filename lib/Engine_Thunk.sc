@@ -59,9 +59,17 @@ Engine_Thunk : CroneEngine {
 
     this.addCommand("load_sample","is", { arg msg;
       var idx = msg[1]-1;
+      var fn = msg[2];
 
-      samples[idx].free;
-      samples[idx] = Buffer.read(context.server,msg[2]);
+      Buffer.read(context.server, fn, action: { arg buf;
+        if(buf.numChannels == 1) {
+          samples[idx].free;
+          samples[idx] = Buffer.readChannel(context.server,fn,channels:[0,0]);
+        } {
+          samples[idx].free;
+          samples[idx] = buf;
+        }
+      });
     });
 
     this.addCommand("note_on","iii", { arg msg;
@@ -70,7 +78,7 @@ Engine_Thunk : CroneEngine {
 
       tracks[idx].set(
         \t_trig, 1,
-        \bufnum, sample_idx,
+        \bufnum, samples[sample_idx],
         \vel, msg[3]
       );
     });
