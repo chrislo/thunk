@@ -99,7 +99,7 @@ describe('screenui', function()
             end)
 
             it("lists all the loaded samples", function()
-                assert.are.equal(256, table.getn(entries))
+                assert.are.equal(64, table.getn(entries))
                 assert.are.equal('foo.wav', entries[1].label)
             end)
         end)

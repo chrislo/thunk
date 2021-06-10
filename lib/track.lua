@@ -105,7 +105,7 @@ local function clamp(n, min, max)
 end
 
 function Track:delta_default_sample_id(delta)
-  self.default_sample_id = clamp(self.default_sample_id + delta, 1, 256)
+  self.default_sample_id = clamp(self.default_sample_id + delta, 1, 64)
 end
 
 return Track

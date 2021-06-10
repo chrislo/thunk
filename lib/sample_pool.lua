@@ -2,7 +2,7 @@ SamplePool = {}
 
 function SamplePool:new(engine)
   samples = {}
-  for i=1,256 do
+  for i=1,64 do
     samples[i] = {}
   end
 
