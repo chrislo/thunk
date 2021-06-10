@@ -77,6 +77,31 @@ describe('screenui', function()
                 local label = entries[2].label
                 assert.is_truthy(label:match("^swing.*$"))
             end)
+
+            it("sets the edit mode to sample", function()
+                assert.are.equal('pattern', state.edit_mode)
+                entries[3].handler()
+                assert.are.equal('samples', state.edit_mode)
+            end)
+        end)
+
+        describe('when the edit_mode is samples', function()
+            before_each(function()
+                local engine = {
+                  load_sample = function() end
+                }
+                local sample_pool = SamplePool:new(engine)
+                sample_pool:add('/sample/foo.wav', 1)
+                state.sample_pool = sample_pool
+
+                state.edit_mode = 'samples'
+                entries = ScreenUI.menu_entries(state)
+            end)
+
+            it("lists all the loaded samples", function()
+                assert.are.equal(256, table.getn(entries))
+                assert.are.equal('foo.wav', entries[1].label)
+            end)
         end)
     end)
 end)
