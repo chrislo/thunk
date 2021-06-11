@@ -17,6 +17,16 @@ local function swing_as_percentage(pulses)
   return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
 end
 
+local function has_value(tab, val)
+  for index, value in ipairs(tab) do
+    if value == val then
+      return true
+    end
+  end
+
+  return false
+end
+
 function ScreenUI.menu_labels(state)
   labels = {}
 
@@ -64,23 +74,6 @@ function ScreenUI.menu_entries(state)
         label = format_menu_item("sample", state.sample_pool:name(sample_id)),
         handler = function(x) track:delta_default_sample_id(x) end
     })
-
-  elseif state.edit_mode == 'pattern' then
-    table.insert(entries, {
-        label = format_menu_item("tempo", params:get("clock_tempo")),
-        handler = function(x) params:delta("clock_tempo", x) end
-    })
-
-    table.insert(entries, {
-        label = format_menu_item("swing", swing_as_percentage(params:get("swing"))),
-        handler = function(x) params:delta("swing", x) end
-    })
-
-    table.insert(entries, {
-        label = "manage samples",
-        handler = function(x) state.edit_mode = "samples" end
-    })
-
   elseif state.edit_mode == 'samples' then
     for i, v in ipairs(state.sample_pool.samples) do
       table.insert(entries, {
@@ -88,6 +81,20 @@ function ScreenUI.menu_entries(state)
           handler = function(i) end
       })
     end
+  end
+
+  if has_value({'tempo', 'swing', 'manage_samples'}, state.machine.current) then
+    table.insert(entries, {
+        label = format_menu_item("tempo", params:get("clock_tempo")),
+    })
+
+    table.insert(entries, {
+        label = format_menu_item("swing", swing_as_percentage(params:get("swing"))),
+    })
+
+    table.insert(entries, {
+        label = "manage samples",
+    })
   end
 
   return entries
