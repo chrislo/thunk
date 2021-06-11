@@ -11,7 +11,7 @@ local fsm = StateMachine.create({
     { name = 'enc_3_dec', from = 'tempo', to = 'tempo' }
   },
   callbacks = {
-    ontempo = function(self, event, from, to)
+    ontempo = function(self, event)
       if event == 'enc_3_inc' then
         params:delta("clock_tempo", 1)
       end
