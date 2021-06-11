@@ -8,7 +8,9 @@ local fsm = StateMachine.create({
     { name = 'enc_2_dec',  from = 'manage_samples', to = 'swing' },
     { name = 'enc_2_dec', from = 'swing', to = 'tempo' },
     { name = 'enc_3_inc', from = 'tempo', to = 'tempo' },
-    { name = 'enc_3_dec', from = 'tempo', to = 'tempo' }
+    { name = 'enc_3_dec', from = 'tempo', to = 'tempo' },
+    { name = 'enc_3_inc', from = 'swing', to = 'swing' },
+    { name = 'enc_3_dec', from = 'swing', to = 'swing' }
   },
   callbacks = {
     ontempo = function(self, event)
@@ -17,6 +19,14 @@ local fsm = StateMachine.create({
       end
       if event == 'enc_3_dec' then
         params:delta("clock_tempo", -1)
+      end
+    end,
+    onswing = function(self, event)
+      if event == 'enc_3_inc' then
+        params:delta("swing", 1)
+      end
+      if event == 'enc_3_dec' then
+        params:delta("swing", -1)
       end
     end
   }
