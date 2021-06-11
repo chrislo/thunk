@@ -76,6 +76,10 @@ function Controller.handle_key(state, n, z)
     state.edit_mode = 'pattern'
     state.screen_dirty = true
   end
+  if n == 2 and state.edit_mode == 'samples' then
+    state.edit_mode = 'pattern'
+    state.screen_dirty = true
+  end
 end
 
 return Controller
