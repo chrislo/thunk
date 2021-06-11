@@ -82,4 +82,16 @@ function Controller.handle_key(state, n, z)
   end
 end
 
+function Controller.handle_enc(state, n, delta)
+  if n == 2 and delta > 0 then
+    state.machine:enc_2_inc()
+  end
+
+  if n == 2 and delta < 0 then
+    state.machine:enc_2_dec()
+  end
+
+  print(state.machine.current)
+end
+
 return Controller

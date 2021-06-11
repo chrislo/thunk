@@ -1,5 +1,14 @@
 State = {}
 
+local fsm = StateMachine.create({
+  initial = 'tempo',
+  events = {
+    { name = 'enc_2_inc',  from = 'tempo',  to = 'swing' },
+    { name = 'enc_2_inc', from = 'swing', to = 'manage_samples' },
+    { name = 'enc_2_dec',  from = 'manage_samples', to = 'swing' },
+    { name = 'enc_2_dec', from = 'swing', to = 'tempo' }
+}})
+
 function State:new(engine)
   state = {
     pattern = Pattern:new(PPQN),
@@ -11,7 +20,8 @@ function State:new(engine)
     playing = true,
     edit_mode = 'track',
     sample_pool = SamplePool:new(engine),
-    trigger_immediately = nil
+    trigger_immediately = nil,
+    machine = fsm
   }
 
   state.pattern:toggleStep(1, 1)

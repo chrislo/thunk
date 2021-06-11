@@ -14,6 +14,7 @@ GridUI = include("lib/gridui")
 ScreenUI = include("lib/screenui")
 Controller = include("lib/controller")
 SamplePool = include("lib/sample_pool")
+StateMachine = include("lib/statemachine")
 State = include("lib/state")
 
 local screen_refresh_metro
@@ -118,6 +119,8 @@ function key(n,z)
 end
 
 function enc(n, delta)
+  Controller.handle_enc(state, n, delta)
+
   if n == 2 then
     main_menu:set_index_delta(util.clamp(delta, -1, 1))
   end
