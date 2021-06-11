@@ -5,8 +5,7 @@
 engine.name = 'Thunk'
 
 local grid = include "midigrid/lib/midigrid"
-local UI = require "ui"
-
+UI = require "ui"
 Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
@@ -19,7 +18,6 @@ State = include("lib/state")
 
 local screen_refresh_metro
 local screen_dirty = true
-local main_menu
 local press_counter = {}
 
 PPQN = 48
@@ -37,10 +35,6 @@ function init()
   clock_id = clock.run(step)
 
   clock.run(grid_redraw_clock)
-
-  -- ui
-  main_menu = UI.ScrollingList.new(0, 0, 1, {})
-  main_menu.entries = ScreenUI.menu_entries(state)
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
@@ -120,22 +114,10 @@ end
 
 function enc(n, delta)
   Controller.handle_enc(state, n, delta)
-
-  if n == 2 then
-    main_menu:set_index_delta(util.clamp(delta, -1, 1))
-  end
-
-  if n == 3 then
-    local selected_menu_entry = ScreenUI.menu_entries(state)[main_menu.index]
-    -- selected_menu_entry.handler(delta)
-  end
-
-  state.screen_dirty = true
 end
 
 function redraw()
   screen.clear()
-  main_menu.entries = ScreenUI.menu_labels(state)
-  main_menu:redraw()
+  ScreenUI.redraw(state)
   screen.update()
 end

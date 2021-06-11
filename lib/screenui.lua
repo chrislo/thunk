@@ -27,6 +27,28 @@ local function has_value(tab, val)
   return false
 end
 
+function ScreenUI.redraw(state)
+  list = UI.ScrollingList.new(0, 0, 1)
+
+  if has_value({'tempo', 'swing', 'manage_samples'}, state.machine.current) then
+    list.entries = {
+      format_menu_item("tempo", params:get("clock_tempo")),
+      format_menu_item("swing", swing_as_percentage(params:get("swing"))),
+      "manage samples"
+    }
+
+    if state.machine.current == 'tempo' then
+      list:set_index(1)
+    elseif state.machine.current == 'swing' then
+      list:set_index(2)
+    elseif state.machine.current == 'manage_samples' then
+      list:set_index(3)
+    end
+  end
+
+  list:redraw()
+end
+
 function ScreenUI.menu_labels(state)
   labels = {}
 

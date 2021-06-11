@@ -99,7 +99,7 @@ function Controller.handle_enc(state, n, delta)
     state.machine:enc_3_dec()
   end
 
-  print(state.machine.current)
+  state.screen_dirty = true
 end
 
 return Controller
