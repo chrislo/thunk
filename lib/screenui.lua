@@ -40,6 +40,22 @@ end
 function ScreenUI.menu_entries(state)
   local entries = {}
 
+  if has_value({'tempo', 'swing', 'manage_samples'}, state.machine.current) then
+    table.insert(entries, {
+        label = format_menu_item("tempo", params:get("clock_tempo")),
+    })
+
+    table.insert(entries, {
+        label = format_menu_item("swing", swing_as_percentage(params:get("swing"))),
+    })
+
+    table.insert(entries, {
+        label = "manage samples",
+    })
+
+    return entries
+  end
+
   if state.edit_mode == 'step' then
     local steps = state.pattern:stepsForSelectedTrack(state.selected_track)
     local step = steps[state.selected_step]
@@ -81,20 +97,6 @@ function ScreenUI.menu_entries(state)
           handler = function(i) end
       })
     end
-  end
-
-  if has_value({'tempo', 'swing', 'manage_samples'}, state.machine.current) then
-    table.insert(entries, {
-        label = format_menu_item("tempo", params:get("clock_tempo")),
-    })
-
-    table.insert(entries, {
-        label = format_menu_item("swing", swing_as_percentage(params:get("swing"))),
-    })
-
-    table.insert(entries, {
-        label = "manage samples",
-    })
   end
 
   return entries
