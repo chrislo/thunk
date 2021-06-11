@@ -84,19 +84,19 @@ end
 
 function Controller.handle_enc(state, n, delta)
   if n == 2 and delta > 0 then
-    state.machine:enc_2_inc(delta)
+    state.machine:enc_2_inc()
   end
 
   if n == 2 and delta < 0 then
-    state.machine:enc_2_dec(delta)
+    state.machine:enc_2_dec()
   end
 
   if n == 3 and delta > 0 then
-    state.machine:enc_3_inc(delta)
+    state.machine:enc_3_inc()
   end
 
   if n == 3 and delta < 0 then
-    state.machine:enc_3_dec(delta)
+    state.machine:enc_3_dec()
   end
 
   print(state.machine.current)
