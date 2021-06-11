@@ -91,12 +91,8 @@ function Controller.handle_enc(state, n, delta)
     state.machine:enc_2_dec()
   end
 
-  if n == 3 and delta > 0 then
-    state.machine:enc_3_inc()
-  end
-
-  if n == 3 and delta < 0 then
-    state.machine:enc_3_dec()
+  if n == 3 then
+    state.machine:enc_3(delta)
   end
 
   state.screen_dirty = true
