@@ -6,8 +6,18 @@ local fsm = StateMachine.create({
     { name = 'enc_2_inc',  from = 'tempo',  to = 'swing' },
     { name = 'enc_2_inc', from = 'swing', to = 'manage_samples' },
     { name = 'enc_2_dec',  from = 'manage_samples', to = 'swing' },
-    { name = 'enc_2_dec', from = 'swing', to = 'tempo' }
-}})
+    { name = 'enc_2_dec', from = 'swing', to = 'tempo' },
+    { name = 'enc_3_inc', from = 'tempo', to = 'tempo' },
+    { name = 'enc_3_dec', from = 'tempo', to = 'tempo' }
+  },
+  callbacks = {
+    ontempo = function(self, event, from, to, delta)
+      if event == 'enc_3_inc' or event == 'enc_3_dec' then
+        params:delta("clock_tempo", delta)
+      end
+    end
+  }
+})
 
 function State:new(engine)
   state = {
