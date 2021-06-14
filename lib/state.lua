@@ -30,4 +30,9 @@ function State:select_track(id)
   self.selected_track = id
 end
 
+function State:select_page(id)
+  self.selected_page[self.selected_track] = id
+  self.pattern:maybeCreatePage(self.selected_track, id)
+end
+
 return State

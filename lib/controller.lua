@@ -11,9 +11,7 @@ function Controller.handle_short_press(state, x, y)
   end
   if y==3 and x>=5 then
     local page = x - 4
-
-    state.selected_page[state.selected_track] = page
-    state.pattern:maybeCreatePage(state.selected_track, page)
+    state:select_page(page)
   end
   if y==8 and x>=3 then
     local track_id = x-2
