@@ -35,7 +35,7 @@ describe('gridui', function()
         end)
 
         it("should show active steps for the selected track", function()
-            state.pattern:toggleStep(2, state.selected_track)
+            state:toggle_step(2)
 
             GridUI.redraw(connection, state)
 
@@ -45,7 +45,7 @@ describe('gridui', function()
         it("should show active steps for the selected track in the selected page", function()
             state:select_track(1)
             state:select_page(2)
-            state.pattern:toggleStep(17, state.selected_track)
+            state:toggle_step(17)
 
             GridUI.redraw(connection, state)
 
@@ -54,8 +54,8 @@ describe('gridui', function()
 
         it("should not show active steps for the selected track if not in the page", function()
             state:select_track(1)
+            state:toggle_step(1)
             state:select_page(2)
-            state.pattern:toggleStep(1, state.selected_track)
 
             GridUI.redraw(connection, state)
 

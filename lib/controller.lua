@@ -6,7 +6,7 @@ function Controller.handle_short_press(state, x, y)
     if state.shift then
       state:current_track().length = step_idx
     else
-      state.pattern:toggleStep(step_idx, state.selected_track)
+      state:toggle_step(step_idx)
     end
   end
   if y==3 and x>=5 then
