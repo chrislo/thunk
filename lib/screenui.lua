@@ -33,7 +33,7 @@ function ScreenUI.menu_entries(state)
   if state.edit_mode == 'step' then
     local steps = state.pattern:stepsForSelectedTrack(state.selected_track)
     local step = steps[state.selected_step]
-    local track = state.pattern:track(state.selected_track)
+    local track = state:current_track()
 
     local sample_id = nil
     if step.sample_id then
@@ -57,7 +57,7 @@ function ScreenUI.menu_entries(state)
         handler = function(x) step:delta_velocity(x) end
     })
   elseif state.edit_mode == 'track' then
-    local track = state.pattern:track(state.selected_track)
+    local track = state:current_track()
     local sample_id = track.default_sample_id
 
     table.insert(entries, {

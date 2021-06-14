@@ -39,4 +39,8 @@ function State:current_page()
   return self.selected_page[self.selected_track]
 end
 
+function State:current_track()
+  return self.pattern:track(self.selected_track)
+end
+
 return State

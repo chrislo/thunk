@@ -4,7 +4,7 @@ function Controller.handle_short_press(state, x, y)
   if y<=2 then
     local step_idx = x + ((state:current_page() - 1) * 16) + ((y-1) * 8)
     if state.shift then
-      state.pattern:track(state.selected_track).length = step_idx
+      state:current_track().length = step_idx
     else
       state.pattern:toggleStep(step_idx, state.selected_track)
     end
