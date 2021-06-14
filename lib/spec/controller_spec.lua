@@ -16,7 +16,7 @@ describe('controller', function()
 
         it("toggle steps for the selected track and page", function()
             local state = State:new()
-            state.selected_track = 1
+            state:select_track(1)
             state.selected_page = {1, 1, 1, 1, 1, 1}
 
             local s = spy.on(Pattern, "toggleStep")
@@ -38,7 +38,7 @@ describe('controller', function()
             Pattern.toggleStep:clear()
 
             -- Step toggle on first page, second track of step editor
-            state.selected_track = 2
+            state:select_track(2)
             Controller.handle_short_press(state, 1, 1)
             assert.spy(Pattern.toggleStep).was_called_with(_, 1, 2)
             Pattern.toggleStep:clear()
@@ -46,7 +46,7 @@ describe('controller', function()
 
         it("selects the step page of the current track", function()
             local state = State:new()
-            state.selected_track = 1
+            state:select_track(1)
             state.selected_page = {1, 1, 1, 1, 1, 1}
 
             Controller.handle_short_press(state, 6, 3)

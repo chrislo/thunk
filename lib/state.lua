@@ -26,4 +26,8 @@ function State:init()
   self.sample_pool:add_dir("/home/we/dust/audio/common/808/")
 end
 
+function State:select_track(id)
+  self.selected_track = id
+end
+
 return State
