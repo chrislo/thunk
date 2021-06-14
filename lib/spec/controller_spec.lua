@@ -47,7 +47,7 @@ describe('controller', function()
             state:select_page(1)
 
             Controller.handle_short_press(state, 6, 3)
-            assert.same(2, state.selected_page[1])
+            assert.same(2, state:current_page())
         end)
     end)
 end)

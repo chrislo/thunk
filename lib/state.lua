@@ -35,4 +35,8 @@ function State:select_page(id)
   self.pattern:maybeCreatePage(self.selected_track, id)
 end
 
+function State:current_page()
+  return self.selected_page[self.selected_track]
+end
+
 return State

@@ -2,7 +2,7 @@ Controller = {}
 
 function Controller.handle_short_press(state, x, y)
   if y<=2 then
-    local step_idx = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
+    local step_idx = x + ((state:current_page() - 1) * 16) + ((y-1) * 8)
     if state.shift then
       state.pattern:track(state.selected_track).length = step_idx
     else
@@ -46,7 +46,7 @@ function Controller.handle_long_press(state, x, y)
 
   if y <=2 and state.edit_mode == 'track' then
     state.edit_mode = 'step'
-    state.selected_step = x + ((state.selected_page[state.selected_track] - 1) * 16) + ((y-1) * 8)
+    state.selected_step = x + ((state:current_page() - 1) * 16) + ((y-1) * 8)
   end
 
   state.grid_dirty = true

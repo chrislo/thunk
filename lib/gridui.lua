@@ -41,15 +41,14 @@ local function draw_track_select(connection, pattern, selected_track)
   end
 end
 
-local function draw_page_select(connection, selected_track, selected_page, track)
-  local page_for_current_track = selected_page[selected_track]
+local function draw_page_select(connection, current_page, track)
   local number_of_pages = math.ceil(track.length / 16)
 
   for i = 1, number_of_pages do
     connection:led(i + 4, 3, 5)
   end
 
-  connection:led(page_for_current_track + 4, 3, 15)
+  connection:led(current_page + 4, 3, 15)
 end
 
 function draw_shift(connection, shift)
@@ -70,8 +69,8 @@ end
 
 function GridUI.redraw(connection, state)
   connection:all(0)
-  draw_track_steps(connection, state.pattern, state.selected_track, state.selected_page[state.selected_track])
-  draw_page_select(connection, state.selected_track, state.selected_page, state.pattern.tracks[state.selected_track])
+  draw_track_steps(connection, state.pattern, state.selected_track, state:current_page())
+  draw_page_select(connection, state:current_page(), state.pattern.tracks[state.selected_track])
   draw_track_select(connection, state.pattern, state.selected_track)
   draw_shift(connection, state.shift)
   draw_playing(connection, state.playing)
