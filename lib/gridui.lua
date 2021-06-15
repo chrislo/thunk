@@ -14,8 +14,10 @@ local function pattern_position_to_grid(i)
   return loc
 end
 
-local function draw_track_steps(connection, pattern, track, page)
-  for i, step in ipairs(pattern:stepsForSelectedTrack(track)) do
+local function draw_track_steps(connection, state)
+  local page = state:current_page()
+
+  for i, step in ipairs(state:current_steps()) do
     if math.ceil(i / 16) == page then
       local pos = pattern_position_to_grid(i - ((page - 1) * 16))
 
@@ -69,7 +71,7 @@ end
 
 function GridUI.redraw(connection, state)
   connection:all(0)
-  draw_track_steps(connection, state.pattern, state.selected_track, state:current_page())
+  draw_track_steps(connection, state)
   draw_page_select(connection, state:current_page(), state.pattern.tracks[state.selected_track])
   draw_track_select(connection, state.pattern, state.selected_track)
   draw_shift(connection, state.shift)
