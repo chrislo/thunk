@@ -9,9 +9,9 @@ describe('controller', function()
             local state = State:new()
             state.shift = true
 
-            assert.same(16, state.pattern.tracks[state.selected_track].length)
+            assert.same(16, state:current_track().length)
             Controller.handle_short_press(state, 8, 1)
-            assert.same(8, state.pattern.tracks[state.selected_track].length)
+            assert.same(8, state:current_track().length)
         end)
 
         it("toggle steps for the selected track and page", function()

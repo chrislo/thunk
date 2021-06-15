@@ -21,7 +21,7 @@ describe('screenui', function()
             before_each(function()
                 state.edit_mode = 'step'
                 entries = ScreenUI.menu_entries(state)
-                selected_step = state.pattern.tracks[state.selected_track].steps[state.selected_step]
+                selected_step = state:current_track().steps[state.selected_step]
             end)
 
             it("displays the selected step sample", function()
