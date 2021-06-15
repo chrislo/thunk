@@ -27,13 +27,13 @@ local function draw_track_steps(connection, state)
   end
 end
 
-local function draw_track_select(connection, pattern, selected_track)
-  for i, step in ipairs(pattern:currentlyPlayingSteps()) do
-    local track = pattern:track(i)
+local function draw_track_select(connection, state)
+  for i, step in ipairs(state.pattern:currentlyPlayingSteps()) do
+    local track = state.pattern:track(i)
 
     if track.mute then
       connection:led(i+2, 8, 5)
-    elseif selected_track == i then
+    elseif state.selected_track == i then
       connection:led(i+2, 8, 15)
     elseif step.active then
       connection:led(i+2, 8, 10)
@@ -43,14 +43,14 @@ local function draw_track_select(connection, pattern, selected_track)
   end
 end
 
-local function draw_page_select(connection, current_page, track)
-  local number_of_pages = math.ceil(track.length / 16)
+local function draw_page_select(connection, state)
+  local number_of_pages = math.ceil(state:current_track().length / 16)
 
   for i = 1, number_of_pages do
     connection:led(i + 4, 3, 5)
   end
 
-  connection:led(current_page + 4, 3, 15)
+  connection:led(state:current_page() + 4, 3, 15)
 end
 
 function draw_shift(connection, shift)
@@ -72,8 +72,8 @@ end
 function GridUI.redraw(connection, state)
   connection:all(0)
   draw_track_steps(connection, state)
-  draw_page_select(connection, state:current_page(), state.pattern.tracks[state.selected_track])
-  draw_track_select(connection, state.pattern, state.selected_track)
+  draw_page_select(connection, state)
+  draw_track_select(connection, state)
   draw_shift(connection, state.shift)
   draw_playing(connection, state.playing)
   connection:refresh()
