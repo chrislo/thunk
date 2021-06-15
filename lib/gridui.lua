@@ -33,7 +33,7 @@ local function draw_track_select(connection, state)
 
     if track.mute then
       connection:led(i+2, 8, 5)
-    elseif state.selected_track == i then
+    elseif state:get_selected_track() == i then
       connection:led(i+2, 8, 15)
     elseif step.active then
       connection:led(i+2, 8, 10)
