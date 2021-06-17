@@ -23,7 +23,12 @@ function Menu:new(initial)
   }
 
   o = {
-    fsm = StateMachine.create({initial = initial, events = events})
+    fsm = StateMachine.create({initial = initial, events = events}),
+    pages = {
+      global = {'tempo', 'swing', 'manage_samples'},
+      track = {'track_sample'},
+      step = {'step_sample', 'step_offset', 'step_velocity'}
+    }
   }
 
   setmetatable(o, self)
@@ -33,13 +38,7 @@ function Menu:new(initial)
 end
 
 function Menu:page()
-  pages = {
-    global = {'tempo', 'swing', 'manage_samples'},
-    track = {'track_sample'},
-    step = {'step_sample', 'step_offset', 'step_velocity'}
-  }
-
-  for page, items in pairs(pages) do
+  for page, items in pairs(self.pages) do
     for k, item in pairs(items) do
       if self.fsm:is(item) then
         return page
@@ -70,6 +69,18 @@ end
 
 function Menu:select_step()
   self.fsm:select_step()
+end
+
+function Menu:draw()
+  items = self.pages[self:page()]
+  for idx, item in pairs(items) do
+    if self.fsm:is(item) then
+      current_idx = idx
+    end
+  end
+
+  list = UI.ScrollingList.new(0, 0, current_idx, items)
+  list:redraw()
 end
 
 return Menu
