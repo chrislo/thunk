@@ -29,6 +29,7 @@ end
 
 function State:select_track(id)
   self.selected_track = id
+  self.menu:select_track()
 end
 
 function State:select_page(id)

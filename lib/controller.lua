@@ -19,7 +19,6 @@ function Controller.handle_short_press(state, x, y)
       local current_mute = state.pattern:track(track_id).mute
       state.pattern:track(track_id).mute = not current_mute
     else
-      state.edit_mode = 'track'
       state:select_track(track_id)
       if not state.playing then
         state.trigger_immediately = state.pattern:track(track_id).default_sample_id
@@ -44,8 +43,8 @@ function Controller.handle_long_press(state, x, y)
     return
   end
 
-  if y <=2 and state.edit_mode == 'track' then
-    state.edit_mode = 'step'
+  if y <=2 then
+    state.menu:select_step()
     state.selected_step = x + ((state:current_page() - 1) * 16) + ((y-1) * 8)
   end
 
@@ -57,10 +56,7 @@ function Controller.handle_long_release(state, x, y)
   if y<=2 then
     state.grid_dirty = true
     state.screen_dirty = true
-
-    if state.edit_mode == 'step' then
-      state.edit_mode = 'track'
-    end
+    state.menu:back()
   end
 
   if y==8 and x==1 then
@@ -70,12 +66,8 @@ function Controller.handle_long_release(state, x, y)
 end
 
 function Controller.handle_key(state, n, z)
-  if n == 2 and state.edit_mode == 'track' then
-    state.edit_mode = 'pattern'
-    state.screen_dirty = true
-  end
-  if n == 2 and state.edit_mode == 'samples' then
-    state.edit_mode = 'pattern'
+  if n == 2 then
+    state.menu:back()
     state.screen_dirty = true
   end
 end
