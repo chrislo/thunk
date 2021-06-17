@@ -72,4 +72,26 @@ function Controller.handle_key(state, n, z)
   end
 end
 
+function Controller.handle_enc(state, n, delta)
+  if n == 2 then
+    if delta > 0 then
+      state.menu:next()
+    elseif delta < 0 then
+      state.menu:prev()
+    end
+  end
+
+  if n == 3 then
+    if     state.menu:is("tempo") then params:delta("clock_tempo", delta)
+    elseif state.menu:is("swing") then params:delta("swing", delta)
+    elseif state.menu:is("track_sample") then print("track_sample")
+    elseif state.menu:is("step_sample") then print("step_sample")
+    elseif state.menu:is("step_offset") then print("step_offset")
+    elseif state.menu:is("step_velocity") then print("step_velocity")
+    end
+  end
+
+  state.screen_dirty = true
+end
+
 return Controller

@@ -71,6 +71,10 @@ function Menu:select_step()
   self.fsm:select_step()
 end
 
+function Menu:is(x)
+  return self.fsm:is(x)
+end
+
 function Menu:draw()
   items = self.pages[self:page()]
   for idx, item in pairs(items) do

@@ -5,7 +5,7 @@
 engine.name = 'Thunk'
 
 local grid = include "midigrid/lib/midigrid"
-local UI = require "ui"
+UI = require "ui"
 
 Pattern = include("lib/pattern")
 Track = include("lib/track")
@@ -120,21 +120,11 @@ function key(n,z)
 end
 
 function enc(n, delta)
-  if n == 2 then
-    main_menu:set_index_delta(util.clamp(delta, -1, 1))
-  end
-
-  if n == 3 then
-    local selected_menu_entry = ScreenUI.menu_entries(state)[main_menu.index]
-    selected_menu_entry.handler(delta)
-  end
-
-  state.screen_dirty = true
+  Controller.handle_enc(state, n, delta)
 end
 
 function redraw()
   screen.clear()
-  main_menu.entries = ScreenUI.menu_labels(state)
-  main_menu:redraw()
+  state.menu:draw()
   screen.update()
 end
