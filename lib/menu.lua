@@ -15,6 +15,11 @@ function Menu:new(initial)
     { name = 'prev',         from = 'step_velocity',  to = 'step_offset'       },
     { name = 'prev',         from = 'step_offset',    to = 'step_sample'       },
     { name = 'select_track', from = '*',              to = 'track_sample'      },
+    { name = 'select_step',  from = '*',              to = 'step_sample'       },
+    { name = 'back',         from = 'track_sample',   to = 'tempo'             },
+    { name = 'back',         from = 'step_sample',    to = 'track_sample'      },
+    { name = 'back',         from = 'step_offset',    to = 'track_sample'      },
+    { name = 'back',         from = 'step_velocity',  to = 'track_sample'      },
   }
 
   o = {
@@ -45,6 +50,26 @@ end
 
 function Menu:select_track()
   self.fsm:select_track()
+end
+
+function Menu:next()
+  self.fsm:next()
+end
+
+function Menu:prev()
+  self.fsm:prev()
+end
+
+function Menu:back()
+  self.fsm:back()
+end
+
+function Menu:select_track()
+  self.fsm:select_track()
+end
+
+function Menu:select_step()
+  self.fsm:select_step()
 end
 
 return Menu
