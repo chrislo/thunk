@@ -21,7 +21,7 @@ describe('screenui', function()
             before_each(function()
                 state.edit_mode = 'step'
                 entries = ScreenUI.menu_entries(state)
-                selected_step = state:current_track().steps[state.selected_step]
+                current_step = state:current_step()
             end)
 
             it("displays the selected step sample", function()
@@ -30,9 +30,9 @@ describe('screenui', function()
             end)
 
             it("allows us to change the sample", function()
-                assert.are.equal(nil, selected_step.sample_id)
+                assert.are.equal(nil, current_step.sample_id)
                 entries[1].handler(1)
-                assert.are.equal(2, selected_step.sample_id)
+                assert.are.equal(2, current_step.sample_id)
             end)
 
             it("displays the selected step offset", function()
@@ -41,9 +41,9 @@ describe('screenui', function()
             end)
 
             it("allows us to change the selected step offset", function()
-                assert.are.equal(0, selected_step.offset)
+                assert.are.equal(0, current_step.offset)
                 entries[2].handler(1)
-                assert.are.equal(1, selected_step.offset)
+                assert.are.equal(1, current_step.offset)
             end)
 
             it("displays the selected step velocity", function()
@@ -52,9 +52,9 @@ describe('screenui', function()
             end)
 
             it("allows us to change the selected step velocity", function()
-                assert.are.equal(127, selected_step.velocity)
+                assert.are.equal(127, current_step.velocity)
                 entries[3].handler(-1)
-                assert.are.equal(126, selected_step.velocity)
+                assert.are.equal(126, current_step.velocity)
             end)
         end)
 

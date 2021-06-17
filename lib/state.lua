@@ -55,4 +55,9 @@ function State:get_selected_track()
   return self.selected_track
 end
 
+function State:current_step()
+  steps = self.current_steps()
+  return steps[self.selected_step]
+end
+
 return State
