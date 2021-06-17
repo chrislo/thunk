@@ -11,7 +11,8 @@ function State:new(engine)
     playing = true,
     edit_mode = 'track',
     sample_pool = SamplePool:new(engine),
-    trigger_immediately = nil
+    trigger_immediately = nil,
+    menu = Menu:new()
   }
 
   state.pattern:toggleStep(1, 1)
