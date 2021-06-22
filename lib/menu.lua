@@ -78,7 +78,7 @@ end
 function Menu:draw()
   items = self.pages[self:page()]
   for idx, item in pairs(items) do
-    if self.fsm:is(item) then
+    if self:is(item) then
       current_idx = idx
     end
   end
