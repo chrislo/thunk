@@ -108,4 +108,8 @@ function Track:delta_default_sample_id(delta)
   self.default_sample_id = clamp(self.default_sample_id + delta, 1, 64)
 end
 
+function Track:default_sample_name(state)
+  return state.sample_pool:name(self.default_sample_id)
+end
+
 return Track

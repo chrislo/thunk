@@ -92,17 +92,19 @@ local function swing_as_percentage(pulses)
   return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
 end
 
-local function format_item(item)
+local function format_item(item,state)
   if item == 'tempo' then
     return format_menu_item(item, params:get("clock_tempo"))
   elseif item == 'swing' then
     return format_menu_item(item, swing_as_percentage(params:get("swing")))
+  elseif item == 'track_sample' then
+    return format_menu_item('Sample', state:current_track():default_sample_name(state))
   else
     return item
   end
 end
 
-function Menu:draw()
+function Menu:draw(state)
   items = self.pages[self:page()]
   display_items = {}
 
@@ -110,8 +112,7 @@ function Menu:draw()
     if self:is(item) then
       current_idx = idx
     end
-    display_items[idx] = format_item(item)
-    print(display_items[idx])
+    display_items[idx] = format_item(item, state)
   end
 
   list = UI.ScrollingList.new(0, 0, current_idx, display_items)

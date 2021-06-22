@@ -84,7 +84,8 @@ function Controller.handle_enc(state, n, delta)
   if n == 3 then
     if     state.menu:is("tempo") then params:delta("clock_tempo", delta)
     elseif state.menu:is("swing") then params:delta("swing", delta)
-    elseif state.menu:is("track_sample") then print("track_sample")
+    elseif state.menu:is("track_sample") then
+      state:current_track():delta_default_sample_id(delta)
     elseif state.menu:is("step_sample") then print("step_sample")
     elseif state.menu:is("step_offset") then print("step_offset")
     elseif state.menu:is("step_velocity") then print("step_velocity")

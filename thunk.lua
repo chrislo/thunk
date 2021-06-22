@@ -119,6 +119,6 @@ end
 
 function redraw()
   screen.clear()
-  state.menu:draw()
+  state.menu:draw(state)
   screen.update()
 end
