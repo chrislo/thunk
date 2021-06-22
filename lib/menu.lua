@@ -75,15 +75,46 @@ function Menu:is(x)
   return self.fsm:is(x)
 end
 
+local function format_menu_item(key, value)
+  local v
+  if type(value) == 'number' then
+    v = string.format("%.0f", value)
+  else
+    v = tostring(value)
+  end
+  local max_width = 30
+  local spaces_to_insert = max_width - string.len(key) - string.len(v) - 1
+
+  return key .. string.rep(" ", spaces_to_insert) .. v
+end
+
+local function swing_as_percentage(pulses)
+  return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
+end
+
+local function format_item(item)
+  if item == 'tempo' then
+    return format_menu_item(item, params:get("clock_tempo"))
+  elseif item == 'swing' then
+    return format_menu_item(item, swing_as_percentage(params:get("swing")))
+  else
+    return item
+  end
+end
+
 function Menu:draw()
   items = self.pages[self:page()]
+  display_items = {}
+
   for idx, item in pairs(items) do
     if self:is(item) then
       current_idx = idx
     end
+    display_items[idx] = format_item(item)
+    print(display_items[idx])
   end
 
-  list = UI.ScrollingList.new(0, 0, current_idx, items)
+  list = UI.ScrollingList.new(0, 0, current_idx, display_items)
   list:redraw()
 end
 
