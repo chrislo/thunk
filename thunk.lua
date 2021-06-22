@@ -20,7 +20,6 @@ State = include("lib/state")
 
 local screen_refresh_metro
 local screen_dirty = true
-local main_menu
 local press_counter = {}
 
 PPQN = 48
@@ -38,10 +37,6 @@ function init()
   clock_id = clock.run(step)
 
   clock.run(grid_redraw_clock)
-
-  -- ui
-  main_menu = UI.ScrollingList.new(0, 0, 1, {})
-  main_menu.entries = ScreenUI.menu_entries(state)
 
   screen_refresh_metro = metro.init()
   screen_refresh_metro.event = function()
