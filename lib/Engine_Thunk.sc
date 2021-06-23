@@ -1,6 +1,10 @@
 Engine_Thunk : CroneEngine {
   var samples;
   var tracks;
+  var track_group;
+  var effects_group;
+  var reverb_bus;
+  var reverb;
 
   *new { arg context, doneCallback;
     ^super.new(context, doneCallback);
@@ -13,7 +17,9 @@ Engine_Thunk : CroneEngine {
 
     (0..5).do({arg i;
       SynthDef("track"++i, {
-        arg out=0,
+        arg dryOut=0,
+        reverbOut,
+        reverbSend=0,
         bufnum=0,
         rate=1,
         start=0,
@@ -62,16 +68,35 @@ Engine_Thunk : CroneEngine {
         // maximum filter gain (4) self-oscillates, so we back it off a bit
         snd=MoogFF.ar(snd, freq: 20000*cutoff, gain: 3.9*resonance);
 
-        Out.ar(out,snd);
+        Out.ar(reverbOut,(snd * reverbSend));
+        Out.ar(dryOut,(snd * (1 - reverbSend)));
 
       }).add;
     });
 
+    SynthDef("reverb", {
+      arg out = 0,
+      in,
+      room,
+      damp;
+
+      var input;
+      input = In.ar(in, 2);
+
+      Out.ar(out, FreeVerb2.ar(input[0], input[1], mix: 1, room: room, damp: damp));
+    }).add;
+
     context.server.sync;
 
+    track_group = Group.new(context.xg);
+    effects_group = Group.new(track_group, addAction: \addAfter);
+    reverb_bus = Bus.audio(context.server, 2);
+
     tracks = Array.fill(6,{arg i;
-      Synth("track"++i,[\bufnum:samples[i]], target:context.xg);
+      Synth("track"++i,[\bufnum:samples[i], \reverbOut:reverb_bus, \dryOut: context.out_b], target:track_group);
     });
+
+    reverb = Synth("reverb", [\in: reverb_bus, \out: context.out_b], target: effects_group);
 
     this.addCommand("load_sample","is", { arg msg;
       var idx = msg[1]-1;
@@ -118,10 +143,34 @@ Engine_Thunk : CroneEngine {
         \resonance, msg[2],
        );
     });
+
+    // <track_id>, <reverb_send [0-1]>
+    this.addCommand("reverb_send","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \reverbSend, msg[2],
+       );
+    });
+
+    // <room [0-1]>
+    this.addCommand("reverb_room","f", { arg msg;
+      reverb.set(
+        \room, msg[1],
+       );
+    });
+
+    // <damp [0-1]>
+    this.addCommand("reverb_damp","f", { arg msg;
+      reverb.set(
+        \damp, msg[1],
+       );
+    });
   }
 
   free {
     (0..63).do({arg i; samples[i].free});
-    (0..5).do({arg i; tracks[i].free});
+    track_group.freeAll;
+    effects_group.freeAll;
   }
 }
