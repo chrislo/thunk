@@ -12,12 +12,26 @@ Engine_Thunk : CroneEngine {
     });
 
     (0..5).do({arg i;
-      SynthDef("track"++i, { arg out=0, bufnum=0, rate=1, start=0, end=1, vel=127, t_trig=0;
+      SynthDef("track"++i, {
+        arg out=0,
+        bufnum=0,
+        rate=1,
+        start=0,
+        end=1,
+        vel=1,
+        cutoff=1,
+        resonance=0.5,
+        t_trig=0;
+
         var snd,pos,frames,duration,env,clamped_vel;
 
         rate = rate*BufRateScale.kr(bufnum);
         frames = BufFrames.kr(bufnum);
         duration = frames*(end-start)/rate.abs/context.server.sampleRate;
+
+        vel = vel.max(0).min(1);
+        cutoff = cutoff.max(0).min(1);
+        resonance = resonance.max(0).min(1);
 
         env=EnvGen.ar(
           Env.new(
@@ -43,8 +57,10 @@ Engine_Thunk : CroneEngine {
           interpolation:4,
         );
 
-        clamped_vel = vel.max(0).min(127);
-        snd = snd * env * (clamped_vel/127);
+        snd = snd * env * vel;
+
+        // maximum filter gain (4) self-oscillates, so we back it off a bit
+        snd=MoogFF.ar(snd, freq: 20000*cutoff, gain: 3.9*resonance);
 
         Out.ar(out,snd);
 
@@ -68,11 +84,13 @@ Engine_Thunk : CroneEngine {
         } {
           samples[idx].free;
           samples[idx] = buf;
-        }
+        };
+        buf.free;
       });
     });
 
-    this.addCommand("note_on","iii", { arg msg;
+    // <track_id>, <sample_id>, <velocity [0-1]>
+    this.addCommand("note_on","iif", { arg msg;
       var idx = msg[1]-1;
       var sample_idx = msg[2]-1;
 
@@ -81,6 +99,24 @@ Engine_Thunk : CroneEngine {
         \bufnum, samples[sample_idx],
         \vel, msg[3]
       );
+    });
+
+    // <track_id>, <cutoff [0-1]>
+    this.addCommand("cutoff","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \cutoff, msg[2],
+       );
+    });
+
+    // <track_id>, <resonance [0-1]>
+    this.addCommand("resonance","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \resonance, msg[2],
+       );
     });
   }
 
