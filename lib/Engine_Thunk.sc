@@ -23,13 +23,15 @@ Engine_Thunk : CroneEngine {
         bufnum=0,
         rate=1,
         start=0,
+        attack = 0.01,
+        release = 0.01,
         end=1,
         vel=1,
         cutoff=1,
         resonance=0.5,
         t_trig=0;
 
-        var snd,pos,frames,duration,env,clamped_vel;
+        var snd,pos,frames,duration,env,clamped_vel,sustain;
 
         rate = rate*BufRateScale.kr(bufnum);
         frames = BufFrames.kr(bufnum);
@@ -38,12 +40,13 @@ Engine_Thunk : CroneEngine {
         vel = vel.max(0).min(1);
         cutoff = cutoff.max(0).min(1);
         resonance = resonance.max(0).min(1);
+        attack = attack.max(0.01).min(1);
+        release = release.max(0.01).min(1);
+
+        sustain = duration - (duration * attack) - (duration * release);
 
         env=EnvGen.ar(
-          Env.new(
-            levels: [0,1,1,0],
-            times: [0,duration,0],
-          ),
+          Env.linen(attackTime: duration * attack, sustainTime: sustain, releaseTime: duration * release),
           gate:t_trig,
         );
 
@@ -143,6 +146,25 @@ Engine_Thunk : CroneEngine {
         \resonance, msg[2],
        );
     });
+
+    // <track_id>, <attack>
+    this.addCommand("attack","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \attack, msg[2],
+       );
+    });
+
+    // <track_id>, <release>
+    this.addCommand("release","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \release, msg[2],
+       );
+    });
+
 
     // <track_id>, <reverb_send [0-1]>
     this.addCommand("reverb_send","if", { arg msg;
