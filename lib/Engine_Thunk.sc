@@ -117,11 +117,15 @@ Engine_Thunk : CroneEngine {
     delay_bus = Bus.audio(context.server, 2);
 
     tracks = Array.fill(6,{arg i;
-      Synth("track"++i,[\bufnum:samples[i], \reverbOut:reverb_bus, \delayOut: delay_bus, \dryOut: context.out_b], target:track_group);
+      Synth("track"++i, [
+        \bufnum:samples[i],
+        \reverbOut:reverb_bus,
+        \delayOut: delay_bus,
+        \dryOut: context.out_b
+      ], target:track_group);
     });
 
     reverb = Synth("reverb", [\in: reverb_bus, \out: context.out_b], target: effects_group);
-
     delay = Synth("delay", [\in: delay_bus, \out: context.out_b], target: effects_group);
 
     this.addCommand("load_sample","is", { arg msg;
