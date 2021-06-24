@@ -9,7 +9,6 @@ function State:new(engine)
     screen_dirty = true,
     shift = false,
     playing = true,
-    edit_mode = 'track',
     sample_pool = SamplePool:new(engine),
     trigger_immediately = nil,
     menu = Menu:new()
