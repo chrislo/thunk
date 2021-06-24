@@ -5,6 +5,8 @@ Engine_Thunk : CroneEngine {
   var effects_group;
   var reverb_bus;
   var reverb;
+  var delay_bus;
+  var delay;
 
   *new { arg context, doneCallback;
     ^super.new(context, doneCallback);
@@ -20,6 +22,8 @@ Engine_Thunk : CroneEngine {
         arg dryOut=0,
         reverbOut,
         reverbSend=0,
+        delayOut,
+        delaySend=0,
         bufnum=0,
         rate=1,
         start=0,
@@ -72,7 +76,8 @@ Engine_Thunk : CroneEngine {
         snd=MoogFF.ar(snd, freq: 20000*cutoff, gain: 3.9*resonance);
 
         Out.ar(reverbOut,(snd * reverbSend));
-        Out.ar(dryOut,(snd * (1 - reverbSend)));
+        Out.ar(delayOut,(snd * delaySend));
+        Out.ar(dryOut, snd);
 
       }).add;
     });
@@ -89,17 +94,35 @@ Engine_Thunk : CroneEngine {
       Out.ar(out, FreeVerb2.ar(input[0], input[1], mix: 1, room: room, damp: damp));
     }).add;
 
+    SynthDef("delay", {
+      arg out = 0,
+      in,
+      delaytime = 0.2,
+      decaytime = 1.0;
+
+      var input;
+      input = In.ar(in, 2);
+
+      delaytime = delaytime.max(0).min(4);
+      decaytime = decaytime.max(0).min(10);
+
+      Out.ar(out, CombC.ar(input, maxdelaytime: 2, delaytime: delaytime, decaytime: decaytime));
+    }).add;
+
     context.server.sync;
 
     track_group = Group.new(context.xg);
     effects_group = Group.new(track_group, addAction: \addAfter);
     reverb_bus = Bus.audio(context.server, 2);
+    delay_bus = Bus.audio(context.server, 2);
 
     tracks = Array.fill(6,{arg i;
-      Synth("track"++i,[\bufnum:samples[i], \reverbOut:reverb_bus, \dryOut: context.out_b], target:track_group);
+      Synth("track"++i,[\bufnum:samples[i], \reverbOut:reverb_bus, \delayOut: delay_bus, \dryOut: context.out_b], target:track_group);
     });
 
     reverb = Synth("reverb", [\in: reverb_bus, \out: context.out_b], target: effects_group);
+
+    delay = Synth("delay", [\in: delay_bus, \out: context.out_b], target: effects_group);
 
     this.addCommand("load_sample","is", { arg msg;
       var idx = msg[1]-1;
@@ -186,6 +209,29 @@ Engine_Thunk : CroneEngine {
     this.addCommand("reverb_damp","f", { arg msg;
       reverb.set(
         \damp, msg[1],
+       );
+    });
+
+    // <track_id>, <delay_send [0-1]>
+    this.addCommand("delay_send","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \delaySend, msg[2],
+       );
+    });
+
+    // <delaytime [0-4]>
+    this.addCommand("delay_time","f", { arg msg;
+      delay.set(
+        \delaytime, msg[1],
+       );
+    });
+
+    // <decaytime [0-4]>
+    this.addCommand("decay_time","f", { arg msg;
+      delay.set(
+        \decaytime, msg[1],
        );
     });
   }
