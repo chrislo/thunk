@@ -33,6 +33,7 @@ Engine_Thunk : CroneEngine {
         vel=1,
         cutoff=1,
         resonance=0.5,
+        resonance=0,
         t_trig=0;
 
         var snd,pos,frames,duration,env,clamped_vel,sustain;
