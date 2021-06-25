@@ -33,6 +33,33 @@ function init()
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0)
   params:set_action("swing", set_swing)
 
+  for i = 1,6 do
+    params:add_group("Track" .. i, 6)
+    name = "t" .. i .. "_cutoff"
+    params:add_control(name, "cutoff", controlspec.AMP)
+    params:set_action(name, function(x) engine.cutoff(i, x) end)
+
+    name = "t" .. i .. "_resonance"
+    params:add_control(name, "resonance", controlspec.AMP)
+    params:set_action(name, function(x) engine.resonance(i, x) end)
+
+    name = "t" .. i .. "_attack"
+    params:add_control(name, "attack", controlspec.AMP)
+    params:set_action(name, function(x) engine.attack(i, x) end)
+
+    name = "t" .. i .. "_release"
+    params:add_control(name, "release", controlspec.AMP)
+    params:set_action(name, function(x) engine.release(i, x) end)
+
+    name = "t" .. i .. "_reverb_send"
+    params:add_control(name, "reverb send", controlspec.AMP)
+    params:set_action(name, function(x) engine.reverb_send(i, x) end)
+
+    name = "t" .. i .. "_delay_send"
+    params:add_control(name, "delay send", controlspec.AMP)
+    params:set_action(name, function(x) engine.delay_send(i, x) end)
+  end
+
   clock_id = clock.run(step)
 
   clock.run(grid_redraw_clock)
