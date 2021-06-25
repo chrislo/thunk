@@ -31,8 +31,7 @@ Engine_Thunk : CroneEngine {
         release = 0.01,
         end=1,
         vel=1,
-        cutoff=1,
-        resonance=0.5,
+        cutoff=20000,
         resonance=0,
         t_trig=0;
 
@@ -43,7 +42,7 @@ Engine_Thunk : CroneEngine {
         duration = frames*(end-start)/rate.abs/context.server.sampleRate;
 
         vel = vel.max(0).min(1);
-        cutoff = cutoff.max(0).min(1);
+        cutoff = cutoff.max(0).min(20000);
         resonance = resonance.max(0).min(1);
         attack = attack.max(0.01).min(1);
         release = release.max(0.01).min(1);
@@ -74,7 +73,7 @@ Engine_Thunk : CroneEngine {
         snd = snd * env * vel;
 
         // maximum filter gain (4) self-oscillates, so we back it off a bit
-        snd=MoogFF.ar(snd, freq: 20000*cutoff, gain: 3.9*resonance);
+        snd=MoogFF.ar(snd, freq: cutoff, gain: 3.9*resonance);
 
         Out.ar(reverbOut,(snd * reverbSend));
         Out.ar(delayOut,(snd * delaySend));
@@ -157,7 +156,7 @@ Engine_Thunk : CroneEngine {
       );
     });
 
-    // <track_id>, <cutoff [0-1]>
+    // <track_id>, <cutoff [0-20000]>
     this.addCommand("cutoff","if", { arg msg;
       var idx = msg[1]-1;
 

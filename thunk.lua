@@ -36,7 +36,7 @@ function init()
   for i = 1,6 do
     params:add_group("Track" .. i, 6)
     name = "t" .. i .. "_cutoff"
-    params:add_control(name, "cutoff", controlspec.AMP)
+    params:add_control(name, "cutoff", controlspec.WIDEFREQ)
     params:set_action(name, function(x) engine.cutoff(i, x) end)
 
     name = "t" .. i .. "_resonance"
