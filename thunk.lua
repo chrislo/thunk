@@ -30,7 +30,7 @@ local state = State:new(engine)
 function init()
   state:init()
 
-  params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0, {}, false)
+  params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0)
   params:set_action("swing", set_swing)
 
   clock_id = clock.run(step)
