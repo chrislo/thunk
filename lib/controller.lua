@@ -86,9 +86,12 @@ function Controller.handle_enc(state, n, delta)
     elseif state.menu:is("swing") then params:delta("swing", delta)
     elseif state.menu:is("track_sample") then
       state:current_track():delta_default_sample_id(delta)
-    elseif state.menu:is("step_sample") then print("step_sample")
-    elseif state.menu:is("step_offset") then print("step_offset")
-    elseif state.menu:is("step_velocity") then print("step_velocity")
+    elseif state.menu:is("step_sample") then
+      state:current_step():delta_sample_id(state:current_track().default_sample_id, delta)
+    elseif state.menu:is("step_offset") then
+      state:current_step():delta_offset(delta)
+    elseif state.menu:is("step_velocity") then
+      state:current_step():delta_velocity(delta)
     end
   end
 

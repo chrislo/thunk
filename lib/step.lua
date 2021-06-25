@@ -37,4 +37,12 @@ function Step:delta_sample_id(default, delta)
   self.sample_id = clamp(sample_id + delta, 1, 64)
 end
 
+function Step:sample_name(state)
+  if self.sample_id then
+    return state.sample_pool:name(self.sample_id)
+  else
+    return '<default>'
+  end
+end
+
 return Step

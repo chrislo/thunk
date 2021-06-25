@@ -99,6 +99,12 @@ local function format_item(item,state)
     return format_menu_item(item, swing_as_percentage(params:get("swing")))
   elseif item == 'track_sample' then
     return format_menu_item('Sample', state:current_track():default_sample_name(state))
+  elseif item == 'step_sample' then
+    return format_menu_item('Sample', state:current_step():sample_name(state))
+  elseif item == 'step_offset' then
+    return format_menu_item('Offset', state:current_step().offset)
+  elseif item == 'step_velocity' then
+    return format_menu_item('Velocity', state:current_step().velocity)
   else
     return item
   end
