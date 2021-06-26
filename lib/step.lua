@@ -19,6 +19,10 @@ local function clamp(n, min, max)
   return math.min(max,(math.max(n,min)))
 end
 
+function Step:toggle()
+  self.active = not self.active
+end
+
 function Step:delta_offset(delta)
   self.offset = clamp(self.offset + delta, 0, PPQN/4)
 end

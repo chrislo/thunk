@@ -57,7 +57,7 @@ function Track:reset()
 end
 
 function Track:toggleStep(step)
-  self.steps[step].active = not self.steps[step].active
+  self.steps[step]:toggle()
 end
 
 function Track:setSwing(swing)
