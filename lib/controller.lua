@@ -84,6 +84,10 @@ function Controller.handle_enc(state, n, delta)
   if n == 3 then
     if     state.menu:is("tempo") then params:delta("clock_tempo", delta)
     elseif state.menu:is("swing") then params:delta("swing", delta)
+    elseif state.menu:is("reverb_room") then params:delta("reverb_room", delta)
+    elseif state.menu:is("reverb_damp") then params:delta("reverb_damp", delta)
+    elseif state.menu:is("delay_time") then params:delta("delay_time", delta)
+    elseif state.menu:is("decay_time") then params:delta("decay_time", delta)
     elseif state.menu:is("track_sample") then
       state:current_track():delta_default_sample_id(delta)
     elseif state.menu:is("step_sample") then

@@ -5,9 +5,15 @@ function Menu:new(initial)
 
   events = {
     { name = 'next',         from = 'tempo',          to = 'swing'             },
-    { name = 'next',         from = 'swing',          to = 'manage_samples'    },
-    { name = 'prev',         from = 'manage_samples', to = 'swing'             },
     { name = 'prev',         from = 'swing',          to = 'tempo'             },
+    { name = 'next',         from = 'swing',          to = 'reverb_room'       },
+    { name = 'prev',         from = 'reverb_room',    to = 'swing'             },
+    { name = 'next',         from = 'reverb_room',    to = 'reverb_damp'       },
+    { name = 'prev',         from = 'reverb_damp',    to = 'reverb_room'       },
+    { name = 'next',         from = 'reverb_damp',    to = 'delay_time'        },
+    { name = 'prev',         from = 'delay_time',     to = 'reverb_damp'       },
+    { name = 'next',         from = 'delay_time',     to = 'decay_time'        },
+    { name = 'prev',         from = 'decay_time',     to = 'delay_time'        },
     { name = 'next',         from = 'track_sample',   to = 'track_sample'      },
     { name = 'prev',         from = 'track_sample',   to = 'track_sample'      },
     { name = 'next',         from = 'step_sample',    to = 'step_offset'       },
@@ -25,7 +31,7 @@ function Menu:new(initial)
   o = {
     fsm = StateMachine.create({initial = initial, events = events}),
     pages = {
-      global = {'tempo', 'swing', 'manage_samples'},
+      global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
       track = {'track_sample'},
       step = {'step_sample', 'step_offset', 'step_velocity'}
     }
@@ -78,7 +84,7 @@ end
 local function format_menu_item(key, value)
   local v
   if type(value) == 'number' then
-    v = string.format("%.0f", value)
+    v = string.format("%.2f", value)
   else
     v = tostring(value)
   end
@@ -105,6 +111,8 @@ local function format_item(item,state)
     return format_menu_item('Offset', state:current_step().offset)
   elseif item == 'step_velocity' then
     return format_menu_item('Velocity', state:current_step().velocity)
+  elseif params:get(item) then
+    return format_menu_item(item, params:get(item))
   else
     return item
   end
