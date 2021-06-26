@@ -1,11 +1,6 @@
 Track = {}
 
 function Track:new(ppqn, default_sample_id)
-  local steps = {}
-  for i = 1, 64 do
-    steps[i] = Step:new()
-  end
-
   track = {
     ppqn = ppqn or 4,
     tick = 0,
@@ -17,10 +12,15 @@ function Track:new(ppqn, default_sample_id)
     mute = false
   }
 
-  track.steps[track.pos].current = true
-
   setmetatable(track, self)
   self.__index = self
+
+  track.steps = {}
+  for i = 1, 64 do
+    track.steps[i] = Step:new(track)
+  end
+
+  track.steps[track.pos].current = true
 
   return track
 end

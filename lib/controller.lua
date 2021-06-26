@@ -87,7 +87,7 @@ function Controller.handle_enc(state, n, delta)
     elseif state.menu:is("track_sample") then
       state:current_track():delta_default_sample_id(delta)
     elseif state.menu:is("step_sample") then
-      state:current_step():delta_sample_id(state:current_track().default_sample_id, delta)
+      state:current_step():delta_sample_id(delta)
     elseif state.menu:is("step_offset") then
       state:current_step():delta_offset(delta)
     elseif state.menu:is("step_velocity") then

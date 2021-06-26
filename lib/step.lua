@@ -1,12 +1,13 @@
 Step = {}
 
-function Step:new()
+function Step:new(track)
   obj = {
     active = false,
     current = false,
     offset = 0,
     velocity = 127,
-    sample_id = nil
+    sample_id = nil,
+    track = track
   }
 
   setmetatable(obj, self)
@@ -26,12 +27,12 @@ function Step:delta_velocity(delta)
   self.velocity = clamp(self.velocity + delta, 0, 127)
 end
 
-function Step:delta_sample_id(default, delta)
+function Step:delta_sample_id(delta)
   local sample_id
   if self.sample_id then
     sample_id = self.sample_id
   else
-    sample_id = default
+    sample_id = self.track.default_sample_id
   end
 
   self.sample_id = clamp(sample_id + delta, 1, 64)
@@ -41,7 +42,7 @@ function Step:sample_name(state)
   if self.sample_id then
     return state.sample_pool:name(self.sample_id)
   else
-    return '<default>'
+    return state.sample_pool:name(self.track.default_sample_id)
   end
 end
 
