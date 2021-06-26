@@ -18,7 +18,6 @@ Menu = include("lib/menu")
 State = include("lib/state")
 
 local screen_refresh_metro
-local screen_dirty = true
 local press_counter = {}
 
 PPQN = 48
