@@ -106,8 +106,6 @@ function step()
   end
 end
 
-
-
 function g.key(x,y,z)
   if z==1 then
     press_counter[x][y] = clock.run(long_press, x, y)
