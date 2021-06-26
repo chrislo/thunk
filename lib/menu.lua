@@ -21,12 +21,16 @@ function Menu:new(initial)
     end
   end
 
-  table.insert(events, { name = 'select_track', from = '*',              to = 'track_sample' })
-  table.insert(events, { name = 'select_step',  from = '*',              to = 'step_sample'  })
-  table.insert(events, { name = 'back',         from = 'track_sample',   to = 'tempo'        })
-  table.insert(events, { name = 'back',         from = 'step_sample',    to = 'track_sample' })
-  table.insert(events, { name = 'back',         from = 'step_offset',    to = 'track_sample' })
-  table.insert(events, { name = 'back',         from = 'step_velocity',  to = 'track_sample' })
+  table.insert(events, { name = 'select_track', from = '*', to = 'track_sample' })
+  table.insert(events, { name = 'select_step',  from = '*', to = 'step_sample'  })
+
+  for _, item in pairs(pages['track']) do
+    table.insert(events, { name = 'back', from = item, to = 'tempo' })
+  end
+
+  for _, item in pairs(pages['step']) do
+    table.insert(events, { name = 'back', from = item, to = 'track_sample' })
+  end
 
   o = {
     fsm = StateMachine.create({initial = initial, events = events}),
