@@ -20,7 +20,18 @@ local function clamp(n, min, max)
 end
 
 function Step:toggle()
-  self.active = not self.active
+  if self.active then
+    self.active = false
+    self:reset_locks()
+  else
+    self.active = true
+  end
+end
+
+function Step:reset_locks()
+  self.offset = 0
+  self.velocity = 127
+  self.sample_id = nil
 end
 
 function Step:delta_offset(delta)
