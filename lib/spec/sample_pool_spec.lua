@@ -1,6 +1,9 @@
-describe('SamplePool', function()
+insulate('SamplePool', function()
     setup(function()
         SamplePool = require("lib/sample_pool")
+        _G.params = {
+          set = function(name, value) end
+        }
     end)
 
     before_each(function()
@@ -9,6 +12,12 @@ describe('SamplePool', function()
     end)
 
     describe('add()', function()
+        it('should set the filename of the sample at index', function()
+            s:add('foo', 1)
+
+            assert.same('foo', s.samples[1].fn)
+        end)
+
         it('should set the filename of the sample at index', function()
             s:add('foo', 1)
 

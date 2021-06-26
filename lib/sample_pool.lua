@@ -18,6 +18,7 @@ end
 
 function SamplePool:add(fn, idx)
   self.samples[idx] = { fn = fn }
+  params:set("sample_" .. idx, fn)
   self.engine.load_sample(idx, fn)
 end
 

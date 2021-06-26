@@ -27,10 +27,44 @@ local g = grid.connect()
 local state = State:new(engine)
 
 function init()
+  init_params()
   state:init()
+
+  clock_id = clock.run(step)
+
+  clock.run(grid_redraw_clock)
+
+  screen_refresh_metro = metro.init()
+  screen_refresh_metro.event = function()
+    if state.screen_dirty then
+      state.screen_dirty = false
+      redraw()
+    end
+  end
+  screen_refresh_metro:start(1 / 5)
+
+  for x = 1, 16 do
+    press_counter[x] = {}
+  end
+end
+
+function init_params()
+  params:add_group("Global", 5)
 
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0)
   params:set_action("swing", set_swing)
+
+  params:add_control("reverb_room", "reverb room", controlspec.AMP)
+  params:set_action("reverb_room", function(x) engine.reverb_room(x) end)
+
+  params:add_control("reverb_damp", "reverb damp", controlspec.AMP)
+  params:set_action("reverb_damp", function(x) engine.reverb_damp(x) end)
+
+  params:add_control("delay_time", "delay time", controlspec.DELAY)
+  params:set_action("delay_time", function(x) engine.delay_time(x) end)
+
+  params:add_control("decay_time", "decay time", controlspec.DELAY)
+  params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
     params:add_group("Track" .. i, 6)
@@ -59,21 +93,11 @@ function init()
     params:set_action(name, function(x) engine.delay_send(i, x) end)
   end
 
-  clock_id = clock.run(step)
-
-  clock.run(grid_redraw_clock)
-
-  screen_refresh_metro = metro.init()
-  screen_refresh_metro.event = function()
-    if state.screen_dirty then
-      state.screen_dirty = false
-      redraw()
-    end
-  end
-  screen_refresh_metro:start(1 / 5)
-
-  for x = 1, 16 do
-    press_counter[x] = {}
+  params:add_group("Samples", 64)
+  for i = 1,64 do
+    name = "sample_" .. i
+    params:add_file(name, "Sample " .. i)
+    params:set_action(name, function(file) state.sample_pool:add(file, i) end)
   end
 end
 
