@@ -3,38 +3,34 @@ Menu = {}
 function Menu:new(initial)
   initial = initial or 'tempo'
 
-  events = {
-    { name = 'next',         from = 'tempo',          to = 'swing'             },
-    { name = 'prev',         from = 'swing',          to = 'tempo'             },
-    { name = 'next',         from = 'swing',          to = 'reverb_room'       },
-    { name = 'prev',         from = 'reverb_room',    to = 'swing'             },
-    { name = 'next',         from = 'reverb_room',    to = 'reverb_damp'       },
-    { name = 'prev',         from = 'reverb_damp',    to = 'reverb_room'       },
-    { name = 'next',         from = 'reverb_damp',    to = 'delay_time'        },
-    { name = 'prev',         from = 'delay_time',     to = 'reverb_damp'       },
-    { name = 'next',         from = 'delay_time',     to = 'decay_time'        },
-    { name = 'prev',         from = 'decay_time',     to = 'delay_time'        },
-    { name = 'next',         from = 'track_sample',   to = 'track_sample'      },
-    { name = 'prev',         from = 'track_sample',   to = 'track_sample'      },
-    { name = 'next',         from = 'step_sample',    to = 'step_offset'       },
-    { name = 'next',         from = 'step_offset',    to = 'step_velocity'     },
-    { name = 'prev',         from = 'step_velocity',  to = 'step_offset'       },
-    { name = 'prev',         from = 'step_offset',    to = 'step_sample'       },
-    { name = 'select_track', from = '*',              to = 'track_sample'      },
-    { name = 'select_step',  from = '*',              to = 'step_sample'       },
-    { name = 'back',         from = 'track_sample',   to = 'tempo'             },
-    { name = 'back',         from = 'step_sample',    to = 'track_sample'      },
-    { name = 'back',         from = 'step_offset',    to = 'track_sample'      },
-    { name = 'back',         from = 'step_velocity',  to = 'track_sample'      },
+  pages = {
+    global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
+    track = {'track_sample'},
+    step = {'step_sample', 'step_offset', 'step_velocity'}
   }
+
+  events = {}
+
+  for page, items in pairs(pages) do
+    for i = 1, (#items - 1) do
+      table.insert(events, { name = 'next', from = items[i], to = items[i+1] })
+    end
+
+    for i = 2, #items do
+      table.insert(events, { name = 'prev', from = items[i], to = items[i-1] })
+    end
+  end
+
+  table.insert(events, { name = 'select_track', from = '*',              to = 'track_sample' })
+  table.insert(events, { name = 'select_step',  from = '*',              to = 'step_sample'  })
+  table.insert(events, { name = 'back',         from = 'track_sample',   to = 'tempo'        })
+  table.insert(events, { name = 'back',         from = 'step_sample',    to = 'track_sample' })
+  table.insert(events, { name = 'back',         from = 'step_offset',    to = 'track_sample' })
+  table.insert(events, { name = 'back',         from = 'step_velocity',  to = 'track_sample' })
 
   o = {
     fsm = StateMachine.create({initial = initial, events = events}),
-    pages = {
-      global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
-      track = {'track_sample'},
-      step = {'step_sample', 'step_offset', 'step_velocity'}
-    }
+    pages = pages
   }
 
   setmetatable(o, self)
