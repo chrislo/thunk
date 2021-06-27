@@ -133,14 +133,14 @@ Engine_Thunk : CroneEngine {
       var fn = msg[2];
 
       Buffer.read(context.server, fn, action: { arg buf;
+        samples[idx].free;
+
         if(buf.numChannels == 1) {
-          samples[idx].free;
           samples[idx] = Buffer.readChannel(context.server,fn,channels:[0,0]);
+          buf.free;
         } {
-          samples[idx].free;
           samples[idx] = buf;
         };
-        buf.free;
       });
     });
 
