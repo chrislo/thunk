@@ -3,10 +3,13 @@ Engine_Thunk : CroneEngine {
   var tracks;
   var track_group;
   var effects_group;
+  var mixer_group;
   var reverb_bus;
   var reverb;
   var delay_bus;
   var delay;
+  var mixer_bus;
+  var mixer;
 
   *new { arg context, doneCallback;
     ^super.new(context, doneCallback);
@@ -109,24 +112,37 @@ Engine_Thunk : CroneEngine {
       Out.ar(out, CombC.ar(input, maxdelaytime: 2, delaytime: delaytime, decaytime: decaytime));
     }).add;
 
+    SynthDef("mixer", {
+      arg out, in;
+
+      var input;
+      input = In.ar(in, 2);
+
+      Out.ar(out, input.softclip);
+    }).add;
+
     context.server.sync;
 
     track_group = Group.new(context.xg);
     effects_group = Group.new(track_group, addAction: \addAfter);
+    mixer_group = Group.new(effects_group, addAction: \addAfter);
+
     reverb_bus = Bus.audio(context.server, 2);
     delay_bus = Bus.audio(context.server, 2);
+    mixer_bus = Bus.audio(context.server, 2);
 
     tracks = Array.fill(6,{arg i;
       Synth("track"++i, [
         \bufnum:samples[i],
         \reverbOut:reverb_bus,
         \delayOut: delay_bus,
-        \dryOut: context.out_b
+        \dryOut: mixer_bus,
       ], target:track_group);
     });
 
-    reverb = Synth("reverb", [\in: reverb_bus, \out: context.out_b], target: effects_group);
-    delay = Synth("delay", [\in: delay_bus, \out: context.out_b], target: effects_group);
+    reverb = Synth("reverb", [\in: reverb_bus, \out: mixer_bus], target: effects_group);
+    delay = Synth("delay", [\in: delay_bus, \out: mixer_bus], target: effects_group);
+    mixer = Synth("mixer", [\in: mixer_bus, \out: context.out_b], target: mixer_group);
 
     this.addCommand("load_sample","is", { arg msg;
       var idx = msg[1]-1;
