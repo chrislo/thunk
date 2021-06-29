@@ -5,7 +5,7 @@ function Menu:new(initial)
 
   pages = {
     global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
-    track = {'track_sample'},
+    track = {'track_sample', 'cutoff', 'resonance', 'attack', 'release', 'reverb_send', 'delay_send'},
     step = {'step_sample', 'step_offset', 'step_velocity'}
   }
 
@@ -105,6 +105,18 @@ local function format_item(item,state)
     return format_menu_item(item, swing_as_percentage(params:get("swing")))
   elseif item == 'track_sample' then
     return format_menu_item('Sample', state:current_track():default_sample_name(state))
+  elseif item == 'cutoff' then
+    return format_menu_item('Cutoff', params:get("t" .. state:get_selected_track() .. "_cutoff"))
+  elseif item == 'resonance' then
+    return format_menu_item('Resonance', params:get("t" .. state:get_selected_track() .. "_resonance"))
+  elseif item == 'attack' then
+    return format_menu_item('Attack', params:get("t" .. state:get_selected_track() .. "_attack"))
+  elseif item == 'release' then
+    return format_menu_item('Release', params:get("t" .. state:get_selected_track() .. "_release"))
+  elseif item == 'delay_send' then
+    return format_menu_item('Delay Send', params:get("t" .. state:get_selected_track() .. "_delay_send"))
+  elseif item == 'reverb_send' then
+    return format_menu_item('Reverb Send', params:get("t" .. state:get_selected_track() .. "_reverb_send"))
   elseif item == 'step_sample' then
     return format_menu_item('Sample', state:current_step():sample_name(state))
   elseif item == 'step_offset' then

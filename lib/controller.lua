@@ -90,6 +90,18 @@ function Controller.handle_enc(state, n, delta)
     elseif state.menu:is("decay_time") then params:delta("decay_time", delta)
     elseif state.menu:is("track_sample") then
       state:current_track():delta_default_sample_id(delta)
+    elseif state.menu:is('cutoff') then
+      params:delta("t" .. state:get_selected_track() .. "_cutoff", delta)
+    elseif state.menu:is('resonance') then
+      params:delta("t" .. state:get_selected_track() .. "_resonance", delta)
+    elseif state.menu:is('attack') then
+      params:delta("t" .. state:get_selected_track() .. "_attack", delta)
+    elseif state.menu:is('release') then
+      params:delta("t" .. state:get_selected_track() .. "_release", delta)
+    elseif state.menu:is('delay_send') then
+      params:delta("t" .. state:get_selected_track() .. "_delay_send", delta)
+    elseif state.menu:is('reverb_send') then
+      params:delta("t" .. state:get_selected_track() .. "_reverb_send", delta)
     elseif state.menu:is("step_sample") then
       state:current_step():delta_sample_id(delta)
     elseif state.menu:is("step_offset") then
