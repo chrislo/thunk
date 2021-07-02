@@ -71,6 +71,7 @@ function init_params()
     name = "t" .. i .. "_cutoff"
     params:add_control(name, "cutoff", controlspec.WIDEFREQ)
     params:set_action(name, function(x) engine.cutoff(i, x) end)
+    params:set(name, params:get_range(name)[2]) -- set to max
 
     name = "t" .. i .. "_resonance"
     params:add_control(name, "resonance", controlspec.AMP)
