@@ -67,7 +67,12 @@ function init_params()
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
-    params:add_group("Track" .. i, 6)
+    params:add_group("Track" .. i, 7)
+    name = "t" .. i .. "_volume"
+    params:add_control(name, "volume", controlspec.AMP)
+    params:set_action(name, function(x) engine.volume(i, x) end)
+    params:set(name, params:get_range(name)[2]) -- set to max
+
     name = "t" .. i .. "_cutoff"
     params:add_control(name, "cutoff", controlspec.WIDEFREQ)
     params:set_action(name, function(x) engine.cutoff(i, x) end)

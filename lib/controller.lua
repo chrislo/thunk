@@ -92,6 +92,8 @@ function Controller.handle_enc(state, n, delta)
       state:current_track():delta_default_sample_id(delta)
     elseif state.menu:is("track_transpose") then
       state:current_track():delta_transpose(delta)
+    elseif state.menu:is('volume') then
+      params:delta("t" .. state:get_selected_track() .. "_volume", delta)
     elseif state.menu:is('cutoff') then
       params:delta("t" .. state:get_selected_track() .. "_cutoff", delta)
     elseif state.menu:is('resonance') then
