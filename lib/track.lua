@@ -77,17 +77,8 @@ function Track:playStep(engine, id)
     swing_offset = self.swing
   end
 
-  local sample_id = nil
-  if step.sample_id then
-    sample_id = step.sample_id
-  else
-    sample_id = self.default_sample_id
-  end
-
-  local rate = 2^(self.transpose / 12)
-
-  if step.active and (offset_in_current_step(self) == (step.offset + swing_offset)) then
-    engine.note_on(id, sample_id, step.velocity / 127, rate)
+  if offset_in_current_step(self) == (step.offset + swing_offset) then
+    step:play(id, engine)
   end
 end
 
