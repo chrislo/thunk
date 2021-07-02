@@ -6,6 +6,7 @@ engine.name = 'Thunk'
 
 local grid = include "midigrid/lib/midigrid"
 UI = require "ui"
+fileselect = require "fileselect"
 
 Pattern = include("lib/pattern")
 Track = include("lib/track")
@@ -16,6 +17,7 @@ SamplePool = include("lib/sample_pool")
 StateMachine = include("lib/statemachine")
 Menu = include("lib/menu")
 State = include("lib/state")
+
 
 local screen_refresh_metro
 local press_counter = {}

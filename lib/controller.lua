@@ -70,6 +70,21 @@ function Controller.handle_key(state, n, z)
     state.menu:back()
     state.screen_dirty = true
   end
+
+  if n == 3 then
+    if state.menu:is("track_sample") then
+      local track = state:current_track()
+      local sample_id = track.default_sample_id
+      local callback  = function(fn)
+        if fn then
+          params:set("sample_" .. sample_id, fn)
+        end
+        state.screen_dirty = true
+      end
+
+      fileselect.enter('/home/we/dust/audio', callback)
+    end
+  end
 end
 
 function Controller.handle_enc(state, n, delta)
