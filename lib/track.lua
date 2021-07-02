@@ -8,6 +8,7 @@ function Track:new(ppqn, default_sample_id)
     length = 16,
     steps = steps,
     swing = 0,
+    transpose = 0,
     default_sample_id = default_sample_id,
     mute = false
   }
@@ -83,8 +84,10 @@ function Track:playStep(engine, id)
     sample_id = self.default_sample_id
   end
 
+  local rate = 2^(self.transpose / 12)
+
   if step.active and (offset_in_current_step(self) == (step.offset + swing_offset)) then
-    engine.note_on(id, sample_id, step.velocity / 127, 1)
+    engine.note_on(id, sample_id, step.velocity / 127, rate)
   end
 end
 
@@ -106,6 +109,10 @@ end
 
 function Track:delta_default_sample_id(delta)
   self.default_sample_id = clamp(self.default_sample_id + delta, 1, 64)
+end
+
+function Track:delta_transpose(delta)
+  self.transpose = clamp(self.transpose + delta, -24, 24)
 end
 
 function Track:default_sample_name(state)
