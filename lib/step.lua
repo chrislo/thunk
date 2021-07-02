@@ -33,6 +33,7 @@ function Step:reset_locks()
   self.offset = 0
   self.velocity = 127
   self.sample_id = nil
+  self.transpose = nil
 end
 
 function Step:delta_offset(delta)
