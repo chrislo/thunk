@@ -84,7 +84,7 @@ function Track:playStep(engine, id)
   end
 
   if step.active and (offset_in_current_step(self) == (step.offset + swing_offset)) then
-    engine.note_on(id, sample_id, step.velocity / 127)
+    engine.note_on(id, sample_id, step.velocity / 127, 1)
   end
 end
 

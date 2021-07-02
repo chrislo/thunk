@@ -50,7 +50,7 @@ describe('track', function()
             local t = track:new()
 
             local engine = {
-              note_on = function(id, sampleId, vel) end
+              note_on = function(id, sampleId, vel, rate) end
             }
             stub(engine, 'note_on')
 
@@ -63,7 +63,7 @@ describe('track', function()
             t:toggleStep(1)
 
             local engine = {
-              note_on = function(id, sampleId, vel) end
+              note_on = function(id, sampleId, vel, rate) end
             }
             stub(engine, 'note_on')
 
@@ -77,7 +77,7 @@ describe('track', function()
             t.steps[1].offset = 1
 
             local engine = {
-              note_on = function(id, sampleId, vel) end
+              note_on = function(id, sampleId, vel, rate) end
             }
             stub(engine, 'note_on')
 
@@ -96,7 +96,7 @@ describe('track', function()
             t:setSwing(1)
 
             local engine = {
-              note_on = function(id, sampleId, vel) end
+              note_on = function(id, sampleId, vel, rate) end
             }
             stub(engine, 'note_on')
 

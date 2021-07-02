@@ -160,15 +160,16 @@ Engine_Thunk : CroneEngine {
       });
     });
 
-    // <track_id>, <sample_id>, <velocity [0-1]>
-    this.addCommand("note_on","iif", { arg msg;
+    // <track_id>, <sample_id>, <velocity [0-1]>, <rate>
+    this.addCommand("note_on","iiff", { arg msg;
       var idx = msg[1]-1;
       var sample_idx = msg[2]-1;
 
       tracks[idx].set(
         \t_trig, 1,
         \bufnum, samples[sample_idx],
-        \vel, msg[3]
+        \vel, msg[3],
+        \rate, msg[4],
       );
     });
 
