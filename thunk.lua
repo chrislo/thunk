@@ -4,10 +4,10 @@
 
 engine.name = 'Thunk'
 
-local grid = util.file_exists(_path.code.."midigrid") and include "midigrid/lib/midigrid" or grid
+PPQN = 48
+
 UI = require "ui"
 fileselect = require "fileselect"
-
 Pattern = include("lib/pattern")
 Track = include("lib/track")
 Step = include("lib/step")
@@ -18,14 +18,10 @@ StateMachine = include("lib/statemachine")
 Menu = include("lib/menu")
 State = include("lib/state")
 
-
 local screen_refresh_metro
 local press_counter = {}
-
-PPQN = 48
-
+local grid = util.file_exists(_path.code.."midigrid") and include "midigrid/lib/midigrid" or grid
 local g = grid.connect()
-
 local state = State:new(engine)
 
 function init()
