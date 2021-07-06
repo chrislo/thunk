@@ -4,7 +4,7 @@
 
 engine.name = 'Thunk'
 
-local grid = include "midigrid/lib/midigrid"
+local grid = util.file_exists(_path.code.."midigrid") and include "midigrid/lib/midigrid" or grid
 UI = require "ui"
 fileselect = require "fileselect"
 
