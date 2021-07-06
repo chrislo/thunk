@@ -23,13 +23,13 @@ end
 function Step:toggle()
   if self.active then
     self.active = false
-    self:reset_locks()
+    self:set_defaults()
   else
     self.active = true
   end
 end
 
-function Step:reset_locks()
+function Step:set_defaults()
   self.offset = 0
   self.velocity = 127
   self.sample_id = nil
