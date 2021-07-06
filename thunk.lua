@@ -28,8 +28,7 @@ function init()
   init_params()
   state:init()
 
-  clock_id = clock.run(step)
-
+  clock.run(step)
   clock.run(grid_redraw_clock)
 
   screen_refresh_metro = metro.init()
