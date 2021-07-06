@@ -69,7 +69,7 @@ function init_params()
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
-    params:add_group("Track" .. i, 7)
+    params:add_group("Track" .. i, 9)
     name = "t" .. i .. "_volume"
     params:add_control(name, "volume", controlspec.AMP)
     params:set_action(name, function(x) engine.volume(i, x) end)
@@ -83,6 +83,16 @@ function init_params()
     name = "t" .. i .. "_resonance"
     params:add_control(name, "resonance", controlspec.AMP)
     params:set_action(name, function(x) engine.resonance(i, x) end)
+
+    name = "t" .. i .. "_sample_start"
+    params:add_control(name, "sample_start", controlspec.AMP)
+    params:set_action(name, function(x) engine.sample_start(i, x) end)
+    params:set(name, params:get_range(name)[1]) -- set to min
+
+    name = "t" .. i .. "_sample_end"
+    params:add_control(name, "sample_end", controlspec.AMP)
+    params:set_action(name, function(x) engine.sample_end(i, x) end)
+    params:set(name, params:get_range(name)[2]) -- set to max
 
     name = "t" .. i .. "_attack"
     params:add_control(name, "attack", controlspec.AMP)

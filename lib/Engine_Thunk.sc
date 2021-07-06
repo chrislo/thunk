@@ -221,6 +221,23 @@ Engine_Thunk : CroneEngine {
        );
     });
 
+    // <track_id>, <start>
+    this.addCommand("sample_start","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \start, msg[2],
+       );
+    });
+
+    // <track_id>, <end>
+    this.addCommand("sample_end","if", { arg msg;
+      var idx = msg[1]-1;
+
+      tracks[idx].set(
+        \end, msg[2],
+       );
+    });
 
     // <track_id>, <reverb_send [0-1]>
     this.addCommand("reverb_send","if", { arg msg;
