@@ -40,4 +40,6 @@ Thunk has space for 64 samples (stereo or mono). It comes preloaded with the nor
 
 - MIDI tracks for sequencing external devices
 - Synth tracks to complement the sampled sounds
+- Patterns
+- Step conditions (e.g. probability, 1:X, fills)
 - Nicer menus
