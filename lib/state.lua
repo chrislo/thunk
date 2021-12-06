@@ -44,6 +44,11 @@ function State:current_track()
   return self.pattern:track(self.selected_track)
 end
 
+function State:set_track_probability(track, probability)
+  track = self.pattern:track(track)
+  track.probability = probability
+end
+
 function State:current_steps()
   return state.pattern:stepsForSelectedTrack(state.selected_track)
 end

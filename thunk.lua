@@ -64,7 +64,7 @@ function init_params()
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
-    params:add_group("Track" .. i, 9)
+    params:add_group("Track" .. i, 10)
     name = "t" .. i .. "_volume"
     params:add_control(name, "volume", controlspec.AMP)
     params:set_action(name, function(x) engine.volume(i, x) end)
@@ -104,6 +104,10 @@ function init_params()
     name = "t" .. i .. "_delay_send"
     params:add_control(name, "delay send", controlspec.AMP)
     params:set_action(name, function(x) engine.delay_send(i, x) end)
+
+    name = "t" .. i .. "_probability"
+    params:add_control(name, "probability", controlspec.AMP)
+    params:set_action(name, function(x) state:set_track_probability(i, x) end)
   end
 
   params:add_group("Samples", 64)

@@ -10,7 +10,8 @@ function Track:new(ppqn, default_sample_id)
     swing = 0,
     transpose = 0,
     default_sample_id = default_sample_id,
-    mute = false
+    mute = false,
+    probability = 1,
   }
 
   setmetatable(track, self)
@@ -67,6 +68,10 @@ end
 
 function Track:playStep(engine, id)
   if self.mute then
+    return
+  end
+
+  if math.random > self.probability then
     return
   end
 

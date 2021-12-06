@@ -125,6 +125,8 @@ function Controller.handle_enc(state, n, delta)
       params:delta("t" .. state:get_selected_track() .. "_delay_send", delta)
     elseif state.menu:is('reverb_send') then
       params:delta("t" .. state:get_selected_track() .. "_reverb_send", delta)
+    elseif state.menu:is('probability') then
+      params:delta("t" .. state:get_selected_track() .. "_probability", delta)
     elseif state.menu:is("step_sample") then
       state:current_step():delta_sample_id(delta)
     elseif state.menu:is("step_transpose") then
