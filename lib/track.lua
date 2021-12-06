@@ -71,7 +71,7 @@ function Track:playStep(engine, id)
     return
   end
 
-  if math.random > self.probability then
+  if math.random() > self.probability then
     return
   end
 
