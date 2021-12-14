@@ -49,6 +49,16 @@ function State:set_track_probability(track, probability)
   track.probability = probability
 end
 
+function State:set_track_sample_start(track, v)
+  track = self.pattern:track(track)
+  track.sample_start = v
+end
+
+function State:set_track_sample_end(track, v)
+  track = self.pattern:track(track)
+  track.sample_end = v
+end
+
 function State:current_steps()
   return state.pattern:stepsForSelectedTrack(state.selected_track)
 end

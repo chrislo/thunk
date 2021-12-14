@@ -1,6 +1,5 @@
 Engine_Thunk : CroneEngine {
   var samples;
-  var tracks;
   var track_amplitudes;
   var track_filters;
   var track_group;
@@ -26,44 +25,36 @@ Engine_Thunk : CroneEngine {
 	  Buffer.alloc(context.server, 1, 2);
 	});
 
-	(0..5).do({arg i;
-	  SynthDef("track"++i, {
-		arg trackAmplitudeOut,
-		bufnum=0,
-		rate=1,
-		start=0,
-		end=1,
-		vel=1,
-		t_trig=0;
+	SynthDef("oneshotplayer", {
+	  arg trackAmplitudeOut,
+	  bufnum=0,
+	  rate=1,
+	  start=0,
+	  end=1,
+	  vel=1,
+	  t_trig=0;
 
-		var snd,pos,frames;
+	  var snd,frames;
 
-		rate = rate*BufRateScale.kr(bufnum);
-		frames = BufFrames.kr(bufnum);
+	  rate = rate*BufRateScale.kr(bufnum);
+	  frames = BufFrames.kr(bufnum);
 
-		vel = vel.max(0).min(1);
+	  vel = vel.max(0).min(1);
 
-		pos=Phasor.ar(
-		  trig:t_trig,
-		  rate:rate,
-		  start:start*frames,
-		  end:end*frames,
-		  resetPos:start*frames,
-		);
+	  snd=PlayBuf.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		rate: rate,
+		trigger: t_trig,
+		startPos: start*frames,
+		loop:0,
+		doneAction: 2,
+	  );
 
-		snd=BufRd.ar(
-		  numChannels:2,
-		  bufnum:bufnum,
-		  phase:pos,
-		  loop:0,
-		  interpolation:4,
-		);
+	  snd = snd * vel;
 
-		snd = snd * vel;
-
-		Out.ar(trackAmplitudeOut, snd);
-	  }).add;
-	});
+	  Out.ar(trackAmplitudeOut, snd);
+	}).add;
 
 	(0..5).do({arg i;
 	  SynthDef("trackamplitude"++i, {
@@ -172,13 +163,6 @@ Engine_Thunk : CroneEngine {
 	track_amplitude_busses = Array.fill(6, {arg i;
 	  Bus.audio(context.server, 2); });
 
-	tracks = Array.fill(6,{arg i;
-	  Synth("track"++i, [
-		\bufnum:samples[i],
-		\trackAmplitudeOut:track_amplitude_busses[i],
-	  ], target:track_group);
-	});
-
 	track_amplitudes = Array.fill(6,{arg i;
 	  Synth("trackamplitude"++i, [
 		\in:track_amplitude_busses[i],
@@ -215,16 +199,22 @@ Engine_Thunk : CroneEngine {
 	  });
 	});
 
-	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>
-	this.addCommand("note_on","iiff", { arg msg;
+	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end
+	this.addCommand("note_on","iiffff", { arg msg;
 	  var idx = msg[1]-1;
 	  var sample_idx = msg[2]-1;
 
-	  tracks[idx].set(
-		\t_trig, 1,
-		\bufnum, samples[sample_idx],
+	  var player = Synth("oneshotplayer", [
+		\bufnum:samples[sample_idx],
 		\vel, msg[3],
 		\rate, msg[4],
+		\start, msg[5],
+		\end, msg[6],
+		\trackAmplitudeOut:track_amplitude_busses[idx],
+	  ], target:track_group);
+
+	  player.set(
+		\t_trig, 1,
 	  );
 
 	  track_amplitudes[idx].set(
@@ -274,24 +264,6 @@ Engine_Thunk : CroneEngine {
 
 	  track_amplitudes[idx].set(
 		\release, msg[2],
-	  );
-	});
-
-	// <track_id>, <start>
-	this.addCommand("sample_start","if", { arg msg;
-	  var idx = msg[1]-1;
-
-	  tracks[idx].set(
-		\start, msg[2],
-	  );
-	});
-
-	// <track_id>, <end>
-	this.addCommand("sample_end","if", { arg msg;
-	  var idx = msg[1]-1;
-
-	  tracks[idx].set(
-		\end, msg[2],
 	  );
 	});
 

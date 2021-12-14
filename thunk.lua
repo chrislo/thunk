@@ -81,12 +81,12 @@ function init_params()
 
     name = "t" .. i .. "_sample_start"
     params:add_control(name, "sample_start", controlspec.AMP)
-    params:set_action(name, function(x) engine.sample_start(i, x) end)
+    params:set_action(name, function(x) state:set_track_sample_start(i, x) end)
     params:set(name, params:get_range(name)[1]) -- set to min
 
     name = "t" .. i .. "_sample_end"
     params:add_control(name, "sample_end", controlspec.AMP)
-    params:set_action(name, function(x) engine.sample_end(i, x) end)
+    params:set_action(name, function(x) state:set_track_sample_end(i, x) end)
     params:set(name, params:get_range(name)[2]) -- set to max
 
     name = "t" .. i .. "_attack"
@@ -141,7 +141,7 @@ function step()
     end
 
     if state.trigger_immediately then
-      engine.note_on(1, state.trigger_immediately, 0.8, 1)
+      engine.note_on(1, state.trigger_immediately, 0.8, 1, 0, 1)
       state.trigger_immediately = nil
     end
   end
