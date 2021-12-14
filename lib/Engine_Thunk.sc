@@ -34,7 +34,6 @@ Engine_Thunk : CroneEngine {
 		start=0,
 		end=1,
 		vel=1,
-		volume=1,
 		t_trig=0;
 
 		var snd,pos,frames;
@@ -43,7 +42,6 @@ Engine_Thunk : CroneEngine {
 		frames = BufFrames.kr(bufnum);
 
 		vel = vel.max(0).min(1);
-		volume = volume.max(0).min(1);
 
 		pos=Phasor.ar(
 		  trig:t_trig,
@@ -61,7 +59,7 @@ Engine_Thunk : CroneEngine {
 		  interpolation:4,
 		);
 
-		snd = snd * vel * volume;
+		snd = snd * vel;
 
 		Out.ar(trackAmplitudeOut, snd);
 	  }).add;
@@ -101,16 +99,18 @@ Engine_Thunk : CroneEngine {
 		delayOut,
 		delaySend=0,
 		cutoff=20000,
-		resonance=0;
+		resonance=0,
+		volume=1;
 
 		var input, snd;
 		input = In.ar(in, 2);
 
 		cutoff = cutoff.max(0).min(20000);
 		resonance = resonance.max(0).min(1);
+		volume = volume.max(0).min(1);
 
 		// maximum filter gain (4) self-oscillates, so we back it off a bit
-		snd=MoogFF.ar(input, freq: cutoff, gain: 3.9*resonance);
+		snd=MoogFF.ar(input, freq: cutoff, gain: 3.9*resonance) * volume;
 
 		Out.ar(reverbOut,(snd * reverbSend));
 		Out.ar(delayOut,(snd * delaySend));
@@ -236,11 +236,10 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("volume","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_filters[idx].set(
 		\volume, msg[2],
 	  );
 	});
-
 
 	// <track_id>, <cutoff [0-20000]>
 	this.addCommand("cutoff","if", { arg msg;
