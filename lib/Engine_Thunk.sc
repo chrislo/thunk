@@ -22,7 +22,7 @@ Engine_Thunk : CroneEngine {
 
 	(0..5).do({arg i;
 	  SynthDef("track"++i, {
-		arg dryOut=0,
+		arg dryOut,
 		reverbOut,
 		reverbSend=0,
 		delayOut,
