@@ -1,7 +1,10 @@
 Engine_Thunk : CroneEngine {
   var samples;
   var tracks;
+  var track_filters;
   var track_group;
+  var track_filters_group;
+  var track_filter_busses;
   var effects_group;
   var mixer_group;
   var reverb_bus;
@@ -22,11 +25,7 @@ Engine_Thunk : CroneEngine {
 
 	(0..5).do({arg i;
 	  SynthDef("track"++i, {
-		arg dryOut,
-		reverbOut,
-		reverbSend=0,
-		delayOut,
-		delaySend=0,
+		arg trackFilterOut,
 		bufnum=0,
 		rate=1,
 		start=0,
@@ -34,8 +33,6 @@ Engine_Thunk : CroneEngine {
 		release = 0.01,
 		end=1,
 		vel=1,
-		cutoff=20000,
-		resonance=0,
 		volume=1,
 		t_trig=0;
 
@@ -47,8 +44,6 @@ Engine_Thunk : CroneEngine {
 
 		vel = vel.max(0).min(1);
 		volume = volume.max(0).min(1);
-		cutoff = cutoff.max(0).min(20000);
-		resonance = resonance.max(0).min(1);
 		attack = attack.max(0.01).min(1);
 		release = release.max(0.01).min(1);
 
@@ -77,13 +72,33 @@ Engine_Thunk : CroneEngine {
 
 		snd = snd * env * vel * volume;
 
+		Out.ar(trackFilterOut, snd);
+	  }).add;
+	});
+
+	(0..5).do({arg i;
+	  SynthDef("trackfilter"++i, {
+		arg in,
+		dryOut,
+		reverbOut,
+		reverbSend=0,
+		delayOut,
+		delaySend=0,
+		cutoff=20000,
+		resonance=0;
+
+		var input, snd;
+		input = In.ar(in, 2);
+
+		cutoff = cutoff.max(0).min(20000);
+		resonance = resonance.max(0).min(1);
+
 		// maximum filter gain (4) self-oscillates, so we back it off a bit
-		snd=MoogFF.ar(snd, freq: cutoff, gain: 3.9*resonance);
+		snd=MoogFF.ar(input, freq: cutoff, gain: 3.9*resonance);
 
 		Out.ar(reverbOut,(snd * reverbSend));
 		Out.ar(delayOut,(snd * delaySend));
 		Out.ar(dryOut, snd);
-
 	  }).add;
 	});
 
@@ -126,19 +141,30 @@ Engine_Thunk : CroneEngine {
 	context.server.sync;
 
 	track_group = Group.new(context.xg);
-	effects_group = Group.new(track_group, addAction: \addAfter);
+	track_filters_group = Group.new(track_group, addAction: \addAfter);
+	effects_group = Group.new(track_filters_group, addAction: \addAfter);
 	mixer_group = Group.new(effects_group, addAction: \addAfter);
 
 	reverb_bus = Bus.audio(context.server, 2);
 	delay_bus = Bus.audio(context.server, 2);
 	mixer_bus = Bus.audio(context.server, 2);
 
-	tracks = Array.fill(6,{arg i;
-	  Synth("track"++i, [
-		\bufnum:samples[i],
+	track_filter_busses = Array.fill(6, {arg i;
+	  Bus.audio(context.server, 2); });
+
+	track_filters = Array.fill(6,{arg i;
+	  Synth("trackfilter"++i, [
+		\in:track_filter_busses[i],
 		\reverbOut:reverb_bus,
 		\delayOut: delay_bus,
 		\dryOut: mixer_bus,
+	  ], target:track_filters_group);
+	});
+
+	tracks = Array.fill(6,{arg i;
+	  Synth("track"++i, [
+		\bufnum:samples[i],
+		\trackFilterOut:track_filter_busses[i],
 	  ], target:track_group);
 	});
 
@@ -189,7 +215,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("cutoff","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_filters[idx].set(
 		\cutoff, msg[2],
 	  );
 	});
@@ -198,7 +224,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("resonance","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_filters[idx].set(
 		\resonance, msg[2],
 	  );
 	});
@@ -243,7 +269,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("reverb_send","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_filters[idx].set(
 		\reverbSend, msg[2],
 	  );
 	});
@@ -266,7 +292,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("delay_send","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_filters[idx].set(
 		\delaySend, msg[2],
 	  );
 	});
@@ -289,6 +315,7 @@ Engine_Thunk : CroneEngine {
   free {
 	(0..63).do({arg i; samples[i].free});
 	track_group.freeAll;
+	track_filters_group.freeAll;
 	effects_group.freeAll;
   }
 }
