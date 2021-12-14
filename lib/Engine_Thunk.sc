@@ -1,8 +1,11 @@
 Engine_Thunk : CroneEngine {
   var samples;
   var tracks;
+  var track_amplitudes;
   var track_filters;
   var track_group;
+  var track_amplitudes_group;
+  var track_amplitude_busses;
   var track_filters_group;
   var track_filter_busses;
   var effects_group;
@@ -25,34 +28,22 @@ Engine_Thunk : CroneEngine {
 
 	(0..5).do({arg i;
 	  SynthDef("track"++i, {
-		arg trackFilterOut,
+		arg trackAmplitudeOut,
 		bufnum=0,
 		rate=1,
 		start=0,
-		attack = 0.01,
-		release = 0.01,
 		end=1,
 		vel=1,
 		volume=1,
 		t_trig=0;
 
-		var snd,pos,frames,duration,env,clamped_vel,sustain;
+		var snd,pos,frames;
 
 		rate = rate*BufRateScale.kr(bufnum);
 		frames = BufFrames.kr(bufnum);
-		duration = frames*(end-start)/rate.abs/context.server.sampleRate;
 
 		vel = vel.max(0).min(1);
 		volume = volume.max(0).min(1);
-		attack = attack.max(0.01).min(1);
-		release = release.max(0.01).min(1);
-
-		sustain = duration - (duration * attack) - (duration * release);
-
-		env=EnvGen.ar(
-		  Env.linen(attackTime: duration * attack, sustainTime: sustain, releaseTime: duration * release),
-		  gate:t_trig,
-		);
 
 		pos=Phasor.ar(
 		  trig:t_trig,
@@ -70,7 +61,32 @@ Engine_Thunk : CroneEngine {
 		  interpolation:4,
 		);
 
-		snd = snd * env * vel * volume;
+		snd = snd * vel * volume;
+
+		Out.ar(trackAmplitudeOut, snd);
+	  }).add;
+	});
+
+	(0..5).do({arg i;
+	  SynthDef("trackamplitude"++i, {
+		arg in,
+		trackFilterOut,
+		attack = 0.01,
+		release = 0.2,
+		t_trig=0;
+
+		var snd, env, maxRelease;
+
+		attack = attack.max(0.01).min(1);
+		release = release.max(0.01).min(1);
+		maxRelease = 5;
+
+		env=EnvGen.ar(
+		  Env.perc(attackTime: attack, releaseTime: release * maxRelease),
+		  gate:t_trig,
+		);
+
+		snd = In.ar(in, 2) * env;
 
 		Out.ar(trackFilterOut, snd);
 	  }).add;
@@ -141,7 +157,8 @@ Engine_Thunk : CroneEngine {
 	context.server.sync;
 
 	track_group = Group.new(context.xg);
-	track_filters_group = Group.new(track_group, addAction: \addAfter);
+	track_amplitudes_group = Group.new(track_group, addAction: \addAfter);
+	track_filters_group = Group.new(track_amplitudes_group, addAction: \addAfter);
 	effects_group = Group.new(track_filters_group, addAction: \addAfter);
 	mixer_group = Group.new(effects_group, addAction: \addAfter);
 
@@ -152,6 +169,23 @@ Engine_Thunk : CroneEngine {
 	track_filter_busses = Array.fill(6, {arg i;
 	  Bus.audio(context.server, 2); });
 
+	track_amplitude_busses = Array.fill(6, {arg i;
+	  Bus.audio(context.server, 2); });
+
+	tracks = Array.fill(6,{arg i;
+	  Synth("track"++i, [
+		\bufnum:samples[i],
+		\trackAmplitudeOut:track_amplitude_busses[i],
+	  ], target:track_group);
+	});
+
+	track_amplitudes = Array.fill(6,{arg i;
+	  Synth("trackamplitude"++i, [
+		\in:track_amplitude_busses[i],
+		\trackFilterOut:track_filter_busses[i],
+	  ], target:track_amplitudes_group);
+	});
+
 	track_filters = Array.fill(6,{arg i;
 	  Synth("trackfilter"++i, [
 		\in:track_filter_busses[i],
@@ -159,13 +193,6 @@ Engine_Thunk : CroneEngine {
 		\delayOut: delay_bus,
 		\dryOut: mixer_bus,
 	  ], target:track_filters_group);
-	});
-
-	tracks = Array.fill(6,{arg i;
-	  Synth("track"++i, [
-		\bufnum:samples[i],
-		\trackFilterOut:track_filter_busses[i],
-	  ], target:track_group);
 	});
 
 	reverb = Synth("reverb", [\in: reverb_bus, \out: mixer_bus], target: effects_group);
@@ -198,6 +225,10 @@ Engine_Thunk : CroneEngine {
 		\bufnum, samples[sample_idx],
 		\vel, msg[3],
 		\rate, msg[4],
+	  );
+
+	  track_amplitudes[idx].set(
+		\t_trig, 1,
 	  );
 	});
 
@@ -233,7 +264,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("attack","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_amplitudes[idx].set(
 		\attack, msg[2],
 	  );
 	});
@@ -242,7 +273,7 @@ Engine_Thunk : CroneEngine {
 	this.addCommand("release","if", { arg msg;
 	  var idx = msg[1]-1;
 
-	  tracks[idx].set(
+	  track_amplitudes[idx].set(
 		\release, msg[2],
 	  );
 	});
