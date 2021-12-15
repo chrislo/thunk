@@ -15,6 +15,7 @@ Engine_Thunk : CroneEngine {
   var delay;
   var mixer_bus;
   var mixer;
+  var player_list;
 
   *new { arg context, doneCallback;
 	^super.new(context, doneCallback);
@@ -147,6 +148,8 @@ Engine_Thunk : CroneEngine {
 
 	context.server.sync;
 
+	player_list = List.new();
+
 	track_group = Group.new(context.xg);
 	track_amplitudes_group = Group.new(track_group, addAction: \addAfter);
 	track_filters_group = Group.new(track_amplitudes_group, addAction: \addAfter);
@@ -201,10 +204,17 @@ Engine_Thunk : CroneEngine {
 
 	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end
 	this.addCommand("note_on","iiffff", { arg msg;
-	  var idx = msg[1]-1;
+	  var track_id = msg[1];
+	  var idx = track_id-1;
 	  var sample_idx = msg[2]-1;
+	  var player, active_players;
 
-	  var player = Synth("oneshotplayer", [
+	  // Free any currently active players for this track
+	  active_players = player_list.select({ arg o, i; o[\trackId] == track_id});
+	  active_players.do({ arg o, i; o.player.free; });
+	  player_list = player_list.reject({ arg o, i; o[\trackId] == track_id});
+
+	  player = Synth("oneshotplayer", [
 		\bufnum:samples[sample_idx],
 		\vel, msg[3],
 		\rate, msg[4],
@@ -213,13 +223,11 @@ Engine_Thunk : CroneEngine {
 		\trackAmplitudeOut:track_amplitude_busses[idx],
 	  ], target:track_group);
 
-	  player.set(
-		\t_trig, 1,
-	  );
+	  // Add new player to list of active players for this track
+	  player_list.add((trackId: track_id, player: player));
 
-	  track_amplitudes[idx].set(
-		\t_trig, 1,
-	  );
+	  player.set(\t_trig, 1);
+	  track_amplitudes[idx].set(\t_trig, 1);
 	});
 
 	// <track_id>, <volume [0-1]>
