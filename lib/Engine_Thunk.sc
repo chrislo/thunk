@@ -57,6 +57,38 @@ Engine_Thunk : CroneEngine {
 	  Out.ar(trackAmplitudeOut, snd);
 	}).add;
 
+	SynthDef("loopplayer", {
+	  arg trackAmplitudeOut,
+	  bufnum=0,
+	  rate=1,
+	  start=0,
+	  startloop=0,
+	  end=1,
+	  vel=1,
+	  t_trig=0;
+
+	  var snd,frames;
+
+	  rate = rate*BufRateScale.kr(bufnum);
+	  frames = BufFrames.kr(bufnum);
+
+	  vel = vel.max(0).min(1);
+
+	  snd=LoopBuf.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		rate: rate,
+		gate: 1,
+		startPos: start*frames,
+		startLoop: start*frames,
+		endLoop: end*frames,
+	  );
+
+	  snd = snd * vel;
+
+	  Out.ar(trackAmplitudeOut, snd);
+	}).add;
+
 	(0..5).do({arg i;
 	  SynthDef("trackamplitude"++i, {
 		arg in,
@@ -202,26 +234,38 @@ Engine_Thunk : CroneEngine {
 	  });
 	});
 
-	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end
-	this.addCommand("note_on","iiffff", { arg msg;
+	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end, <loop [0, 1]>
+	this.addCommand("note_on","iiffffi", { arg msg;
 	  var track_id = msg[1];
 	  var idx = track_id-1;
 	  var sample_idx = msg[2]-1;
 	  var player, active_players;
+	  var looping = msg[7].asBoolean;
 
 	  // Free any currently active players for this track
 	  active_players = player_list.select({ arg o, i; o[\trackId] == track_id});
 	  active_players.do({ arg o, i; o.player.free; });
 	  player_list = player_list.reject({ arg o, i; o[\trackId] == track_id});
 
-	  player = Synth("oneshotplayer", [
-		\bufnum:samples[sample_idx],
-		\vel, msg[3],
-		\rate, msg[4],
-		\start, msg[5],
-		\end, msg[6],
-		\trackAmplitudeOut:track_amplitude_busses[idx],
-	  ], target:track_group);
+	  if (looping) {
+		player = Synth("loopplayer", [
+		  \bufnum:samples[sample_idx],
+		  \vel, msg[3],
+		  \rate, msg[4],
+		  \start, msg[5],
+		  \end, msg[6],
+		  \trackAmplitudeOut:track_amplitude_busses[idx],
+		], target:track_group);
+	  } {
+		player = Synth("oneshotplayer", [
+		  \bufnum:samples[sample_idx],
+		  \vel, msg[3],
+		  \rate, msg[4],
+		  \start, msg[5],
+		  \end, msg[6],
+		  \trackAmplitudeOut:track_amplitude_busses[idx],
+		], target:track_group);
+	  };
 
 	  // Add new player to list of active players for this track
 	  player_list.add((trackId: track_id, player: player));
