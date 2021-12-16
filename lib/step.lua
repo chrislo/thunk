@@ -75,7 +75,7 @@ function Step:play(track_id, engine)
 
   local rate = 2^(self:transpose_or_default() / 12)
 
-  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end)
+  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, 0)
 end
 
 function Step:sample_name(state)

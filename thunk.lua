@@ -141,7 +141,7 @@ function step()
     end
 
     if state.trigger_immediately then
-      engine.note_on(1, state.trigger_immediately, 0.8, 1, 0, 1)
+      engine.note_on(1, state.trigger_immediately, 0.8, 1, 0, 1, 0)
       state.trigger_immediately = nil
     end
   end
