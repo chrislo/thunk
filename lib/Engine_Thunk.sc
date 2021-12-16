@@ -95,17 +95,19 @@ Engine_Thunk : CroneEngine {
 		trackFilterOut,
 		attack = 0.01,
 		release = 0.01,
-		duration = 0.25,
+		duration = 2, // in 1/16th notes
+		tempo = 120,
 		t_trig=0;
 
-		var snd, env, attackTime, releaseTime, sustainTime;
+		var snd, env, attackTime, releaseTime, sustainTime, durationTime;
 
 		attack = attack.max(0.01).min(1);
 		release = release.max(0.01).min(1);
 
-		attackTime = attack * duration;
-		releaseTime = release * duration;
-		sustainTime = duration - attackTime - releaseTime;
+		durationTime = ((60 / tempo) / 4) * duration;
+		attackTime = attack * durationTime;
+		releaseTime = release * durationTime;
+		sustainTime = durationTime - attackTime - releaseTime;
 
 		env=EnvGen.ar(
 		  Env.linen(attackTime, sustainTime, releaseTime),
@@ -276,6 +278,16 @@ Engine_Thunk : CroneEngine {
 
 	  player.set(\t_trig, 1);
 	  track_amplitudes[idx].set(\t_trig, 1);
+	});
+
+	// <tempo>
+	this.addCommand("tempo","f", { arg msg;
+	  var tempo = msg[1];
+
+	  (0..5).do({arg i;
+		postln(tempo);
+		track_amplitudes[i].set(\tempo, tempo);
+	  });
 	});
 
 	// <track_id>, <volume [0-1]>

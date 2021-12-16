@@ -48,6 +48,8 @@ end
 function init_params()
   params:add_group("Global", 5)
 
+  params:set_action("clock_tempo", function(x) engine.tempo(x) end)
+
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0)
   params:set_action("swing", set_swing)
 
@@ -64,7 +66,7 @@ function init_params()
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
-    params:add_group("Track" .. i, 10)
+    params:add_group("Track" .. i, 11)
     name = "t" .. i .. "_volume"
     params:add_control(name, "volume", controlspec.AMP)
     params:set_action(name, function(x) engine.volume(i, x) end)
@@ -92,6 +94,10 @@ function init_params()
     name = "t" .. i .. "_attack"
     params:add_control(name, "attack", controlspec.AMP)
     params:set_action(name, function(x) engine.attack(i, x) end)
+
+    name = "t" .. i .. "_duration"
+    params:add_number(name, "duration", 1, 16, 2)
+    params:set_action(name, function(x) engine.duration(i, x) end)
 
     name = "t" .. i .. "_release"
     params:add_control(name, "release", controlspec.AMP)
