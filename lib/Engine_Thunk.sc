@@ -94,17 +94,21 @@ Engine_Thunk : CroneEngine {
 		arg in,
 		trackFilterOut,
 		attack = 0.01,
-		release = 0.2,
+		release = 0.01,
+		duration = 0.25,
 		t_trig=0;
 
-		var snd, env, maxRelease;
+		var snd, env, attackTime, releaseTime, sustainTime;
 
 		attack = attack.max(0.01).min(1);
 		release = release.max(0.01).min(1);
-		maxRelease = 5;
+
+		attackTime = attack * duration;
+		releaseTime = release * duration;
+		sustainTime = duration - attackTime - releaseTime;
 
 		env=EnvGen.ar(
-		  Env.perc(attackTime: attack, releaseTime: release * maxRelease),
+		  Env.linen(attackTime, sustainTime, releaseTime),
 		  gate:t_trig,
 		);
 
@@ -316,6 +320,15 @@ Engine_Thunk : CroneEngine {
 
 	  track_amplitudes[idx].set(
 		\release, msg[2],
+	  );
+	});
+
+	// <track_id>, <duration>
+	this.addCommand("duration","if", { arg msg;
+	  var idx = msg[1]-1;
+
+	  track_amplitudes[idx].set(
+		\duration, msg[2],
 	  );
 	});
 
