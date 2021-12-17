@@ -119,6 +119,8 @@ function Controller.handle_enc(state, n, delta)
       params:delta("t" .. state:get_selected_track() .. "_sample_start", delta)
     elseif state.menu:is('sample_end') then
       params:delta("t" .. state:get_selected_track() .. "_sample_end", delta)
+    elseif state.menu:is('duration') then
+      params:delta("t" .. state:get_selected_track() .. "_duration", delta)
     elseif state.menu:is('attack') then
       params:delta("t" .. state:get_selected_track() .. "_attack", delta)
     elseif state.menu:is('release') then
