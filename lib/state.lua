@@ -59,6 +59,11 @@ function State:set_track_sample_end(track, v)
   track.sample_end = v
 end
 
+function State:set_track_loop(track, v)
+  track = self.pattern:track(track)
+  track.loop = v
+end
+
 function State:current_steps()
   return state.pattern:stepsForSelectedTrack(state.selected_track)
 end

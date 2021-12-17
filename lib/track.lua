@@ -13,7 +13,8 @@ function Track:new(ppqn, default_sample_id)
     mute = false,
     probability = 1,
     sample_start = 0,
-    sample_end = 1
+    sample_end = 1,
+    loop = 0
   }
 
   setmetatable(track, self)
