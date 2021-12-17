@@ -5,7 +5,7 @@ function Menu:new(initial)
 
   pages = {
     global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
-    track = {'track_sample', 'track_transpose', 'volume', 'cutoff', 'resonance', 'sample_start', 'sample_end', 'attack', 'release', 'reverb_send', 'delay_send', 'probability'},
+    track = {'track_sample', 'track_transpose', 'volume', 'cutoff', 'resonance', 'loop', 'sample_start', 'sample_end', 'attack', 'release', 'reverb_send', 'delay_send', 'probability'},
     step = {'step_sample', 'step_transpose', 'step_offset', 'step_velocity'}
   }
 
@@ -94,6 +94,19 @@ local function format_menu_item(key, value)
   return key .. string.rep(" ", spaces_to_insert) .. v
 end
 
+local function format_boolean(key, value)
+  local v
+  if value == 1 then
+    v = 'on'
+  else
+    v = 'off'
+  end
+  local max_width = 30
+  local spaces_to_insert = max_width - string.len(key) - string.len(v) - 1
+
+  return key .. string.rep(" ", spaces_to_insert) .. v
+end
+
 local function swing_as_percentage(pulses)
   return math.floor(50 + pulses * (50 / (PPQN/4))) .. "%"
 end
@@ -113,6 +126,8 @@ local function format_item(item,state)
     return format_menu_item('Cutoff', params:get("t" .. state:get_selected_track() .. "_cutoff"))
   elseif item == 'resonance' then
     return format_menu_item('Resonance', params:get("t" .. state:get_selected_track() .. "_resonance"))
+  elseif item == 'loop' then
+    return format_boolean('Loop', params:get("t" .. state:get_selected_track() .. "_loop"))
   elseif item == 'sample_start' then
     return format_menu_item('Start', params:get("t" .. state:get_selected_track() .. "_sample_start"))
   elseif item == 'sample_end' then

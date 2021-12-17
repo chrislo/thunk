@@ -113,6 +113,8 @@ function Controller.handle_enc(state, n, delta)
       params:delta("t" .. state:get_selected_track() .. "_cutoff", delta)
     elseif state.menu:is('resonance') then
       params:delta("t" .. state:get_selected_track() .. "_resonance", delta)
+    elseif state.menu:is('loop') then
+      params:delta("t" .. state:get_selected_track() .. "_loop", delta)
     elseif state.menu:is('sample_start') then
       params:delta("t" .. state:get_selected_track() .. "_sample_start", delta)
     elseif state.menu:is('sample_end') then
