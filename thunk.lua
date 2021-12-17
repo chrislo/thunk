@@ -116,7 +116,9 @@ function init_params()
     params:set_action(name, function(x) engine.delay_send(i, x) end)
 
     name = "t" .. i .. "_probability"
-    params:add_control(name, "probability", controlspec.AMP)
+    local prob_control = controlspec.AMP:copy()
+    prob_control.default = 1
+    params:add_control(name, "probability", prob_control)
     params:set_action(name, function(x) state:set_track_probability(i, x) end)
   end
 
