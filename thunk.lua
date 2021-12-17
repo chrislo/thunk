@@ -62,7 +62,8 @@ function init_params()
   params:add_control("delay_time", "delay time", controlspec.DELAY)
   params:set_action("delay_time", function(x) engine.delay_time(x) end)
 
-  params:add_control("decay_time", "decay time", controlspec.DELAY)
+  local decay_time_control = controlspec.new(0, 5, 'lin', 0.1, 0)
+  params:add_control("decay_time", "decay time", decay_time_control)
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
