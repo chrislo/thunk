@@ -62,7 +62,7 @@ end
 
 function Step:transpose_or_default()
   if self.transpose then
-    return self.transpose
+    return self.track.transpose + self.transpose
   else
     return self.track.transpose
   end
