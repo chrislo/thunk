@@ -6,7 +6,7 @@ function Step:new(track)
     current = false,
     offset = 0,
     velocity = 127,
-    transpose = nil,
+    transpose = 0,
     sample_id = nil,
     track = track
   }
@@ -33,7 +33,7 @@ function Step:set_defaults()
   self.offset = 0
   self.velocity = 127
   self.sample_id = nil
-  self.transpose = nil
+  self.transpose = 0
 end
 
 function Step:delta_offset(delta)
@@ -45,7 +45,7 @@ function Step:delta_velocity(delta)
 end
 
 function Step:delta_transpose(delta)
-  self.transpose = clamp(self:transpose_or_default() + delta, -24, 24)
+  self.transpose = clamp(self.transpose + delta, -24, 24)
 end
 
 function Step:delta_sample_id(delta)
@@ -61,11 +61,7 @@ function Step:sample_id_or_default()
 end
 
 function Step:transpose_or_default()
-  if self.transpose then
-    return self.track.transpose + self.transpose
-  else
-    return self.track.transpose
-  end
+  return self.track.transpose + self.transpose
 end
 
 function Step:play(track_id, engine)
