@@ -230,8 +230,8 @@ Engine_Thunk : CroneEngine {
 	  var player;
 	  var looping = msg[7].asBoolean;
 
-	  // Free any currently active players for this track
-	  track_groups[idx].deepFree;
+	  // Release any currently active players for this track
+	  track_groups[idx].release;
 
 	  if (looping) {
 		player = Synth("loopplayer", [
