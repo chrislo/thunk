@@ -390,5 +390,6 @@ Engine_Thunk : CroneEngine {
 	track_group.freeAll;
 	track_filters_group.freeAll;
 	effects_group.freeAll;
+	mixer_group.freeAll;
   }
 }
