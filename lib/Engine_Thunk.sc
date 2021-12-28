@@ -13,6 +13,7 @@ Engine_Thunk : CroneEngine {
   var delay;
   var mixer_bus;
   var mixer;
+  var player_env;
 
   *new { arg context, doneCallback;
 	^super.new(context, doneCallback);
@@ -23,29 +24,41 @@ Engine_Thunk : CroneEngine {
 	  Buffer.alloc(context.server, 1, 2);
 	});
 
+	player_env = {
+	  arg attack = 0.01,
+	  release = 0.01,
+	  duration = 0.5,
+	  gate = 1;
+
+	  var attackTime, releaseTime, sustainTime;
+
+	  attack = attack.max(0.01).min(1);
+	  release = release.max(0.01).min(1);
+	  attackTime = attack * duration;
+	  releaseTime = release * duration;
+	  sustainTime = duration - attackTime - releaseTime;
+
+	  EnvGen.ar(
+		Env.linen(attackTime, sustainTime, releaseTime),
+		gate:gate,
+		doneAction: 2,
+	  );
+	};
+
 	SynthDef("oneshotplayer", {
 	  arg trackFilterOut,
 	  bufnum=0,
 	  rate=1,
 	  start=0,
 	  end=1,
-	  attack = 0.01,
-	  release = 0.01,
-	  duration = 0.5,
 	  vel=1,
-	  gate=1,
 	  t_trig=0;
 
-	  var snd, env, frames, attackTime, releaseTime, sustainTime;
+	  var snd, env, frames;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
 	  vel = vel.max(0).min(1);
-	  attack = attack.max(0.01).min(1);
-	  release = release.max(0.01).min(1);
-	  attackTime = attack * duration;
-	  releaseTime = release * duration;
-	  sustainTime = duration - attackTime - releaseTime;
 
 	  snd=PlayBuf.ar(
 		numChannels:2,
@@ -57,11 +70,7 @@ Engine_Thunk : CroneEngine {
 		doneAction: 2,
 	  );
 
-	  env=EnvGen.ar(
-		Env.linen(attackTime, sustainTime, releaseTime),
-		gate:gate,
-		doneAction: 2,
-	  );
+	  env = SynthDef.wrap(player_env);
 
 	  snd = snd * vel * env;
 
@@ -75,23 +84,14 @@ Engine_Thunk : CroneEngine {
 	  start=0,
 	  startloop=0,
 	  end=1,
-	  attack = 0.01,
-	  release = 0.01,
-	  duration = 0,
 	  vel=1,
-	  gate=1,
 	  t_trig=0;
 
-	  var snd, env, frames, attackTime, releaseTime, sustainTime;
+	  var snd, env, frames;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
 	  vel = vel.max(0).min(1);
-	  attack = attack.max(0.01).min(1);
-	  release = release.max(0.01).min(1);
-	  attackTime = attack * duration;
-	  releaseTime = release * duration;
-	  sustainTime = duration - attackTime - releaseTime;
 
 	  snd=LoopBuf.ar(
 		numChannels:2,
@@ -103,11 +103,7 @@ Engine_Thunk : CroneEngine {
 		endLoop: end*frames,
 	  );
 
-	  env=EnvGen.ar(
-		Env.linen(attackTime, sustainTime, releaseTime),
-		gate:gate,
-		doneAction: 2,
-	  );
+	  env = SynthDef.wrap(player_env);
 
 	  snd = snd * vel * env;
 
