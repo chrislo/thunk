@@ -6,7 +6,7 @@ function Menu:new(initial)
   pages = {
     global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
     track = {'track_sample', 'track_transpose', 'volume', 'cutoff', 'resonance', 'loop', 'sample_start', 'sample_end', 'duration', 'attack', 'release', 'reverb_send', 'delay_send', 'probability'},
-    step = {'step_sample', 'step_transpose', 'step_offset', 'step_velocity'}
+    step = {'step_sample', 'step_transpose', 'step_offset', 'step_velocity', 'step_duration'}
   }
 
   events = {}
@@ -152,6 +152,8 @@ local function format_item(item,state)
     return format_menu_item('Offset', state:current_step().offset)
   elseif item == 'step_velocity' then
     return format_menu_item('Velocity', state:current_step().velocity)
+  elseif item == 'step_duration' then
+    return format_menu_item('Duration', state:current_step():duration_or_default())
   elseif params:get(item) then
     return format_menu_item(item, params:get(item))
   else

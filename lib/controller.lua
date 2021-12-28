@@ -139,6 +139,8 @@ function Controller.handle_enc(state, n, delta)
       state:current_step():delta_offset(delta)
     elseif state.menu:is("step_velocity") then
       state:current_step():delta_velocity(delta)
+    elseif state.menu:is("step_duration") then
+      state:current_step():delta_duration(delta)
     end
   end
 

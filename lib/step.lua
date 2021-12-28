@@ -8,7 +8,8 @@ function Step:new(track)
     velocity = 127,
     transpose = 0,
     sample_id = nil,
-    track = track
+    track = track,
+    duration = nil,
   }
 
   setmetatable(obj, self)
@@ -34,6 +35,7 @@ function Step:set_defaults()
   self.velocity = 127
   self.sample_id = nil
   self.transpose = 0
+  self.duration = nil
 end
 
 function Step:delta_offset(delta)
@@ -42,6 +44,11 @@ end
 
 function Step:delta_velocity(delta)
   self.velocity = clamp(self.velocity + delta, 0, 127)
+end
+
+function Step:delta_duration(delta)
+  initial = self:duration_or_default()
+  self.duration = clamp(initial + delta, 0, 127)
 end
 
 function Step:delta_transpose(delta)
@@ -64,15 +71,22 @@ function Step:transpose_or_default()
   return self.track.transpose + self.transpose
 end
 
+function Step:duration_or_default()
+  return self.duration or self.track.duration
+end
+
+function duration_to_seconds(d)
+  return ((60 / params:get('clock_tempo')) / 4) * d;
+end
+
 function Step:play(track_id, engine)
   if not self.active then
     return
   end
 
   local rate = 2^(self:transpose_or_default() / 12)
-  local duration = ((60 / params:get('clock_tempo')) / 4) * self.track.duration;
 
-  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, self.track.loop, self.track.attack, self.track.release, duration)
+  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, self.track.loop, self.track.attack, self.track.release, duration_to_seconds(self:duration_or_default()))
 end
 
 function Step:sample_name(state)
