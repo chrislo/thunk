@@ -31,7 +31,7 @@ Engine_Thunk : CroneEngine {
 	  end=1,
 	  attack = 0.01,
 	  release = 0.01,
-	  duration = 0,
+	  duration = 0.5,
 	  vel=1,
 	  gate=1,
 	  t_trig=0;
@@ -40,7 +40,6 @@ Engine_Thunk : CroneEngine {
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
-	  duration = duration.min(BufDur.kr(bufnum));
 	  vel = vel.max(0).min(1);
 	  attack = attack.max(0.01).min(1);
 	  release = release.max(0.01).min(1);
@@ -61,6 +60,7 @@ Engine_Thunk : CroneEngine {
 	  env=EnvGen.ar(
 		Env.linen(attackTime, sustainTime, releaseTime),
 		gate:gate,
+		doneAction: 2,
 	  );
 
 	  snd = snd * vel * env;
