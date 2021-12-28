@@ -48,8 +48,6 @@ end
 function init_params()
   params:add_group("Global", 5)
 
-  params:set_action("clock_tempo", function(x) engine.tempo(x) end)
-
   params:add_number("swing", "swing", 0, math.floor(PPQN/4), 0)
   params:set_action("swing", set_swing)
 
@@ -98,15 +96,15 @@ function init_params()
 
     name = "t" .. i .. "_attack"
     params:add_control(name, "attack", controlspec.AMP)
-    params:set_action(name, function(x) engine.attack(i, x) end)
+    params:set_action(name, function(x) state:set_track_attack(i, x) end)
 
     name = "t" .. i .. "_duration"
-    params:add_number(name, "duration", 1, 16, 2)
-    params:set_action(name, function(x) engine.duration(i, x) end)
+    params:add_number(name, "duration", 1, 16, 4)
+    params:set_action(name, function(x) state:set_track_duration(i, x) end)
 
     name = "t" .. i .. "_release"
     params:add_control(name, "release", controlspec.AMP)
-    params:set_action(name, function(x) engine.release(i, x) end)
+    params:set_action(name, function(x) state:set_track_release(i, x) end)
 
     name = "t" .. i .. "_reverb_send"
     params:add_control(name, "reverb send", controlspec.AMP)
@@ -121,6 +119,8 @@ function init_params()
     prob_control.default = 1
     params:add_control(name, "probability", prob_control)
     params:set_action(name, function(x) state:set_track_probability(i, x) end)
+
+    params:bang()
   end
 
   params:add_group("Samples", 64)

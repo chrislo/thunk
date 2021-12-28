@@ -74,8 +74,9 @@ function Step:play(track_id, engine)
   end
 
   local rate = 2^(self:transpose_or_default() / 12)
+  local duration = ((60 / params:get('clock_tempo')) / 4) * self.track.duration;
 
-  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, self.track.loop)
+  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, self.track.loop, self.track.attack, self.track.release, duration)
 end
 
 function Step:sample_name(state)

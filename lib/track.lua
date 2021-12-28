@@ -14,7 +14,10 @@ function Track:new(ppqn, default_sample_id)
     probability = 1,
     sample_start = 0,
     sample_end = 1,
-    loop = 0
+    loop = 0,
+    attack = 0.01,
+    release = 0.01,
+    duration = 0.5,
   }
 
   setmetatable(track, self)

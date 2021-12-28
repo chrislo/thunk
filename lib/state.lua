@@ -64,6 +64,21 @@ function State:set_track_loop(track, v)
   track.loop = v
 end
 
+function State:set_track_attack(track, v)
+  track = self.pattern:track(track)
+  track.attack = v
+end
+
+function State:set_track_release(track, v)
+  track = self.pattern:track(track)
+  track.release = v
+end
+
+function State:set_track_duration(track, v)
+  track = self.pattern:track(track)
+  track.duration = v
+end
+
 function State:current_steps()
   return state.pattern:stepsForSelectedTrack(state.selected_track)
 end
