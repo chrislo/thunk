@@ -3,6 +3,7 @@ Engine_Thunk : CroneEngine {
   var track_amplitudes;
   var track_filters;
   var track_group;
+  var track_groups;
   var track_amplitudes_group;
   var track_amplitude_busses;
   var track_filters_group;
@@ -15,7 +16,6 @@ Engine_Thunk : CroneEngine {
   var delay;
   var mixer_bus;
   var mixer;
-  var player_list;
 
   *new { arg context, doneCallback;
 	^super.new(context, doneCallback);
@@ -186,9 +186,8 @@ Engine_Thunk : CroneEngine {
 
 	context.server.sync;
 
-	player_list = List.new();
-
 	track_group = Group.new(context.xg);
+	track_groups = Array.fill(6, {arg i; Group.new(track_group, addAction: \addToTail); });
 	track_amplitudes_group = Group.new(track_group, addAction: \addAfter);
 	track_filters_group = Group.new(track_amplitudes_group, addAction: \addAfter);
 	effects_group = Group.new(track_filters_group, addAction: \addAfter);
@@ -245,13 +244,11 @@ Engine_Thunk : CroneEngine {
 	  var track_id = msg[1];
 	  var idx = track_id-1;
 	  var sample_idx = msg[2]-1;
-	  var player, active_players;
+	  var player;
 	  var looping = msg[7].asBoolean;
 
 	  // Free any currently active players for this track
-	  active_players = player_list.select({ arg o, i; o[\trackId] == track_id});
-	  active_players.do({ arg o, i; o.player.free; });
-	  player_list = player_list.reject({ arg o, i; o[\trackId] == track_id});
+	  track_groups[idx].deepFree;
 
 	  if (looping) {
 		player = Synth("loopplayer", [
@@ -261,7 +258,7 @@ Engine_Thunk : CroneEngine {
 		  \start, msg[5],
 		  \end, msg[6],
 		  \trackAmplitudeOut:track_amplitude_busses[idx],
-		], target:track_group);
+		], target:track_groups[idx]);
 	  } {
 		player = Synth("oneshotplayer", [
 		  \bufnum:samples[sample_idx],
@@ -270,11 +267,8 @@ Engine_Thunk : CroneEngine {
 		  \start, msg[5],
 		  \end, msg[6],
 		  \trackAmplitudeOut:track_amplitude_busses[idx],
-		], target:track_group);
+		], target:track_groups[idx]);
 	  };
-
-	  // Add new player to list of active players for this track
-	  player_list.add((trackId: track_id, player: player));
 
 	  player.set(\t_trig, 1);
 	  track_amplitudes[idx].set(\t_trig, 1);
