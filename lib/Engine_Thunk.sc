@@ -1,11 +1,8 @@
 Engine_Thunk : CroneEngine {
   var samples;
-  var track_amplitudes;
   var track_filters;
   var track_group;
   var track_groups;
-  var track_amplitudes_group;
-  var track_amplitude_busses;
   var track_filters_group;
   var track_filter_busses;
   var effects_group;
@@ -27,20 +24,29 @@ Engine_Thunk : CroneEngine {
 	});
 
 	SynthDef("oneshotplayer", {
-	  arg trackAmplitudeOut,
+	  arg trackFilterOut,
 	  bufnum=0,
 	  rate=1,
 	  start=0,
 	  end=1,
+	  attack = 0.01,
+	  release = 0.01,
+	  duration = 0,
 	  vel=1,
+	  gate=1,
 	  t_trig=0;
 
-	  var snd,frames;
+	  var snd, env, frames, attackTime, releaseTime, sustainTime;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
-
+	  duration = duration.min(BufDur.kr(bufnum));
 	  vel = vel.max(0).min(1);
+	  attack = attack.max(0.01).min(1);
+	  release = release.max(0.01).min(1);
+	  attackTime = attack * duration;
+	  releaseTime = release * duration;
+	  sustainTime = duration - attackTime - releaseTime;
 
 	  snd=PlayBuf.ar(
 		numChannels:2,
@@ -52,27 +58,40 @@ Engine_Thunk : CroneEngine {
 		doneAction: 2,
 	  );
 
-	  snd = snd * vel;
+	  env=EnvGen.ar(
+		Env.linen(attackTime, sustainTime, releaseTime),
+		gate:gate,
+	  );
 
-	  Out.ar(trackAmplitudeOut, snd);
+	  snd = snd * vel * env;
+
+	  Out.ar(trackFilterOut, snd);
 	}).add;
 
 	SynthDef("loopplayer", {
-	  arg trackAmplitudeOut,
+	  arg trackFilterOut,
 	  bufnum=0,
 	  rate=1,
 	  start=0,
 	  startloop=0,
 	  end=1,
+	  attack = 0.01,
+	  release = 0.01,
+	  duration = 0,
 	  vel=1,
+	  gate=1,
 	  t_trig=0;
 
-	  var snd,frames;
+	  var snd, env, frames, attackTime, releaseTime, sustainTime;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
-
 	  vel = vel.max(0).min(1);
+	  attack = attack.max(0.01).min(1);
+	  release = release.max(0.01).min(1);
+	  attackTime = attack * duration;
+	  releaseTime = release * duration;
+	  sustainTime = duration - attackTime - releaseTime;
 
 	  snd=LoopBuf.ar(
 		numChannels:2,
@@ -84,41 +103,16 @@ Engine_Thunk : CroneEngine {
 		endLoop: end*frames,
 	  );
 
-	  snd = snd * vel;
+	  env=EnvGen.ar(
+		Env.linen(attackTime, sustainTime, releaseTime),
+		gate:gate,
+		doneAction: 2,
+	  );
 
-	  Out.ar(trackAmplitudeOut, snd);
+	  snd = snd * vel * env;
+
+	  Out.ar(trackFilterOut, snd);
 	}).add;
-
-	(0..5).do({arg i;
-	  SynthDef("trackamplitude"++i, {
-		arg in,
-		trackFilterOut,
-		attack = 0.01,
-		release = 0.01,
-		duration = 2, // in 1/16th notes
-		tempo = 120,
-		t_trig=0;
-
-		var snd, env, attackTime, releaseTime, sustainTime, durationTime;
-
-		attack = attack.max(0.01).min(1);
-		release = release.max(0.01).min(1);
-
-		durationTime = ((60 / tempo) / 4) * duration;
-		attackTime = attack * durationTime;
-		releaseTime = release * durationTime;
-		sustainTime = durationTime - attackTime - releaseTime;
-
-		env=EnvGen.ar(
-		  Env.linen(attackTime, sustainTime, releaseTime),
-		  gate:t_trig,
-		);
-
-		snd = In.ar(in, 2) * env;
-
-		Out.ar(trackFilterOut, snd);
-	  }).add;
-	});
 
 	(0..5).do({arg i;
 	  SynthDef("trackfilter"++i, {
@@ -188,8 +182,7 @@ Engine_Thunk : CroneEngine {
 
 	track_group = Group.new(context.xg);
 	track_groups = Array.fill(6, {arg i; Group.new(track_group, addAction: \addToTail); });
-	track_amplitudes_group = Group.new(track_group, addAction: \addAfter);
-	track_filters_group = Group.new(track_amplitudes_group, addAction: \addAfter);
+	track_filters_group = Group.new(track_group, addAction: \addAfter);
 	effects_group = Group.new(track_filters_group, addAction: \addAfter);
 	mixer_group = Group.new(effects_group, addAction: \addAfter);
 
@@ -199,16 +192,6 @@ Engine_Thunk : CroneEngine {
 
 	track_filter_busses = Array.fill(6, {arg i;
 	  Bus.audio(context.server, 2); });
-
-	track_amplitude_busses = Array.fill(6, {arg i;
-	  Bus.audio(context.server, 2); });
-
-	track_amplitudes = Array.fill(6,{arg i;
-	  Synth("trackamplitude"++i, [
-		\in:track_amplitude_busses[i],
-		\trackFilterOut:track_filter_busses[i],
-	  ], target:track_amplitudes_group);
-	});
 
 	track_filters = Array.fill(6,{arg i;
 	  Synth("trackfilter"++i, [
@@ -239,8 +222,8 @@ Engine_Thunk : CroneEngine {
 	  });
 	});
 
-	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end, <loop [0, 1]>
-	this.addCommand("note_on","iiffffi", { arg msg;
+	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end, <loop [0, 1]>, attack, release, duration
+	this.addCommand("note_on","iiffffifff", { arg msg;
 	  var track_id = msg[1];
 	  var idx = track_id-1;
 	  var sample_idx = msg[2]-1;
@@ -257,7 +240,10 @@ Engine_Thunk : CroneEngine {
 		  \rate, msg[4],
 		  \start, msg[5],
 		  \end, msg[6],
-		  \trackAmplitudeOut:track_amplitude_busses[idx],
+		  \attack, msg[8],
+		  \release, msg[9],
+		  \duration, msg[10],
+		  \trackFilterOut:track_filter_busses[idx],
 		], target:track_groups[idx]);
 	  } {
 		player = Synth("oneshotplayer", [
@@ -266,22 +252,14 @@ Engine_Thunk : CroneEngine {
 		  \rate, msg[4],
 		  \start, msg[5],
 		  \end, msg[6],
-		  \trackAmplitudeOut:track_amplitude_busses[idx],
+		  \attack, msg[8],
+		  \release, msg[9],
+		  \duration, msg[10],
+		  \trackFilterOut:track_filter_busses[idx],
 		], target:track_groups[idx]);
 	  };
 
 	  player.set(\t_trig, 1);
-	  track_amplitudes[idx].set(\t_trig, 1);
-	});
-
-	// <tempo>
-	this.addCommand("tempo","f", { arg msg;
-	  var tempo = msg[1];
-
-	  (0..5).do({arg i;
-		postln(tempo);
-		track_amplitudes[i].set(\tempo, tempo);
-	  });
 	});
 
 	// <track_id>, <volume [0-1]>
@@ -308,33 +286,6 @@ Engine_Thunk : CroneEngine {
 
 	  track_filters[idx].set(
 		\resonance, msg[2],
-	  );
-	});
-
-	// <track_id>, <attack>
-	this.addCommand("attack","if", { arg msg;
-	  var idx = msg[1]-1;
-
-	  track_amplitudes[idx].set(
-		\attack, msg[2],
-	  );
-	});
-
-	// <track_id>, <release>
-	this.addCommand("release","if", { arg msg;
-	  var idx = msg[1]-1;
-
-	  track_amplitudes[idx].set(
-		\release, msg[2],
-	  );
-	});
-
-	// <track_id>, <duration>
-	this.addCommand("duration","if", { arg msg;
-	  var idx = msg[1]-1;
-
-	  track_amplitudes[idx].set(
-		\duration, msg[2],
 	  );
 	});
 
