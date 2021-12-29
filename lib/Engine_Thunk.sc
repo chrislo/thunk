@@ -14,6 +14,7 @@ Engine_Thunk : CroneEngine {
   var mixer_bus;
   var mixer;
   var player_env;
+  var player_filter_env;
 
   *new { arg context, doneCallback;
 	^super.new(context, doneCallback);
@@ -45,6 +46,16 @@ Engine_Thunk : CroneEngine {
 	  );
 	};
 
+	player_filter_env = {
+	  arg filter_attack = 0.01,
+	  filter_release = 1,
+	  cutoff = 20000;
+
+	  EnvGen.ar(
+		Env.perc(filter_attack, filter_release, cutoff)
+	  );
+	};
+
 	SynthDef("oneshotplayer", {
 	  arg trackFilterOut,
 	  bufnum=0,
@@ -52,9 +63,11 @@ Engine_Thunk : CroneEngine {
 	  start=0,
 	  end=1,
 	  vel=1,
+	  filter=0,
+	  rq=1,
 	  t_trig=0;
 
-	  var snd, env, frames;
+	  var snd, env, flt, frames;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
@@ -71,8 +84,8 @@ Engine_Thunk : CroneEngine {
 	  );
 
 	  env = SynthDef.wrap(player_env);
-
-	  snd = snd * vel * env;
+	  flt = SynthDef.wrap(player_filter_env);
+	  snd = Select.ar(filter, [snd * vel, RLPF.ar(snd * vel, flt, rq)]) * env;
 
 	  Out.ar(trackFilterOut, snd);
 	}).add;
@@ -85,9 +98,11 @@ Engine_Thunk : CroneEngine {
 	  startloop=0,
 	  end=1,
 	  vel=1,
+	  filter=0,
+	  rq=1,
 	  t_trig=0;
 
-	  var snd, env, frames;
+	  var snd, env, flt, frames;
 
 	  rate = rate*BufRateScale.kr(bufnum);
 	  frames = BufFrames.kr(bufnum);
@@ -104,8 +119,8 @@ Engine_Thunk : CroneEngine {
 	  );
 
 	  env = SynthDef.wrap(player_env);
-
-	  snd = snd * vel * env;
+	  flt = SynthDef.wrap(player_filter_env);
+	  snd = Select.ar(filter, [snd * vel, RLPF.ar(snd * vel, flt, rq)]) * env;
 
 	  Out.ar(trackFilterOut, snd);
 	}).add;
@@ -218,8 +233,22 @@ Engine_Thunk : CroneEngine {
 	  });
 	});
 
-	// <track_id>, <sample_id>, <velocity [0-1]>, <rate>, sample_start, sample_end, <loop [0, 1]>, attack, release, duration
-	this.addCommand("note_on","iiffffifff", { arg msg;
+	// 1: <track_id>
+	// 2: <sample_id>
+	// 3: <velocity [0-1]>
+	// 4: <rate>
+	// 5: sample_start
+	// 6: sample_end
+	// 7: <loop [0, 1]>
+	// 8: attack
+	// 9: release
+	// 10: duration
+	// 11: filter [0,1]
+	// 12: filter_attack
+	// 13: filter_release
+	// 14: cutoff
+	// 15: rq
+	this.addCommand("note_on","iiffffifffiffff", { arg msg;
 	  var track_id = msg[1];
 	  var idx = track_id-1;
 	  var sample_idx = msg[2]-1;
@@ -239,6 +268,11 @@ Engine_Thunk : CroneEngine {
 		  \attack, msg[8],
 		  \release, msg[9],
 		  \duration, msg[10],
+		  \filter, msg[11],
+		  \filter_attack, msg[12],
+		  \filter_release, msg[13],
+		  \cutoff, msg[14],
+		  \rq, msg[15],
 		  \trackFilterOut:track_filter_busses[idx],
 		], target:track_groups[idx]);
 	  } {
@@ -251,6 +285,11 @@ Engine_Thunk : CroneEngine {
 		  \attack, msg[8],
 		  \release, msg[9],
 		  \duration, msg[10],
+		  \filter, msg[11],
+		  \filter_attack, msg[12],
+		  \filter_release, msg[13],
+		  \cutoff, msg[14],
+		  \rq, msg[15],
 		  \trackFilterOut:track_filter_busses[idx],
 		], target:track_groups[idx]);
 	  };
