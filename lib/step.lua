@@ -60,11 +60,7 @@ function Step:delta_sample_id(delta)
 end
 
 function Step:sample_id_or_default()
-  if self.sample_id then
-    return self.sample_id
-  else
-    return self.track.sample_id
-  end
+  return self.sample_id or self.track.sample_id
 end
 
 function Step:transpose_or_default()
