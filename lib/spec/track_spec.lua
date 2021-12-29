@@ -1,6 +1,13 @@
 describe('track', function()
     setup(function()
         track = require("lib/track")
+        _G.params = {
+          get = function(name, value)
+            if value == 'clock_tempo' then
+              return 120
+            end
+          end
+        }
     end)
 
     describe('new()', function()
