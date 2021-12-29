@@ -63,7 +63,7 @@ function Step:sample_id_or_default()
   if self.sample_id then
     return self.sample_id
   else
-    return self.track.default_sample_id
+    return self.track.sample_id
   end
 end
 
@@ -93,7 +93,7 @@ function Step:sample_name(state)
   if self.sample_id then
     return state.sample_pool:name(self.sample_id)
   else
-    return state.sample_pool:name(self.track.default_sample_id)
+    return state.sample_pool:name(self.track.sample_id)
   end
 end
 

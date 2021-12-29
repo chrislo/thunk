@@ -1,6 +1,6 @@
 Track = {}
 
-function Track:new(ppqn, default_sample_id)
+function Track:new(ppqn, sample_id)
   track = {
     ppqn = ppqn or 4,
     tick = 0,
@@ -9,7 +9,7 @@ function Track:new(ppqn, default_sample_id)
     steps = steps,
     swing = 0,
     transpose = 0,
-    default_sample_id = default_sample_id,
+    sample_id = sample_id,
     mute = false,
     probability = 1,
     sample_start = 0,
@@ -109,8 +109,8 @@ local function clamp(n, min, max)
   return math.min(max,(math.max(n,min)))
 end
 
-function Track:delta_default_sample_id(delta)
-  self.default_sample_id = clamp(self.default_sample_id + delta, 1, 64)
+function Track:delta_sample_id(delta)
+  self.sample_id = clamp(self.sample_id + delta, 1, 64)
 end
 
 function Track:delta_transpose(delta)
@@ -118,7 +118,7 @@ function Track:delta_transpose(delta)
 end
 
 function Track:default_sample_name(state)
-  return state.sample_pool:name(self.default_sample_id)
+  return state.sample_pool:name(self.sample_id)
 end
 
 return Track

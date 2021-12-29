@@ -21,7 +21,7 @@ function Controller.handle_short_press(state, x, y)
     else
       state:select_track(track_id)
       if not state.playing then
-        state.trigger_immediately = state.pattern:track(track_id).default_sample_id
+        state.trigger_immediately = state.pattern:track(track_id).sample_id
       end
     end
   end
@@ -74,7 +74,7 @@ function Controller.handle_key(state, n, z)
   if n == 3 then
     if state.menu:is("track_sample") then
       local track = state:current_track()
-      local sample_id = track.default_sample_id
+      local sample_id = track.sample_id
       local callback  = function(fn)
         if fn then
           params:set("sample_" .. sample_id, fn)
@@ -104,7 +104,7 @@ function Controller.handle_enc(state, n, delta)
     elseif state.menu:is("delay_time") then params:delta("delay_time", delta)
     elseif state.menu:is("decay_time") then params:delta("decay_time", delta)
     elseif state.menu:is("track_sample") then
-      state:current_track():delta_default_sample_id(delta)
+      state:current_track():delta_sample_id(delta)
     elseif state.menu:is("track_transpose") then
       state:current_track():delta_transpose(delta)
     elseif state.menu:is('volume') then
