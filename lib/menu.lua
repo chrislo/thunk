@@ -114,6 +114,8 @@ end
 local function format_item(item,state)
   if item == 'tempo' then
     return format_menu_item(item, params:get("clock_tempo"))
+  elseif item == 'delay_time' then
+    return format_menu_item(item, Delay.options()[params:get("delay_time")])
   elseif item == 'swing' then
     return format_menu_item(item, swing_as_percentage(params:get("swing")))
   elseif item == 'track_sample' then

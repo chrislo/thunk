@@ -17,6 +17,7 @@ SamplePool = include("lib/sample_pool")
 StateMachine = include("lib/statemachine")
 Menu = include("lib/menu")
 State = include("lib/state")
+Delay = include("lib/delay")
 
 local screen_refresh_metro
 local press_counter = {}
@@ -57,8 +58,8 @@ function init_params()
   params:add_control("reverb_damp", "reverb damp", controlspec.AMP)
   params:set_action("reverb_damp", function(x) engine.reverb_damp(x) end)
 
-  params:add_control("delay_time", "delay time", controlspec.DELAY)
-  params:set_action("delay_time", function(x) engine.delay_time(x) end)
+  params:add_option("delay_time", "delay time", Delay.options(), 1)
+  params:set_action("delay_time", function(x) engine.delay_time(Delay.ratio_to_seconds(Delay.options()[x], params:get('clock_tempo'))) end)
 
   local decay_time_control = controlspec.new(0, 5, 'lin', 0.1, 0)
   params:add_control("decay_time", "decay time", decay_time_control)
