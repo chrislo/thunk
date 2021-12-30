@@ -18,6 +18,11 @@ function Track:new(ppqn, sample_id)
     attack = 0.01,
     release = 0.01,
     duration = 0.5,
+    filter = 0,
+    filter_attack = 0.01,
+    filter_release = 1,
+    filter_cutoff = 20000,
+    filter_rq = 1,
   }
 
   setmetatable(track, self)

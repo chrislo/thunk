@@ -125,6 +125,16 @@ function Controller.handle_enc(state, n, delta)
       params:delta("t" .. state:get_selected_track() .. "_attack", delta)
     elseif state.menu:is('release') then
       params:delta("t" .. state:get_selected_track() .. "_release", delta)
+    elseif state.menu:is('filter') then
+      params:delta("t" .. state:get_selected_track() .. "_filter", delta)
+    elseif state.menu:is('filter_attack') then
+      params:delta("t" .. state:get_selected_track() .. "_filter_attack", delta)
+    elseif state.menu:is('filter_release') then
+      params:delta("t" .. state:get_selected_track() .. "_filter_release", delta)
+    elseif state.menu:is('filter_cutoff') then
+      params:delta("t" .. state:get_selected_track() .. "_filter_cutoff", delta)
+    elseif state.menu:is('filter_rq') then
+      params:delta("t" .. state:get_selected_track() .. "_filter_rq", delta)
     elseif state.menu:is('delay_send') then
       params:delta("t" .. state:get_selected_track() .. "_delay_send", delta)
     elseif state.menu:is('reverb_send') then

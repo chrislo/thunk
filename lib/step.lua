@@ -82,7 +82,29 @@ function Step:play(track_id, engine)
 
   local rate = 2^(self:transpose_or_default() / 12)
 
-  engine.note_on(track_id, self:sample_id_or_default(), self.velocity / 127, rate, self.track.sample_start, self.track.sample_end, self.track.loop, self.track.attack, self.track.release, duration_to_seconds(self:duration_or_default()))
+  print(self.track.filter)
+  print(self.track.filter_attack)
+  print(self.track.filter_release)
+  print(self.track.filter_cutoff)
+  print(self.track.filter_rq)
+
+  engine.note_on(
+    track_id,
+    self:sample_id_or_default(),
+    self.velocity / 127,
+    rate,
+    self.track.sample_start,
+    self.track.sample_end,
+    self.track.loop,
+    self.track.attack,
+    self.track.release,
+    duration_to_seconds(self:duration_or_default()),
+    self.track.filter,
+    self.track.filter_attack,
+    self.track.filter_release,
+    self.track.filter_cutoff,
+    self.track.filter_rq
+  )
 end
 
 function Step:sample_name(state)

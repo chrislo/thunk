@@ -66,7 +66,7 @@ function init_params()
   params:set_action("decay_time", function(x) engine.decay_time(x) end)
 
   for i = 1,6 do
-    params:add_group("Track" .. i, 12)
+    params:add_group("Track" .. i, 17)
     name = "t" .. i .. "_volume"
     params:add_control(name, "volume", controlspec.AMP)
     params:set_action(name, function(x) engine.volume(i, x) end)
@@ -106,6 +106,26 @@ function init_params()
     name = "t" .. i .. "_release"
     params:add_control(name, "release", controlspec.AMP)
     params:set_action(name, function(x) state:set_track_release(i, x) end)
+
+    name = "t" .. i .. "_filter"
+    params:add_number(name, "filter", 0, 1, 0)
+    params:set_action(name, function(x) state:set_track_filter(i, x) end)
+
+    name = "t" .. i .. "_filter_attack"
+    params:add_control(name, "filter attack", controlspec.AMP)
+    params:set_action(name, function(x) state:set_filter_attack(i, x) end)
+
+    name = "t" .. i .. "_filter_release"
+    params:add_control(name, "filter release", controlspec.AMP)
+    params:set_action(name, function(x) state:set_filter_release(i, x) end)
+
+    name = "t" .. i .. "_filter_cutoff"
+    params:add_control(name, "filter cutoff", controlspec.WIDEFREQ)
+    params:set_action(name, function(x) state:set_filter_cutoff(i, x) end)
+
+    name = "t" .. i .. "_filter_rq"
+    params:add_control(name, "filter rq", controlspec.RQ)
+    params:set_action(name, function(x) state:set_filter_rq(i, x) end)
 
     name = "t" .. i .. "_reverb_send"
     params:add_control(name, "reverb send", controlspec.AMP)

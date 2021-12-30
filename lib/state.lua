@@ -79,6 +79,31 @@ function State:set_track_duration(track, v)
   track.duration = v
 end
 
+function State:set_track_filter(track, v)
+  track = self.pattern:track(track)
+  track.filter = v
+end
+
+function State:set_filter_attack(track, v)
+  track = self.pattern:track(track)
+  track.filter_attack = v
+end
+
+function State:set_filter_release(track, v)
+  track = self.pattern:track(track)
+  track.filter_release = v
+end
+
+function State:set_filter_cutoff(track, v)
+  track = self.pattern:track(track)
+  track.filter_cutoff = v
+end
+
+function State:set_filter_rq(track, v)
+  track = self.pattern:track(track)
+  track.filter_rq = v
+end
+
 function State:current_steps()
   return state.pattern:stepsForSelectedTrack(state.selected_track)
 end

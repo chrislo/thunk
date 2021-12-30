@@ -5,7 +5,7 @@ function Menu:new(initial)
 
   pages = {
     global = {'tempo', 'swing', 'reverb_room', 'reverb_damp', 'delay_time', 'decay_time'},
-    track = {'track_sample', 'track_transpose', 'volume', 'cutoff', 'resonance', 'loop', 'sample_start', 'sample_end', 'duration', 'attack', 'release', 'reverb_send', 'delay_send', 'probability'},
+    track = {'track_sample', 'track_transpose', 'volume', 'cutoff', 'resonance', 'loop', 'sample_start', 'sample_end', 'duration', 'attack', 'release', 'filter', 'filter_attack', 'filter_release', 'filter_cutoff', 'filter_rq', 'reverb_send', 'delay_send', 'probability'},
     step = {'step_sample', 'step_transpose', 'step_offset', 'step_velocity', 'step_duration'}
   }
 
@@ -140,6 +140,16 @@ local function format_item(item,state)
     return format_menu_item('Attack', params:get("t" .. state:get_selected_track() .. "_attack"))
   elseif item == 'release' then
     return format_menu_item('Release', params:get("t" .. state:get_selected_track() .. "_release"))
+  elseif item == 'filter' then
+    return format_boolean('Filter', params:get("t" .. state:get_selected_track() .. "_filter"))
+  elseif item == 'filter_attack' then
+    return format_menu_item('Filter attack', params:get("t" .. state:get_selected_track() .. "_filter_attack"))
+  elseif item == 'filter_release' then
+    return format_menu_item('Filter release', params:get("t" .. state:get_selected_track() .. "_filter_release"))
+  elseif item == 'filter_cutoff' then
+    return format_menu_item('Filter cutoff', params:get("t" .. state:get_selected_track() .. "_filter_cutoff"))
+  elseif item == 'filter_rq' then
+    return format_menu_item('Filter RQ', params:get("t" .. state:get_selected_track() .. "_filter_rq"))
   elseif item == 'delay_send' then
     return format_menu_item('Delay Send', params:get("t" .. state:get_selected_track() .. "_delay_send"))
   elseif item == 'reverb_send' then
